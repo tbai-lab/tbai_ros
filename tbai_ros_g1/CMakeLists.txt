@@ -41,6 +41,7 @@ add_library(${PROJECT_NAME}
   src/G1BeyondMimicController.cpp
   src/G1SpinkickController.cpp
   src/G1TwistController.cpp
+  src/G1PBHCController.cpp
 )
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}

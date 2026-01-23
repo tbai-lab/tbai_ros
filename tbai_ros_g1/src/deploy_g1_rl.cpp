@@ -12,6 +12,7 @@
 #include <tbai_ros_core/Rate.hpp>
 #include <tbai_ros_g1/G1BeyondMimicController.hpp>
 #include <tbai_ros_g1/G1MimicController.hpp>
+#include <tbai_ros_g1/G1PBHCController.hpp>
 #include <tbai_ros_g1/G1RLController.hpp>
 #include <tbai_ros_g1/G1SpinkickController.hpp>
 #include <tbai_ros_g1/G1TwistController.hpp>
@@ -159,6 +160,33 @@ int main(int argc, char *argv[]) {
     TBAI_LOG_INFO(logger, "Loading TWIST2 Swing: {}", twistSwingMotion);
     controller.addController(std::make_unique<tbai::g1::RosG1TwistController>(
         stateSubscriber, twistModelPath, twistSwingMotion, twistSwingStart, twistSwingEnd, "G1TwistSwing"));
+
+    // Load G1 PBHC Horse Stance Punch controller
+    auto pbhcModelPath = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_punch/model_path");
+    auto pbhcMotionFile = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_punch/motion_file");
+    auto pbhcTimeStart = tbai::fromGlobalConfig<float>("g1_pbhc_horse_stance_punch/time_start");
+    auto pbhcTimeEnd = tbai::fromGlobalConfig<float>("g1_pbhc_horse_stance_punch/time_end");
+    TBAI_LOG_INFO(logger, "Loading PBHC Horse Stance Punch: {}", pbhcMotionFile);
+    controller.addController(std::make_unique<tbai::g1::RosG1PBHCController>(
+        stateSubscriber, pbhcModelPath, pbhcMotionFile, pbhcTimeStart, pbhcTimeEnd, "G1PBHCHorseStancePunch"));
+
+    // Load G1 PBHC Horse Stance Pose controller (model_50000)
+    auto pbhcPoseModelPath = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_pose/model_path");
+    auto pbhcPoseMotionFile = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_pose/motion_file");
+    auto pbhcPoseTimeStart = tbai::fromGlobalConfig<float>("g1_pbhc_horse_stance_pose/time_start");
+    auto pbhcPoseTimeEnd = tbai::fromGlobalConfig<float>("g1_pbhc_horse_stance_pose/time_end");
+    TBAI_LOG_INFO(logger, "Loading PBHC Horse Stance Pose: {}", pbhcPoseMotionFile);
+    controller.addController(std::make_unique<tbai::g1::RosG1PBHCController>(
+        stateSubscriber, pbhcPoseModelPath, pbhcPoseMotionFile, pbhcPoseTimeStart, pbhcPoseTimeEnd, "G1PBHCHorseStancePose"));
+
+    // Load G1 PBHC Horse Stance Pose v2 controller (model_119000)
+    auto pbhcPose2ModelPath = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_pose2/model_path");
+    auto pbhcPose2MotionFile = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_pose2/motion_file");
+    auto pbhcPose2TimeStart = tbai::fromGlobalConfig<float>("g1_pbhc_horse_stance_pose2/time_start");
+    auto pbhcPose2TimeEnd = tbai::fromGlobalConfig<float>("g1_pbhc_horse_stance_pose2/time_end");
+    TBAI_LOG_INFO(logger, "Loading PBHC Horse Stance Pose v2: {}", pbhcPose2MotionFile);
+    controller.addController(std::make_unique<tbai::g1::RosG1PBHCController>(
+        stateSubscriber, pbhcPose2ModelPath, pbhcPose2MotionFile, pbhcPose2TimeStart, pbhcPose2TimeEnd, "G1PBHCHorseStancePose2"));
 
     TBAI_LOG_INFO(logger, "Controllers initialized. Starting main loop...");
 

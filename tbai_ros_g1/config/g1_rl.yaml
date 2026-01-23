@@ -229,6 +229,66 @@ g1_twist_swing:
   time_start: 0.0
   time_end: -1.0
 
+# G1 PBHC Controller Configuration
+# PBHC uses 23 DOFs (locked wrists) with ONNX model
+g1_pbhc_controller:
+  rate: 50.0
+  action_scale: 0.25
+  action_clip: 100.0
+
+  # Observation scales (matching PBHC Python code)
+  ang_vel_scale: 0.25
+  dof_pos_scale: 1.0
+  dof_vel_scale: 0.05
+
+  # Default joint positions for 23 G1 joints (from PBHC config)
+  default_joint_pos: [
+    -0.1, 0.0, 0.0, 0.3, -0.2, 0.0,       # left leg (6)
+    -0.1, 0.0, 0.0, 0.3, -0.2, 0.0,       # right leg (6)
+    0.0, 0.0, 0.0,                         # waist (3)
+    0.2, 0.2, 0.0, 0.9,                    # left arm (4)
+    0.2, -0.2, 0.0, 0.9                    # right arm (4)
+  ]
+
+  # Stiffness for 23 G1 joints (from PBHC config)
+  stiffness: [
+    100.0, 100.0, 100.0, 150.0, 40.0, 40.0,  # left leg
+    100.0, 100.0, 100.0, 150.0, 40.0, 40.0,  # right leg
+    400.0, 400.0, 400.0,                      # waist
+    100.0, 100.0, 50.0, 50.0,                 # left arm
+    100.0, 100.0, 50.0, 50.0                  # right arm
+  ]
+
+  # Damping for 23 G1 joints (from PBHC config)
+  damping: [
+    2.0, 2.0, 2.0, 4.0, 2.0, 2.0,       # left leg
+    2.0, 2.0, 2.0, 4.0, 2.0, 2.0,       # right leg
+    5.0, 5.0, 5.0,                       # waist
+    2.0, 2.0, 2.0, 2.0,                  # left arm
+    2.0, 2.0, 2.0, 2.0                   # right arm
+  ]
+
+# G1 PBHC Horse Stance Punch motion
+g1_pbhc_horse_stance_punch:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/pbhc/model_33000.onnx"
+  motion_file: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/pbhc/Horse-stance_punch.csv"
+  time_start: 0.0
+  time_end: -1.0
+
+# G1 PBHC Horse Stance Pose motion
+g1_pbhc_horse_stance_pose:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/pbhc/model_50000.onnx"
+  motion_file: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/pbhc/Horse-stance_pose.csv"
+  time_start: 0.0
+  time_end: -1.0
+
+# G1 PBHC Horse Stance Pose v2 motion (better trained)
+g1_pbhc_horse_stance_pose2:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/pbhc/model_119000.onnx"
+  motion_file: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/pbhc/Horse-stance_pose.csv"
+  time_start: 0.0
+  time_end: -1.0
+
 joint_names:
   - "left_hip_pitch_joint"
   - "left_hip_roll_joint"

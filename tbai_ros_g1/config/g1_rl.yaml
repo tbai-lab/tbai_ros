@@ -144,6 +144,91 @@ g1_spinkick:
   hf_repo: "kubjonai/tbai-models"
   hf_model: "spinkick.onnx"
 
+# G1 TWIST2 Controller Configuration
+# TWIST2 uses 29 DOFs (all joints) with ONNX model from amazon-far/TWIST2
+g1_twist_controller:
+  rate: 50.0
+  action_scale: 0.5
+  action_clip: 10.0
+
+  # Observation scales
+  ang_vel_scale: 0.25
+  dof_pos_scale: 1.0
+  dof_vel_scale: 0.05
+
+  # Ankle joint indices in 29-DOF (velocities zeroed in observation)
+  ankle_joint_ids: [4, 5, 10, 11]
+
+  # Default joint positions for 29 G1 joints (from TWIST2 g1.yaml)
+  default_joint_pos: [
+    -0.2, 0.0, 0.0, 0.4, -0.2, 0.0,     # left leg (6)
+    -0.2, 0.0, 0.0, 0.4, -0.2, 0.0,     # right leg (6)
+    0.0, 0.0, 0.0,                       # waist (3)
+    0.0, 0.4, 0.0, 1.2, 0.0, 0.0, 0.0,  # left arm with wrists (7)
+    0.0, -0.4, 0.0, 1.2, 0.0, 0.0, 0.0  # right arm with wrists (7)
+  ]
+
+  # Stiffness for 29 G1 joints (from TWIST2 g1.yaml)
+  stiffness: [
+    100.0, 100.0, 100.0, 150.0, 40.0, 40.0,  # left leg
+    100.0, 100.0, 100.0, 150.0, 40.0, 40.0,  # right leg
+    150.0, 150.0, 150.0,                      # waist
+    40.0, 40.0, 40.0, 40.0, 20.0, 20.0, 20.0, # left arm
+    40.0, 40.0, 40.0, 40.0, 20.0, 20.0, 20.0  # right arm
+  ]
+
+  # Damping for 29 G1 joints (from TWIST2 g1.yaml)
+  damping: [
+    2.0, 2.0, 2.0, 4.0, 2.0, 2.0,       # left leg
+    2.0, 2.0, 2.0, 4.0, 2.0, 2.0,       # right leg
+    4.0, 4.0, 4.0,                       # waist
+    5.0, 5.0, 5.0, 5.0, 1.0, 1.0, 1.0,  # left arm
+    5.0, 5.0, 5.0, 5.0, 1.0, 1.0, 1.0   # right arm
+  ]
+
+# G1 TWIST2 model and motion files
+# Walk motion 1 (default)
+g1_twist_walk1:
+  model_path: "/home/kb/models/twist2_1017_25k.onnx"
+  motion_file: "/home/kb/models/twist2_motions/0807_yanjie_walk_001.csv"
+  time_start: 0.0
+  time_end: -1.0
+
+# Walk motion 2
+g1_twist_walk2:
+  model_path: "/home/kb/models/twist2_1017_25k.onnx"
+  motion_file: "/home/kb/models/twist2_motions/0807_yanjie_walk_002.csv"
+  time_start: 0.0
+  time_end: -1.0
+
+# Walk motion 3
+g1_twist_walk3:
+  model_path: "/home/kb/models/twist2_1017_25k.onnx"
+  motion_file: "/home/kb/models/twist2_motions/0807_yanjie_walk_003.csv"
+  time_start: 0.0
+  time_end: -1.0
+
+# Walk motion 5 (longer)
+g1_twist_walk5:
+  model_path: "/home/kb/models/twist2_1017_25k.onnx"
+  motion_file: "/home/kb/models/twist2_motions/0807_yanjie_walk_005.csv"
+  time_start: 0.0
+  time_end: -1.0
+
+# Walk motion 7 (longest)
+g1_twist_walk7:
+  model_path: "/home/kb/models/twist2_1017_25k.onnx"
+  motion_file: "/home/kb/models/twist2_motions/0807_yanjie_walk_007.csv"
+  time_start: 0.0
+  time_end: -1.0
+
+# Swing motion
+g1_twist_swing:
+  model_path: "/home/kb/models/twist2_1017_25k.onnx"
+  motion_file: "/home/kb/models/twist2_motions/accad_A3___Swing_t2.csv"
+  time_start: 0.0
+  time_end: -1.0
+
 joint_names:
   - "left_hip_pitch_joint"
   - "left_hip_roll_joint"

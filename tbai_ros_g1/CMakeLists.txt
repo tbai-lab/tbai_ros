@@ -19,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(tbai REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(Torch REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
@@ -39,6 +40,7 @@ add_library(${PROJECT_NAME}
   src/G1MimicController.cpp
   src/G1BeyondMimicController.cpp
   src/G1SpinkickController.cpp
+  src/G1TwistController.cpp
 )
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
@@ -46,6 +48,8 @@ target_link_libraries(${PROJECT_NAME}
   tbai::core
   tbai::reference
   tbai::deploy_g1
+  tbai::torch
+  ${TORCH_LIBRARIES}
 )
 
 # Deployment executable

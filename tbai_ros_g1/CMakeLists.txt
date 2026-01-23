@@ -43,6 +43,7 @@ add_library(${PROJECT_NAME}
   src/G1TwistController.cpp
   src/G1PBHCController.cpp
   src/G1ASAPController.cpp
+  src/G1ASAPMimicController.cpp
 )
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}

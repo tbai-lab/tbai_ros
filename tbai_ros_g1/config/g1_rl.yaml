@@ -368,6 +368,111 @@ g1_asap_controller:
 g1_asap_locomotion:
   model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/model_6600.onnx"
 
+# G1 ASAP Mimic Controller Configuration
+# Uses 23 DOFs (locked wrists) for motion tracking
+g1_asap_mimic_controller:
+  rate: 50.0
+  action_scale: 0.25
+  action_clip: 100.0
+
+  # Observation scales
+  ang_vel_scale: 0.25
+  dof_vel_scale: 0.05
+
+  # Default joint positions for 23-DOF mimic (g1_29dof_anneal_23dof order)
+  # Order: left leg(6), right leg(6), waist(3), left arm(4), right arm(4)
+  default_joint_pos: [
+    -0.1, 0.0, 0.0, 0.3, -0.2, 0.0,     # left leg
+    -0.1, 0.0, 0.0, 0.3, -0.2, 0.0,     # right leg
+    0.0, 0.0, 0.0,                       # waist
+    0.0, 0.0, 0.0, 0.0,                  # left arm (no wrists)
+    0.0, 0.0, 0.0, 0.0                   # right arm (no wrists)
+  ]
+
+  # Full 29-DOF default positions for motor commands
+  default_joint_pos_full: [
+    -0.1, 0.0, 0.0, 0.3, -0.2, 0.0,     # left leg
+    -0.1, 0.0, 0.0, 0.3, -0.2, 0.0,     # right leg
+    0.0, 0.0, 0.0,                       # waist
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  # left arm with wrists
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0   # right arm with wrists
+  ]
+
+  # Stiffness for 29 G1 joints
+  stiffness: [
+    100.0, 100.0, 100.0, 200.0, 20.0, 20.0,   # left leg
+    100.0, 100.0, 100.0, 200.0, 20.0, 20.0,   # right leg
+    400.0, 400.0, 400.0,                       # waist
+    90.0, 60.0, 20.0, 60.0, 4.0, 4.0, 4.0,    # left arm
+    90.0, 60.0, 20.0, 60.0, 4.0, 4.0, 4.0     # right arm
+  ]
+
+  # Damping for 29 G1 joints
+  damping: [
+    2.5, 2.5, 2.5, 5.0, 0.2, 0.1,       # left leg
+    2.5, 2.5, 2.5, 5.0, 0.2, 0.1,       # right leg
+    5.0, 5.0, 5.0,                       # waist
+    2.0, 1.0, 0.4, 1.0, 0.2, 0.2, 0.2,  # left arm
+    2.0, 1.0, 0.4, 1.0, 0.2, 0.2, 0.2   # right arm
+  ]
+
+# G1 ASAP Mimic motions
+g1_asap_cr7:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/cr7_model.onnx"
+  motion_length: 3.967
+
+g1_asap_apt:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/apt_level1.onnx"
+  motion_length: 7.66
+
+g1_asap_jump_forward1:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/jump_forward_level1.onnx"
+  motion_length: 3.76
+
+g1_asap_jump_forward2:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/jump_forward_level2.onnx"
+  motion_length: 3.56
+
+g1_asap_jump_forward3:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/jump_forward_level3.onnx"
+  motion_length: 4.26
+
+g1_asap_kick1:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/kick_level1.onnx"
+  motion_length: 3.96
+
+g1_asap_kick2:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/kick_level2.onnx"
+  motion_length: 3.36
+
+g1_asap_kick3:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/kick_level3.onnx"
+  motion_length: 4.56
+
+g1_asap_kobe:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/kobe_level1.onnx"
+  motion_length: 4.16
+
+g1_asap_lebron1:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/lebron_level1.onnx"
+  motion_length: 5.067
+
+g1_asap_lebron2:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/lebron_level2.onnx"
+  motion_length: 6.967
+
+g1_asap_side_jump1:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/side_jump_level1.onnx"
+  motion_length: 3.06
+
+g1_asap_side_jump2:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/side_jump_level2.onnx"
+  motion_length: 3.56
+
+g1_asap_side_jump3:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/side_jump_level3.onnx"
+  motion_length: 3.66
+
 joint_names:
   - "left_hip_pitch_joint"
   - "left_hip_roll_joint"

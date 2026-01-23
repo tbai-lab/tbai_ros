@@ -10,6 +10,7 @@
 #include <tbai_core/control/CentralController.hpp>
 #include <tbai_deploy_g1/G1RobotInterface.hpp>
 #include <tbai_ros_core/Rate.hpp>
+#include <tbai_ros_g1/G1ASAPController.hpp>
 #include <tbai_ros_g1/G1BeyondMimicController.hpp>
 #include <tbai_ros_g1/G1MimicController.hpp>
 #include <tbai_ros_g1/G1PBHCController.hpp>
@@ -187,6 +188,12 @@ int main(int argc, char *argv[]) {
     TBAI_LOG_INFO(logger, "Loading PBHC Horse Stance Pose v2: {}", pbhcPose2MotionFile);
     controller.addController(std::make_unique<tbai::g1::RosG1PBHCController>(
         stateSubscriber, pbhcPose2ModelPath, pbhcPose2MotionFile, pbhcPose2TimeStart, pbhcPose2TimeEnd, "G1PBHCHorseStancePose2"));
+
+    // Load G1 ASAP Locomotion controller (decoupled locomotion with stand height)
+    auto asapModelPath = tbai::fromGlobalConfig<std::string>("g1_asap_locomotion/model_path");
+    TBAI_LOG_INFO(logger, "Loading ASAP Locomotion: {}", asapModelPath);
+    controller.addController(std::make_unique<tbai::g1::RosG1ASAPController>(
+        stateSubscriber, referenceVelocityPtr, asapModelPath, "G1ASAPLocomotion"));
 
     TBAI_LOG_INFO(logger, "Controllers initialized. Starting main loop...");
 

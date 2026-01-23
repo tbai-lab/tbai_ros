@@ -289,6 +289,85 @@ g1_pbhc_horse_stance_pose2:
   time_start: 0.0
   time_end: -1.0
 
+# G1 ASAP Controller Configuration
+# ASAP uses 29 DOFs with decoupled control: 12 lower body (policy) + 17 upper body (reference)
+g1_asap_controller:
+  rate: 50.0
+  action_scale: 0.25
+  action_clip: 100.0
+
+  # Observation scales (matching ASAP Python code)
+  ang_vel_scale: 0.25
+  dof_vel_scale: 0.05
+  base_height_scale: 2.0
+  gait_period: 0.9
+  default_base_height: 0.78
+
+  # Default joint positions for 29 G1 joints (from ASAP g1_29dof_hist.yaml)
+  default_joint_pos: [
+    -0.1,  # left_hip_pitch_joint
+    0.0,   # left_hip_roll_joint
+    0.0,   # left_hip_yaw_joint
+    0.3,   # left_knee_joint
+    -0.2,  # left_ankle_pitch_joint
+    0.0,   # left_ankle_roll_joint
+    -0.1,  # right_hip_pitch_joint
+    0.0,   # right_hip_roll_joint
+    0.0,   # right_hip_yaw_joint
+    0.3,   # right_knee_joint
+    -0.2,  # right_ankle_pitch_joint
+    0.0,   # right_ankle_roll_joint
+    0.0,   # waist_yaw_joint
+    0.0,   # waist_roll_joint
+    0.0,   # waist_pitch_joint
+    0.0,   # left_shoulder_pitch_joint
+    0.0,   # left_shoulder_roll_joint
+    0.0,   # left_shoulder_yaw_joint
+    0.0,   # left_elbow_joint
+    0.0,   # left_wrist_roll_joint
+    0.0,   # left_wrist_pitch_joint
+    0.0,   # left_wrist_yaw_joint
+    0.0,   # right_shoulder_pitch_joint
+    0.0,   # right_shoulder_roll_joint
+    0.0,   # right_shoulder_yaw_joint
+    0.0,   # right_elbow_joint
+    0.0,   # right_wrist_roll_joint
+    0.0,   # right_wrist_pitch_joint
+    0.0    # right_wrist_yaw_joint
+  ]
+
+  # Default upper body reference positions (17 upper body joints: waist + arms)
+  # From ASAP loco_upper_body_dof_pos
+  default_upper_body_ref: [
+    0.0, 0.0, 0.0,             # waist (yaw, roll, pitch)
+    0.0, 0.3, 0.0, 1.0,        # left shoulder and elbow
+    0.0, 0.0, 0.0,             # left wrist
+    0.0, -0.3, 0.0, 1.0,       # right shoulder and elbow
+    0.0, 0.0, 0.0              # right wrist
+  ]
+
+  # Stiffness for 29 G1 joints (from ASAP JOINT_KP)
+  stiffness: [
+    100.0, 100.0, 100.0, 200.0, 20.0, 20.0,   # left leg
+    100.0, 100.0, 100.0, 200.0, 20.0, 20.0,   # right leg
+    400.0, 400.0, 400.0,                       # waist
+    90.0, 60.0, 20.0, 60.0, 4.0, 4.0, 0.0,    # left arm
+    90.0, 60.0, 20.0, 60.0, 4.0, 4.0, 4.0     # right arm
+  ]
+
+  # Damping for 29 G1 joints (from ASAP JOINT_KD)
+  damping: [
+    2.5, 2.5, 2.5, 5.0, 0.2, 0.1,       # left leg
+    2.5, 2.5, 2.5, 5.0, 0.2, 0.1,       # right leg
+    5.0, 5.0, 5.0,                       # waist
+    2.0, 1.0, 0.4, 1.0, 0.2, 0.2, 0.2,  # left arm
+    2.0, 1.0, 0.4, 1.0, 0.2, 0.2, 0.2   # right arm
+  ]
+
+# G1 ASAP Locomotion model
+g1_asap_locomotion:
+  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/model_6600.onnx"
+
 joint_names:
   - "left_hip_pitch_joint"
   - "left_hip_roll_joint"

@@ -1,6 +1,6 @@
 [submodule "dependencies/gazebo_robotic_assets"]
 	path = dependencies/gazebo_robotic_assets
-	url = https://github.com/lnotspotl/gazebo_robotic_assets.git
+	url = https://github.com/tbai-lab/gazebo_robotic_assets.git
 [submodule "dependencies/elevation_mapping"]
 	path = dependencies/elevation_mapping
 	url = https://github.com/ANYbotics/elevation_mapping.git

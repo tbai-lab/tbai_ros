@@ -402,7 +402,7 @@ remove-tbai:
 clone-mujoco-robotic-assets:
     #!/usr/bin/env bash
     if [[ ! -d dependencies/mujoco_robotic_assets ]]; then
-        git clone https://github.com/lnotspotl/mujoco_robotic_assets.git --single-branch --branch=main dependencies/mujoco_robotic_assets
+        git clone https://github.com/tbai-lab/mujoco_robotic_assets.git --single-branch --branch=main dependencies/mujoco_robotic_assets
     else
         echo "[TBAI] dependencies/mujoco_robotic_assets already exists, skipping clone"
         if [[ -d dependencies/mujoco_robotic_assets/.git ]]; then
@@ -425,7 +425,7 @@ remove-mujoco-robotic-assets:
 clone-unitree-mujoco:
     #!/usr/bin/env bash
     if [[ ! -d dependencies/unitree_mujoco ]]; then
-        git clone https://github.com/lnotspotl/unitree_mujoco.git --single-branch --branch=main dependencies/unitree_mujoco
+        git clone https://github.com/tbai-lab/unitree_mujoco.git --single-branch --branch=main dependencies/unitree_mujoco
     else
         echo "[TBAI] dependencies/unitree_mujoco already exists, skipping clone"
         if [[ -d dependencies/unitree_mujoco/.git ]]; then

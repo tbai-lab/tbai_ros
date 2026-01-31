@@ -201,6 +201,68 @@ class G1UIController:
         )
         self.spinkick_button.pack(side=tk.LEFT, padx=3)
 
+        # TWIST2 controllers
+        twist_label_frame = ttk.Frame(button_grid)
+        twist_label_frame.pack(pady=(10, 0))
+        ttk.Label(twist_label_frame, text="twist2:", font=("Arial", 10)).pack(side=tk.LEFT, padx=5)
+
+        for name, label in [("G1TwistWalk1", "WALK1"), ("G1TwistWalk2", "WALK2"),
+                            ("G1TwistWalk3", "WALK3"), ("G1TwistWalk5", "WALK5"),
+                            ("G1TwistWalk7", "WALK7"), ("G1TwistSwing", "SWING")]:
+            ttk.Button(
+                twist_label_frame, text=label, width=7,
+                command=lambda n=name: self.publish_controller_change(n)
+            ).pack(side=tk.LEFT, padx=3)
+
+        # PBHC controllers
+        pbhc_frame = ttk.Frame(button_grid)
+        pbhc_frame.pack(pady=(10, 0))
+        ttk.Label(pbhc_frame, text="pbhc:", font=("Arial", 10)).pack(side=tk.LEFT, padx=5)
+
+        for name, label in [("G1PBHCHorseStancePunch", "PUNCH"),
+                            ("G1PBHCHorseStancePose", "POSE"),
+                            ("G1PBHCHorseStancePose2", "POSE2")]:
+            ttk.Button(
+                pbhc_frame, text=label, width=7,
+                command=lambda n=name: self.publish_controller_change(n)
+            ).pack(side=tk.LEFT, padx=3)
+
+        # ASAP controllers
+        asap_frame1 = ttk.Frame(button_grid)
+        asap_frame1.pack(pady=(10, 0))
+        ttk.Label(asap_frame1, text="asap:", font=("Arial", 10)).pack(side=tk.LEFT, padx=5)
+
+        for name, label in [("G1ASAPLocomotion", "LOCO"), ("G1ASAPCR7", "CR7"),
+                            ("G1ASAPAPT", "APT"), ("G1ASAPKobe", "KOBE")]:
+            ttk.Button(
+                asap_frame1, text=label, width=7,
+                command=lambda n=name: self.publish_controller_change(n)
+            ).pack(side=tk.LEFT, padx=3)
+
+        asap_frame2 = ttk.Frame(button_grid)
+        asap_frame2.pack(pady=(5, 0))
+        ttk.Label(asap_frame2, text="", width=6).pack(side=tk.LEFT, padx=5)
+
+        for name, label in [("G1ASAPJumpForward1", "JUMP1"), ("G1ASAPJumpForward2", "JUMP2"),
+                            ("G1ASAPJumpForward3", "JUMP3"), ("G1ASAPSideJump1", "SIDE1"),
+                            ("G1ASAPSideJump2", "SIDE2"), ("G1ASAPSideJump3", "SIDE3")]:
+            ttk.Button(
+                asap_frame2, text=label, width=7,
+                command=lambda n=name: self.publish_controller_change(n)
+            ).pack(side=tk.LEFT, padx=3)
+
+        asap_frame3 = ttk.Frame(button_grid)
+        asap_frame3.pack(pady=(5, 0))
+        ttk.Label(asap_frame3, text="", width=6).pack(side=tk.LEFT, padx=5)
+
+        for name, label in [("G1ASAPKick1", "KICK1"), ("G1ASAPKick2", "KICK2"),
+                            ("G1ASAPKick3", "KICK3"), ("G1ASAPLeBron1", "LEBRON1"),
+                            ("G1ASAPLeBron2", "LEBRON2")]:
+            ttk.Button(
+                asap_frame3, text=label, width=7,
+                command=lambda n=name: self.publish_controller_change(n)
+            ).pack(side=tk.LEFT, padx=3)
+
         # Status indicator
         status_frame = ttk.Frame(main_frame)
         status_frame.pack(pady=(15, 0))

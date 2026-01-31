@@ -17,7 +17,7 @@
 #include <tbai_ros_g1/G1PBHCController.hpp>
 #include <tbai_ros_g1/G1RLController.hpp>
 #include <tbai_ros_g1/G1SpinkickController.hpp>
-#include <tbai_ros_g1/G1TwistController.hpp>
+#include <tbai_ros_g1/G1Twist2Controller.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_static/StaticController.hpp>
 
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
     auto twistWalk1Start = tbai::fromGlobalConfig<float>("g1_twist_walk1/time_start");
     auto twistWalk1End = tbai::fromGlobalConfig<float>("g1_twist_walk1/time_end");
     TBAI_LOG_INFO(logger, "Loading TWIST2 Walk1: {}", twistWalk1Motion);
-    controller.addController(std::make_unique<tbai::g1::RosG1TwistController>(
+    controller.addController(std::make_unique<tbai::g1::RosG1Twist2Controller>(
         stateSubscriber, twistModelPath, twistWalk1Motion, twistWalk1Start, twistWalk1End, "G1TwistWalk1"));
 
     // Walk motion 2
@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
     auto twistWalk2Start = tbai::fromGlobalConfig<float>("g1_twist_walk2/time_start");
     auto twistWalk2End = tbai::fromGlobalConfig<float>("g1_twist_walk2/time_end");
     TBAI_LOG_INFO(logger, "Loading TWIST2 Walk2: {}", twistWalk2Motion);
-    controller.addController(std::make_unique<tbai::g1::RosG1TwistController>(
+    controller.addController(std::make_unique<tbai::g1::RosG1Twist2Controller>(
         stateSubscriber, twistModelPath, twistWalk2Motion, twistWalk2Start, twistWalk2End, "G1TwistWalk2"));
 
     // Walk motion 3
@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
     auto twistWalk3Start = tbai::fromGlobalConfig<float>("g1_twist_walk3/time_start");
     auto twistWalk3End = tbai::fromGlobalConfig<float>("g1_twist_walk3/time_end");
     TBAI_LOG_INFO(logger, "Loading TWIST2 Walk3: {}", twistWalk3Motion);
-    controller.addController(std::make_unique<tbai::g1::RosG1TwistController>(
+    controller.addController(std::make_unique<tbai::g1::RosG1Twist2Controller>(
         stateSubscriber, twistModelPath, twistWalk3Motion, twistWalk3Start, twistWalk3End, "G1TwistWalk3"));
 
     // Walk motion 5
@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
     auto twistWalk5Start = tbai::fromGlobalConfig<float>("g1_twist_walk5/time_start");
     auto twistWalk5End = tbai::fromGlobalConfig<float>("g1_twist_walk5/time_end");
     TBAI_LOG_INFO(logger, "Loading TWIST2 Walk5: {}", twistWalk5Motion);
-    controller.addController(std::make_unique<tbai::g1::RosG1TwistController>(
+    controller.addController(std::make_unique<tbai::g1::RosG1Twist2Controller>(
         stateSubscriber, twistModelPath, twistWalk5Motion, twistWalk5Start, twistWalk5End, "G1TwistWalk5"));
 
     // Walk motion 7
@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
     auto twistWalk7Start = tbai::fromGlobalConfig<float>("g1_twist_walk7/time_start");
     auto twistWalk7End = tbai::fromGlobalConfig<float>("g1_twist_walk7/time_end");
     TBAI_LOG_INFO(logger, "Loading TWIST2 Walk7: {}", twistWalk7Motion);
-    controller.addController(std::make_unique<tbai::g1::RosG1TwistController>(
+    controller.addController(std::make_unique<tbai::g1::RosG1Twist2Controller>(
         stateSubscriber, twistModelPath, twistWalk7Motion, twistWalk7Start, twistWalk7End, "G1TwistWalk7"));
 
     // Swing motion
@@ -160,7 +160,7 @@ int main(int argc, char *argv[]) {
     auto twistSwingStart = tbai::fromGlobalConfig<float>("g1_twist_swing/time_start");
     auto twistSwingEnd = tbai::fromGlobalConfig<float>("g1_twist_swing/time_end");
     TBAI_LOG_INFO(logger, "Loading TWIST2 Swing: {}", twistSwingMotion);
-    controller.addController(std::make_unique<tbai::g1::RosG1TwistController>(
+    controller.addController(std::make_unique<tbai::g1::RosG1Twist2Controller>(
         stateSubscriber, twistModelPath, twistSwingMotion, twistSwingStart, twistSwingEnd, "G1TwistSwing"));
 
     // Load G1 PBHC Horse Stance Punch controller

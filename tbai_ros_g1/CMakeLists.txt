@@ -40,7 +40,7 @@ add_library(${PROJECT_NAME}
   src/G1MimicController.cpp
   src/G1BeyondMimicController.cpp
   src/G1SpinkickController.cpp
-  src/G1TwistController.cpp
+  src/G1Twist2Controller.cpp
   src/G1PBHCController.cpp
   src/G1ASAPController.cpp
   src/G1ASAPMimicController.cpp

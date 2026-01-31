@@ -189,43 +189,49 @@ g1_twist_controller:
 # G1 TWIST2 model and motion files
 # Walk motion 1 (default)
 g1_twist_walk1:
-  model_path: "/home/kb/models/twist2_1017_25k.onnx"
-  motion_file: "/home/kb/models/twist2_motions/0807_yanjie_walk_001.csv"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "twist2_1017_25k.onnx"
+  hf_motion_file: "0807_yanjie_walk_001.csv"
   time_start: 0.0
   time_end: -1.0
 
 # Walk motion 2
 g1_twist_walk2:
-  model_path: "/home/kb/models/twist2_1017_25k.onnx"
-  motion_file: "/home/kb/models/twist2_motions/0807_yanjie_walk_002.csv"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "twist2_1017_25k.onnx"
+  hf_motion_file: "0807_yanjie_walk_002.csv"
   time_start: 0.0
   time_end: -1.0
 
 # Walk motion 3
 g1_twist_walk3:
-  model_path: "/home/kb/models/twist2_1017_25k.onnx"
-  motion_file: "/home/kb/models/twist2_motions/0807_yanjie_walk_003.csv"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "twist2_1017_25k.onnx"
+  hf_motion_file: "0807_yanjie_walk_003.csv"
   time_start: 0.0
   time_end: -1.0
 
-# Walk motion 5 (longer)
+# Walk motion 5
 g1_twist_walk5:
-  model_path: "/home/kb/models/twist2_1017_25k.onnx"
-  motion_file: "/home/kb/models/twist2_motions/0807_yanjie_walk_005.csv"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "twist2_1017_25k.onnx"
+  hf_motion_file: "0807_yanjie_walk_005.csv"
   time_start: 0.0
   time_end: -1.0
 
-# Walk motion 7 (longest)
+# Walk motion 7
 g1_twist_walk7:
-  model_path: "/home/kb/models/twist2_1017_25k.onnx"
-  motion_file: "/home/kb/models/twist2_motions/0807_yanjie_walk_007.csv"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "twist2_1017_25k.onnx"
+  hf_motion_file: "0807_yanjie_walk_007.csv"
   time_start: 0.0
   time_end: -1.0
 
 # Swing motion
 g1_twist_swing:
-  model_path: "/home/kb/models/twist2_1017_25k.onnx"
-  motion_file: "/home/kb/models/twist2_motions/accad_A3___Swing_t2.csv"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "twist2_1017_25k.onnx"
+  hf_motion_file: "accad_A3___Swing_t2.csv"
   time_start: 0.0
   time_end: -1.0
 
@@ -270,22 +276,25 @@ g1_pbhc_controller:
 
 # G1 PBHC Horse Stance Punch motion
 g1_pbhc_horse_stance_punch:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/pbhc/model_33000.onnx"
-  motion_file: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/pbhc/Horse-stance_punch.csv"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "pbhc_horse_stance_punch_1017_25k.onnx"
+  hf_motion_file: "Horse-stance_punch.csv"
   time_start: 0.0
   time_end: -1.0
 
 # G1 PBHC Horse Stance Pose motion
 g1_pbhc_horse_stance_pose:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/pbhc/model_50000.onnx"
-  motion_file: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/pbhc/Horse-stance_pose.csv"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "pbhc_horse_stance_pose_1017_25k.onnx"
+  hf_motion_file: "Horse-stance_pose.csv"
   time_start: 0.0
   time_end: -1.0
 
 # G1 PBHC Horse Stance Pose v2 motion (better trained)
 g1_pbhc_horse_stance_pose2:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/pbhc/model_119000.onnx"
-  motion_file: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/pbhc/Horse-stance_pose.csv"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "pbhc_horse_stance_pose2_1017_25k.onnx"
+  hf_motion_file: "Horse-stance_pose.csv"
   time_start: 0.0
   time_end: -1.0
 
@@ -303,7 +312,7 @@ g1_asap_controller:
   gait_period: 0.9
   default_base_height: 0.78
 
-  # Default joint positions for 29 G1 joints (from ASAP g1_29dof_hist.yaml)
+  # Default joint positions for 29 G1 joints (from ASAP)
   default_joint_pos: [
     -0.1,  # left_hip_pitch_joint
     0.0,   # left_hip_roll_joint
@@ -366,7 +375,8 @@ g1_asap_controller:
 
 # G1 ASAP Locomotion model
 g1_asap_locomotion:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/model_6600.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_locomotion_1017_25k.onnx"
 
 # G1 ASAP Mimic Controller Configuration
 # Uses 23 DOFs (locked wrists) for motion tracking
@@ -418,59 +428,73 @@ g1_asap_mimic_controller:
 
 # G1 ASAP Mimic motions
 g1_asap_cr7:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/cr7_model.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_cr7_1017_25k.onnx"
   motion_length: 3.967
 
 g1_asap_apt:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/apt_level1.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_apt_1017_25k.onnx"
   motion_length: 7.66
 
 g1_asap_jump_forward1:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/jump_forward_level1.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_jump_forward1_1017_25k.onnx"
   motion_length: 3.76
 
 g1_asap_jump_forward2:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/jump_forward_level2.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_jump_forward2_1017_25k.onnx"
   motion_length: 3.56
 
 g1_asap_jump_forward3:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/jump_forward_level3.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_jump_forward3_1017_25k.onnx"
   motion_length: 4.26
 
 g1_asap_kick1:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/kick_level1.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_kick1_1017_25k.onnx"
   motion_length: 3.96
 
 g1_asap_kick2:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/kick_level2.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_kick2_1017_25k.onnx"
   motion_length: 3.36
 
 g1_asap_kick3:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/kick_level3.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_kick3_1017_25k.onnx"
   motion_length: 4.56
 
 g1_asap_kobe:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/kobe_level1.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_kobe_1017_25k.onnx"
   motion_length: 4.16
 
 g1_asap_lebron1:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/lebron_level1.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_lebron1_1017_25k.onnx"
   motion_length: 5.067
 
 g1_asap_lebron2:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/lebron_level2.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_lebron2_1017_25k.onnx"
   motion_length: 6.967
 
 g1_asap_side_jump1:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/side_jump_level1.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_side_jump1_1017_25k.onnx"
   motion_length: 3.06
 
 g1_asap_side_jump2:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/side_jump_level2.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_side_jump2_1017_25k.onnx"
   motion_length: 3.56
 
 g1_asap_side_jump3:
-  model_path: "/home/kb/Documents/ros/src/tbai_ros/tbai_ros_g1/resources/asap/side_jump_level3.onnx"
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "asap_side_jump3_1017_25k.onnx"
   motion_length: 3.66
 
 joint_names:

@@ -202,6 +202,9 @@ Here are a couple that most inspiration was drawn from and that were instrumenta
 - https://github.com/letaicodeit/DreamWaQ_Go2W
 - https://cmp.felk.cvut.cz/~peckama2/ (supervision, access to a DGX station)
 - http://www.michaelsebek.cz/cs
+- https://github.com/HansZ8/RoboJuDo
+- https://github.com/HybridRobotics/motion_tracking_controller
+- https://hier-robotics.github.io/ (professor Jaemin Lee, supervision, access to Go2s)
 - hundreds of others ...
 
 Thank you all 🤗

@@ -194,9 +194,9 @@ go2w_handstand_mujoco:
     source $(catkin locate)/devel/setup.bash
     roslaunch tbai_ros_go2w go2w_mujoco_handstand.launch run_rviz:=false
 
-# Spot with arm, MPC
+# Spot with arm, MPC, dummy
 [group("2. demos")]
-spot_arm_mpc:
+spot_arm_mpc_dummy:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
     roslaunch tbai_ros_mpc spot_arm_blind.launch dummy:=true

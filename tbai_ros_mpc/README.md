@@ -1,5 +1,13 @@
 # tbai_ros_mpc package
 
+## Example - Spot with arm
+
+
+
+https://github.com/user-attachments/assets/e90cb376-cb17-4c51-b11a-909159f77f09
+
+
+
 ## Example - Go2 blind
 ```bash
 roslaunch tbai_ros_mpc go2_blind.launch gui:=true 

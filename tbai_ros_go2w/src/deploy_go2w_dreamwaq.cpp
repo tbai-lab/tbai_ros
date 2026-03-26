@@ -1,7 +1,10 @@
+#include <atomic>
 #include <iostream>
 #include <memory>
+#include <thread>
 
 #include <ros/ros.h>
+#include <sensor_msgs/Image.h>
 #include <tbai_core/Env.hpp>
 #include <tbai_core/Logging.hpp>
 #include <tbai_core/Utils.hpp>
@@ -12,6 +15,52 @@
 #include <tbai_ros_go2w/Go2WDreamWaQController.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_static/StaticController.hpp>
+#include <tbai_ros_core/StateVisualizer.hpp>
+#include <tbai_sdk/subscriber.hpp>
+#include <tbai_sdk/messages/robot_msgs.hpp>
+
+class SensorBridge {
+   public:
+    SensorBridge(bool publishImage) : running_(false) {
+        if (!publishImage) return;
+
+        ros::NodeHandle nh;
+        imagePublisher_ = nh.advertise<sensor_msgs::Image>("camera/color/image_raw", 1);
+        imageSubscriber_ = std::make_unique<tbai::PollingSubscriber<robot_msgs::ImgFrame>>("rt/camera/image");
+
+        running_ = true;
+        thread_ = std::thread([this]() {
+            ros::Rate rate(30.0);
+            while (ros::ok() && running_) {
+                auto frame = imageSubscriber_->take();
+                if (frame) {
+                    sensor_msgs::Image msg;
+                    msg.header.stamp = ros::Time::now();
+                    msg.header.frame_id = "head_camera";
+                    msg.height = frame->height;
+                    msg.width = frame->width;
+                    msg.encoding = frame->encoding;
+                    msg.is_bigendian = frame->is_bigendian;
+                    msg.step = frame->step;
+                    msg.data = std::move(frame->data);
+                    imagePublisher_.publish(msg);
+                }
+                rate.sleep();
+            }
+        });
+    }
+
+    ~SensorBridge() {
+        running_ = false;
+        if (thread_.joinable()) thread_.join();
+    }
+
+   private:
+    ros::Publisher imagePublisher_;
+    std::unique_ptr<tbai::PollingSubscriber<robot_msgs::ImgFrame>> imageSubscriber_;
+    std::atomic<bool> running_;
+    std::thread thread_;
+};
 
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "tbai_ros_deploy_go2w_dreamwaq");
@@ -23,11 +72,19 @@ int main(int argc, char *argv[]) {
     // Set zero time
     tbai::writeInitTime(tbai::RosTime::rightNow());
 
+    // Start sensor bridge
+    bool publishImage = tbai::getEnvAs<bool>("TBAI_GO2W_PUBLISH_IMAGE", true, true);
+    auto sensorBridge = std::make_unique<SensorBridge>(publishImage);
+
     // Initialize Go2WRobotInterface
-    std::shared_ptr<tbai::Go2WRobotInterface> go2wRobotInterface = std::make_shared<tbai::Go2WRobotInterface>(
-        tbai::Go2WRobotInterfaceArgs()
-            .networkInterface(tbai::getEnvAs<std::string>("TBAI_GO2W_NETWORK_INTERFACE", true, "lo"))
-            .unitreeChannel(tbai::getEnvAs<int>("TBAI_GO2W_UNITREE_CHANNEL", true, 1)));
+    tbai::Go2WRobotInterfaceArgs ifaceArgs;
+    ifaceArgs.useGroundTruthState(tbai::getEnvAs<bool>("TBAI_GO2W_USE_GROUND_TRUTH", true, false));
+    std::shared_ptr<tbai::Go2WRobotInterface> go2wRobotInterface = std::make_shared<tbai::Go2WRobotInterface>(ifaceArgs);
+
+    // State visualizer (TF + contacts)
+    auto jointNames = tbai::fromGlobalConfig<std::vector<std::string>>("joint_names");
+    std::vector<std::string> footFrames = {"FR_foot", "FL_foot", "RR_foot", "RL_foot"};
+    auto stateVisualizer = std::make_unique<tbai::StateVisualizer>(go2wRobotInterface, jointNames, footFrames, 30.0, false, "base");
 
     std::shared_ptr<tbai::StateSubscriber> stateSubscriber = go2wRobotInterface;
     std::shared_ptr<tbai::CommandPublisher> commandPublisher = go2wRobotInterface;

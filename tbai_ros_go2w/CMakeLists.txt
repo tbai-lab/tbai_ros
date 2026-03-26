@@ -2,7 +2,15 @@ cmake_minimum_required(VERSION 3.14)
 project(tbai_ros_go2w)
 
 add_compile_options(-std=c++17)
+set(CMAKE_CXX_STANDARD 17)
 add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS)
+
+# tbai_sdk (header-only, zenoh-based)
+set(TBAI_SDK_DIR "/home/kb/projects/tbai_sdk")
+set(ZENOH_INSTALL "${TBAI_SDK_DIR}/deps/zenoh-install")
+include_directories(${TBAI_SDK_DIR}/include ${ZENOH_INSTALL}/include)
+add_definitions(-DZENOHCXX_ZENOHC)
+link_directories(${ZENOH_INSTALL}/lib)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp

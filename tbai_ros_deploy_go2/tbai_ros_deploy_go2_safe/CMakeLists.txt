@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(tbai_ros_deploy_go2_safe)
 
-## C++17 is a requirement
+## C++17 required by tbai_sdk (zenoh)
 add_compile_options(-std=c++17)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -15,6 +15,13 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package(tbai REQUIRED)
 find_package(spdlog REQUIRED)
+
+# tbai_sdk (header-only, zenoh-based)
+set(TBAI_SDK_DIR "/home/kb/projects/tbai_sdk")
+set(ZENOH_INSTALL "${TBAI_SDK_DIR}/deps/zenoh-install")
+include_directories(${TBAI_SDK_DIR}/include ${ZENOH_INSTALL}/include)
+add_definitions(-DZENOHCXX_ZENOHC)
+link_directories(${ZENOH_INSTALL}/lib)
 
 catkin_package(
   INCLUDE_DIRS include
@@ -33,6 +40,7 @@ target_link_libraries(deploy_go2_safe
     tbai::deploy_go2
     tbai::reference
     tbai::static
+    zenohc
 )
 target_include_directories(deploy_go2_safe
     PRIVATE
@@ -48,6 +56,7 @@ target_link_libraries(go2_joystick_node
     tbai::core
     tbai::deploy_go2
     tbai::reference
+    zenohc
 )
 target_include_directories(go2_joystick_node
     PRIVATE

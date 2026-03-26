@@ -31,10 +31,10 @@
     <param name="gait_file" type="string" value="$(arg gait_file)"/>
 
     <arg name="mujoco_simulation"            default="false"/>
-    <arg name="mujoco_config_file"          default="$(find mujoco_robotic_assets)/resources/go2/config.yaml"/>
+    <arg name="mujoco_config_file"          default="/home/kb/projects/tbai_mujoco/simulate/configs/config_go2.yaml"/>
     <group if="$(arg mujoco_simulation)">
         <node name="dsa" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
-        args="unitree_mujoco $(arg mujoco_config_file)"/>
+        args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>
     </group>
 
     <!-- Load gazebo description -->
@@ -56,6 +56,11 @@
     <env name="TBAI_GO2_UNITREE_CHANNEL" value="$(arg unitree_channel)"/>
 
     <env name="TBAI_GO2_PUBLISH_LIDAR" value="$(arg publish_pointcloud)"/>
+
+    <!-- MuJoCo depth camera pointcloud and RGB image publishing -->
+    <env name="TBAI_GO2_SUBSCRIBE_POINTCLOUD" value="$(arg mujoco_simulation)"/>
+    <env name="TBAI_GO2_ENABLE_VIDEO" value="$(arg mujoco_simulation)"/>
+    <env name="TBAI_GO2_USE_GROUND_TRUTH" value="$(arg mujoco_simulation)"/>
 
     <!-- Launch simple node -->
     <node name="deploy_go2_mpc" pkg="tbai_ros_deploy_go2_mpc" type="deploy_go2_mpc" output="screen"/>
@@ -81,5 +86,8 @@
         <arg name="rvizconfig" default="$(find tbai_ros_deploy_go2_mpc)/launch/rviz/deploy_go2_mpc.rviz" />
         <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" />
     </group>
+
+    <node pkg="tf" type="static_transform_publisher" name="map2camera" args="0 0 0.00 0 0.22 0  /front_camera /camera_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="camera2optical" args="0 0 0 4.7124 0 -1.3508  /camera_link /camera_link_optical 100"/>
 
 </launch>

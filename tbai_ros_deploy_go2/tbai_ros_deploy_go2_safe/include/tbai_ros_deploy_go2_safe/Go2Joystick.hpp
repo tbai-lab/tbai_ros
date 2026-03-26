@@ -35,17 +35,17 @@ class Go2Joystick : public ::tbai::reference::ReferenceVelocityGenerator, public
 
     void publishTwist() {
         geometry_msgs::Twist twist;
-        twist.linear.x = gamepad.ly * velocityFactorX_;
-        twist.linear.y = -gamepad.lx * velocityFactorY_;
-        twist.angular.z = -gamepad.rx * yawRateFactor_;
+        twist.linear.x = ly * velocityFactorX_;
+        twist.linear.y = -lx * velocityFactorY_;
+        twist.angular.z = -rx * yawRateFactor_;
         twistPublisher_.publish(twist);
     }
 
     ReferenceVelocity getReferenceVelocity(scalar_t time, scalar_t dt) {
         ReferenceVelocity reference;
-        reference.velocity_x = gamepad.ly * velocityFactorX_;
-        reference.velocity_y = -gamepad.lx * velocityFactorY_;
-        reference.yaw_rate = -gamepad.rx * yawRateFactor_;
+        reference.velocity_x = ly * velocityFactorX_;
+        reference.velocity_y = -lx * velocityFactorY_;
+        reference.yaw_rate = -rx * yawRateFactor_;
         return reference;
     }
 

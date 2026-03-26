@@ -14,10 +14,10 @@
     <arg name="mapping_device"              default="none"/>
     
     <arg name="mujoco_simulation"            default="false"/>
-    <arg name="mujoco_config_file"          default="$(find mujoco_robotic_assets)/resources/go2/config.yaml"/>
+    <arg name="mujoco_config_file"          default="/home/kb/projects/tbai_mujoco/simulate/configs/config_go2.yaml"/>
     <group if="$(arg mujoco_simulation)">
         <node name="dsa" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
-        args="unitree_mujoco $(arg mujoco_config_file)"/>
+        args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>
     </group>
 
     <!-- Upload config path to ROS param server -->

@@ -7,7 +7,6 @@ int main(int argc, char *argv[]) {
     ros::NodeHandle nh;
 
     tbai::reference::Go2Joystick joystick(nh);
-    joystick.InitDdsModel(tbai::getEnvAs<std::string>("TBAI_GO2_NETWORK_INTERFACE", true, "eth0"));
     joystick.Start();
 
     ros::Rate rate(20);

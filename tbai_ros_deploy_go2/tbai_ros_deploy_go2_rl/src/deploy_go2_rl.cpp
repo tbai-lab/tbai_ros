@@ -12,8 +12,11 @@
 
 #include <ros/ros.h>
 #include <sensor_msgs/CompressedImage.h>
+#include <sensor_msgs/Image.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/PointField.h>
+#include <tbai_sdk/subscriber.hpp>
+#include <tbai_sdk/messages/robot_msgs.hpp>
 #include <tbai_core/Env.hpp>
 #include <tbai_core/Logging.hpp>
 #include <tbai_core/ResourceMonitor.hpp>
@@ -46,13 +49,16 @@ class Go2RobotInterfaceWithLidar : public tbai::Go2RobotInterface {
         }
 
         if (publishImage) {
-            imagePublisher_ = nh.advertise<sensor_msgs::CompressedImage>("camera/color/image_raw/compressed", 1);
+            imagePublisher_ = nh.advertise<sensor_msgs::Image>("camera/color/image_raw", 1);
+            std::string imageTopic = "rt/camera/image";
+            imageSubscriber_ = std::make_unique<tbai::PollingSubscriber<robot_msgs::ImgFrame>>(imageTopic);
+            ROS_INFO("Subscribed to tbai_sdk image topic: %s", imageTopic.c_str());
         }
 
         if (publishPointcloud || publishImage) {
             publishMujocoSensors_ = true;
             sensorPublishThread_ = std::thread([this, publishPointcloud, publishImage]() {
-                ros::Rate rate(5.0);
+                ros::Rate rate(30.0);
                 while (ros::ok() && publishMujocoSensors_) {
                     if (publishPointcloud) publishDepthPointcloud();
                     if (publishImage) publishColorImage();
@@ -69,34 +75,30 @@ class Go2RobotInterfaceWithLidar : public tbai::Go2RobotInterface {
         }
     }
 
-    void lidarCallback(const void *msg2) override {
-        auto *msg = reinterpret_cast<const sensor_msgs::msg::dds_::PointCloud2_ *>(msg2);
-
+    void lidarCallback(const robot_msgs::PointCloud2 &msg) override {
         // Create a sensor_msgs::PointCloud2 message from the input
         sensor_msgs::PointCloud2 pc2_msg;
 
-        // Use getter methods to access fields from the DDS message
-        pc2_msg.header.stamp = ros::Time(msg->header().stamp().sec(), msg->header().stamp().nanosec());
+        pc2_msg.header.stamp = ros::Time(msg.header.stamp.sec, msg.header.stamp.nanosec);
         pc2_msg.header.frame_id = "radar";
-        pc2_msg.height = msg->height();
-        pc2_msg.width = msg->width();
+        pc2_msg.height = msg.height;
+        pc2_msg.width = msg.width;
 
-        // Convert fields (std::vector-like) to ROS fields
-        pc2_msg.fields.resize(msg->fields().size());
-        for (size_t i = 0; i < msg->fields().size(); ++i) {
-            const auto &field = msg->fields()[i];
-            pc2_msg.fields[i].name = field.name();
-            pc2_msg.fields[i].offset = field.offset();
-            pc2_msg.fields[i].datatype = field.datatype();
-            pc2_msg.fields[i].count = field.count();
+        // Convert fields to ROS fields
+        pc2_msg.fields.resize(msg.fields.size());
+        for (size_t i = 0; i < msg.fields.size(); ++i) {
+            const auto &field = msg.fields[i];
+            pc2_msg.fields[i].name = field.name;
+            pc2_msg.fields[i].offset = field.offset;
+            pc2_msg.fields[i].datatype = field.datatype;
+            pc2_msg.fields[i].count = field.count;
         }
 
-        pc2_msg.is_bigendian = msg->is_bigendian();
-        pc2_msg.point_step = msg->point_step();
-        pc2_msg.row_step = msg->row_step();
-        pc2_msg.is_dense = msg->is_dense();
-
-        pc2_msg.data = std::move(const_cast<std::vector<uint8_t> &>(msg->data()));
+        pc2_msg.is_bigendian = msg.is_bigendian;
+        pc2_msg.point_step = msg.point_step;
+        pc2_msg.row_step = msg.row_step;
+        pc2_msg.is_dense = msg.is_dense;
+        pc2_msg.data = msg.data;
 
         // Publish the message
         lidarPublisher_.publish(pc2_msg);
@@ -141,26 +143,27 @@ class Go2RobotInterfaceWithLidar : public tbai::Go2RobotInterface {
     }
 
     void publishColorImage() {
-        try {
-            auto imageData = getLatestImage();
-            if (imageData.empty()) return;
+        if (!imageSubscriber_) return;
+        auto frame = imageSubscriber_->take();
+        if (!frame) return;
 
-            sensor_msgs::CompressedImage img_msg;
-            img_msg.header.stamp = ros::Time::now();
-            img_msg.header.frame_id = "camera_link_optical";
-            img_msg.format = "png";
-            img_msg.data = std::move(imageData);
+        sensor_msgs::Image img_msg;
+        img_msg.header.stamp = ros::Time::now();
+        img_msg.header.frame_id = "camera_link_optical";
+        img_msg.height = frame->height;
+        img_msg.width = frame->width;
+        img_msg.encoding = frame->encoding;
+        img_msg.is_bigendian = frame->is_bigendian;
+        img_msg.step = frame->step;
+        img_msg.data = std::move(frame->data);
 
-            imagePublisher_.publish(img_msg);
-        } catch (const std::exception &e) {
-            // Video client may not be ready yet
-            ROS_WARN("Failed to publish color image: %s", e.what());
-        }
+        imagePublisher_.publish(img_msg);
     }
 
     ros::Publisher lidarPublisher_;
     ros::Publisher depthPointcloudPublisher_;
     ros::Publisher imagePublisher_;
+    std::unique_ptr<tbai::PollingSubscriber<robot_msgs::ImgFrame>> imageSubscriber_;
     std::atomic<bool> publishMujocoSensors_;
     std::thread sensorPublishThread_;
 };
@@ -180,7 +183,8 @@ int main(int argc, char *argv[]) {
                 .subscribeLidar(tbai::getEnvAs<bool>("TBAI_GO2_PUBLISH_LIDAR", true, false))
                 .unitreeChannel(tbai::getEnvAs<int>("TBAI_GO2_UNITREE_CHANNEL", true, 0))
                 .subscribePointcloud(tbai::getEnvAs<bool>("TBAI_GO2_SUBSCRIBE_POINTCLOUD", true, true))
-                .enableVideo(tbai::getEnvAs<bool>("TBAI_GO2_ENABLE_VIDEO", true, true))));
+                .enableVideo(tbai::getEnvAs<bool>("TBAI_GO2_ENABLE_VIDEO", true, true))
+                .useGroundTruthState(tbai::getEnvAs<bool>("TBAI_GO2_USE_GROUND_TRUTH", true, false))));
 
     std::shared_ptr<tbai::StateSubscriber> stateSubscriber = go2RobotInterface;
     std::shared_ptr<tbai::CommandPublisher> commandPublisher = go2RobotInterface;

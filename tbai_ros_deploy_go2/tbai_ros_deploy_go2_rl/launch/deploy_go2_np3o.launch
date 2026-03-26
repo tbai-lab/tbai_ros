@@ -16,10 +16,10 @@
     <arg name="mapping_device"              default="none"/>
     
     <arg name="mujoco_simulation"            default="false"/>
-    <arg name="mujoco_config_file"          default="$(find mujoco_robotic_assets)/resources/go2/config.yaml"/>
+    <arg name="mujoco_config_file"          default="/home/kb/projects/tbai_mujoco/simulate/configs/config_go2.yaml"/>
     <group if="$(arg mujoco_simulation)">
         <node name="dsa" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
-        args="unitree_mujoco $(arg mujoco_config_file)"/>
+        args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>
     </group>
 
     <param name="robot_name" type="string" value="$(arg robot_name)"/>
@@ -43,6 +43,7 @@
     <!-- MuJoCo depth camera pointcloud and RGB image publishing -->
     <env name="TBAI_GO2_SUBSCRIBE_POINTCLOUD" value="$(arg mujoco_simulation)"/>
     <env name="TBAI_GO2_ENABLE_VIDEO" value="$(arg mujoco_simulation)"/>
+    <env name="TBAI_GO2_USE_GROUND_TRUTH" value="$(arg mujoco_simulation)"/>
 
     <param name="$(arg description_name)" command="$(find xacro)/xacro --inorder $(arg description_file)" />
 

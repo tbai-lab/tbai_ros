@@ -178,14 +178,91 @@ go2_bob_blind_gazebo:
 g1_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_g1 g1_mujoco.launch mujoco_simulation:=true run_rviz:=false
+    roslaunch tbai_ros_g1 g1_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal B blind MPC in MuJoCo
+[group("2. demos")]
+anymal_b_mpc_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d anymal_b_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal C blind MPC in MuJoCo
+[group("2. demos")]
+anymal_c_mpc_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d anymal_c_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal D blind MPC in MuJoCo
+[group("2. demos")]
+anymal_d_mpc_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d anymal_d_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal D blind Bob in MuJoCo
+[group("2. demos")]
+anymal_d_bob_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d anymal_d_bob_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal D perceptive Bob in MuJoCo
+[group("2. demos")]
+anymal_d_bob_perceptive_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d anymal_d_bob_perceptive_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal D blind DTC in MuJoCo
+[group("2. demos")]
+anymal_d_dtc_blind_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d anymal_d_dtc_blind_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal D perceptive DTC in MuJoCo
+[group("2. demos")]
+anymal_d_dtc_perceptive_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d anymal_d_dtc_perceptive_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal D JOE in MuJoCo
+[group("2. demos")]
+anymal_d_joe_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d anymal_d_joe_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# Spot in MuJoCo (with MPC + RViz)
+[group("2. demos")]
+spot_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_spot spot_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# Spot Arm in MuJoCo (with MPC + RViz)
+[group("2. demos")]
+spot_arm_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_spot spot_arm_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# Franka Panda in MuJoCo (with MPC + RViz)
+[group("2. demos")]
+franka_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_franka franka_mujoco.launch mujoco_simulation:=true run_rviz:=true enable_mpc:=true
 
 # Go2W (wheeled) drive in MuJoCo
 [group("2. demos")]
 go2w_drive_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_go2w go2w_mujoco_drive.launch run_rviz:=false
+    roslaunch tbai_ros_go2w go2w_mujoco_drive.launch run_rviz:=true
 
 # Go2W (wheeled) handstand in MuJoCo
 [group("2. demos")]

@@ -383,12 +383,9 @@ clone-tbai:
     #!/usr/bin/env bash
     if [[ ! -d dependencies/tbai ]]; then
         git clone https://github.com/tbai-lab/tbai.git --single-branch --branch=main dependencies/tbai
+        git -C dependencies/tbai checkout e97306e29a54e91a0fa7e6bb965ffd8264d79a03
     else
         echo "[TBAI] dependencies/tbai already exists, skipping clone"
-        if [[ -d dependencies/tbai/.git ]]; then
-            echo "[TBAI] dependencies/tbai exists, pulling latest changes"
-            git -C dependencies/tbai pull
-        fi
     fi
 
 # Build tbai library
@@ -410,12 +407,9 @@ clone-mujoco-robotic-assets:
     #!/usr/bin/env bash
     if [[ ! -d dependencies/mujoco_robotic_assets ]]; then
         git clone https://github.com/tbai-lab/mujoco_robotic_assets.git --single-branch --branch=main dependencies/mujoco_robotic_assets
+        git -C dependencies/mujoco_robotic_assets checkout 740275bb777cbec7f0866e81542c9d02cbd3cf55
     else
         echo "[TBAI] dependencies/mujoco_robotic_assets already exists, skipping clone"
-        if [[ -d dependencies/mujoco_robotic_assets/.git ]]; then
-            echo "[TBAI] dependencies/mujoco_robotic_assets exists, pulling latest changes"
-            git -C dependencies/mujoco_robotic_assets pull
-        fi
     fi
 
 [group("4. development")]
@@ -433,12 +427,9 @@ clone-unitree-mujoco:
     #!/usr/bin/env bash
     if [[ ! -d dependencies/unitree_mujoco ]]; then
         git clone https://github.com/tbai-lab/unitree_mujoco.git --single-branch --branch=main dependencies/unitree_mujoco
+        git -C dependencies/unitree_mujoco checkout d382f90fe1e1a0f78a94eea3e0ffee5e1490a846
     else
         echo "[TBAI] dependencies/unitree_mujoco already exists, skipping clone"
-        if [[ -d dependencies/unitree_mujoco/.git ]]; then
-            echo "[TBAI] dependencies/unitree_mujoco exists, pulling latest changes"
-            git -C dependencies/unitree_mujoco pull
-        fi
     fi
 
 [group("4. development")]
@@ -457,7 +448,7 @@ remove-unitree-mujoco:
 [group("4. development")]
 install-tbai-cbf-mppi: clone-tbai
     #!/usr/bin/env bash
-    pip3 install git+https://github.com/tbai-lab/tbai_cbf_mppi.git
+    pip3 install git+https://github.com/tbai-lab/tbai_cbf_mppi.git@315ea3d7a8bb3678838525418ffdd7fb6fb851ff
 
 # Build all ROS packages
 [group("4. development")]

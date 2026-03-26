@@ -45,12 +45,12 @@ sqpWbc
   ; =============================================
 
   ; Arm end-effector position PD gains
-  armEEPositionKp         100.0
-  armEEPositionKd         20.0
+  armEEPositionKp         40.0
+  armEEPositionKd         10.0
 
   ; Arm end-effector orientation PD gains
-  armEEOrientationKp      50.0
-  armEEOrientationKd      10.0
+  armEEOrientationKp      20.0
+  armEEOrientationKd      5.0
 
   ; Arm joint centering (nullspace) PD gains
   armJointCenteringKp     10.0
@@ -64,8 +64,8 @@ sqpWbc
   armJointHomePosition
   {
     (0,0)  0.0    ; arm_sh0
-    (1,0) -3.1    ; arm_sh1
-    (2,0)  2.1    ; arm_el0
+    (1,0) -3.14   ; arm_sh1
+    (2,0)  3.06   ; arm_el0
     (3,0)  0.0    ; arm_el1
     (4,0)  0.0    ; arm_wr0
     (5,0)  0.0    ; arm_wr1
@@ -116,12 +116,12 @@ hqpWbc
   ; =============================================
 
   ; Arm end-effector position PD gains
-  armEEPositionKp         100.0
-  armEEPositionKd         20.0
+  armEEPositionKp         40.0
+  armEEPositionKd         10.0
 
   ; Arm end-effector orientation PD gains
-  armEEOrientationKp      50.0
-  armEEOrientationKd      10.0
+  armEEOrientationKp      20.0
+  armEEOrientationKd      5.0
 
   ; Arm joint centering (nullspace) PD gains
   armJointCenteringKp     10.0
@@ -135,8 +135,8 @@ hqpWbc
   armJointHomePosition
   {
     (0,0)  0.0    ; arm_sh0
-    (1,0) -3.1    ; arm_sh1
-    (2,0)  2.1    ; arm_el0
+    (1,0) -3.14   ; arm_sh1
+    (2,0)  3.06   ; arm_el0
     (3,0)  0.0    ; arm_el1
     (4,0)  0.0    ; arm_wr0
     (5,0)  0.0    ; arm_wr1
@@ -179,8 +179,8 @@ StaticController
     (11,0) -1.60  ; RH_KFE
     ; Arm joints (stowed position)
     (12,0)  0.0   ; arm_sh0
-    (13,0) -3.1   ; arm_sh1
-    (14,0)  2.1   ; arm_el0
+    (13,0) -3.14  ; arm_sh1
+    (14,0)  3.06  ; arm_el0
     (15,0)  0.0   ; arm_el1
     (16,0)  0.0   ; arm_wr0
     (17,0)  0.0   ; arm_wr1
@@ -204,8 +204,8 @@ StaticController
     (11,0) -2.5  ; RH_KFE
     ; Arm joints (stowed position)
     (12,0)  0.0   ; arm_sh0
-    (13,0) -3.1   ; arm_sh1
-    (14,0)  2.1   ; arm_el0
+    (13,0) -3.14  ; arm_sh1
+    (14,0)  3.06  ; arm_el0
     (15,0)  0.0   ; arm_el1
     (16,0)  0.0   ; arm_wr0
     (17,0)  0.0   ; arm_wr1

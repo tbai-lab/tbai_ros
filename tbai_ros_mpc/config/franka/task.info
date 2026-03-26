@@ -191,13 +191,13 @@ endEffector
 {
   ; end effector quadratic penalty scaling
   muPosition      100.0
-  muOrientation   25.0
+  muOrientation   0.0
 }
 
 finalEndEffector
 {
   muPosition      100.0
-  muOrientation   25.0
+  muOrientation   0.0
 }
 
 ; Only applied for arm joints: limits parsed from URDF
@@ -318,6 +318,10 @@ hqpWbc
   ; End-effector orientation tracking PD gains
   eeOrientationKp     100.0
   eeOrientationKd     15.0
+
+  ; Joint centering PD gains (drives joints towards home position)
+  jointCenteringKp    20.0
+  jointCenteringKd    4.0
 
   ; Joint torque limit [Nm] (default for Franka)
   torqueLimit         87.0

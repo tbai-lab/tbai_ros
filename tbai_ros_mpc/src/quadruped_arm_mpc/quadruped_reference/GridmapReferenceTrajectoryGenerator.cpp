@@ -179,8 +179,8 @@ ocs2::TargetTrajectories GridmapReferenceTrajectoryGenerator::generateReferenceT
         // base linear velocity
         state.segment<3>(9) = Rt * baseReferenceTrajectory.linearVelocityInWorld[i];
 
-        // joint angles
-        state.segment<12>(12) = defaultJointState_;
+        // joint angles (legs + arm)
+        state.segment(12, defaultJointState_.size()) = defaultJointState_;
 
         desiredStateTrajectory[i] = std::move(state);
     }

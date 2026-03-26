@@ -44,7 +44,8 @@ void ContactVisualizer::visualize(const vector_t &currentState, const std::vecto
     vector_t q = vector_t::Zero(model_.nq);
     q.head<3>() = currentState.segment<3>(3);                               // Position
     q.segment<4>(3) = tbai::ocs2rpy2quat(currentState.head<3>()).coeffs();  // Orientation
-    q.tail(12) = currentState.segment<12>(3 + 3 + 3 + 3);
+    const int numJoints = model_.nq - 7;
+    q.tail(numJoints) = currentState.segment(12, numJoints);
     pinocchio::forwardKinematics(model_, data_, q);
     pinocchio::updateFramePlacements(model_, data_);
 

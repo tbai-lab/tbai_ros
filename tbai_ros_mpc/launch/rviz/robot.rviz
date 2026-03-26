@@ -12,7 +12,7 @@ Panels:
         - /MarkerArray1
         - /MarkerArray2
       Splitter Ratio: 0.5
-    Tree Height: 1156
+    Tree Height: 436
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -30,7 +30,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: Image
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -65,107 +65,23 @@ Visualization Manager:
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
-        LF_ADAPTER:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         LF_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        LF_HIP:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LF_SHANK:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LF_THIGH:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LH_ADAPTER:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         LH_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        LH_HIP:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LH_SHANK:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LH_THIGH:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         Link Tree Style: Links in Alphabetic Order
-        RF_ADAPTER:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         RF_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        RF_HIP:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        RF_SHANK:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        RF_THIGH:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        RH_ADAPTER:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         RH_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        RH_HIP:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        RH_SHANK:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        RH_THIGH:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         base:
           Alpha: 1
           Show Axes: false
@@ -175,6 +91,114 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_link_back:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_link_front_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_link_front_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_link_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_link_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_optical:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_optical_back:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_optical_front_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_optical_front_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_optical_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_optical_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        fl_hip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fl_lleg:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fl_uleg:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr_hip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr_lleg:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr_uleg:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hl_hip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hl_lleg:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hl_uleg:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hr_hip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hr_lleg:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hr_uleg:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -210,7 +234,7 @@ Visualization Manager:
       Marker Topic: /contact_points
       Name: MarkerArray
       Namespaces:
-        {}
+        "": true
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -218,7 +242,9 @@ Visualization Manager:
       Marker Topic: /ocs2_quadruped/optimizedStateTrajectory
       Name: MarkerArray
       Namespaces:
-        {}
+        Base Trajectory: true
+        EE Trajectories: true
+        Future footholds: true
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -226,7 +252,7 @@ Visualization Manager:
       Marker Topic: /ocs2_quadruped/swing_planner/trajectory_LH
       Name: MarkerArray
       Namespaces:
-        {}
+        "": true
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -234,7 +260,7 @@ Visualization Manager:
       Marker Topic: /ocs2_quadruped/swing_planner/trajectory_RF
       Name: MarkerArray
       Namespaces:
-        {}
+        "": true
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -242,7 +268,7 @@ Visualization Manager:
       Marker Topic: /ocs2_quadruped/swing_planner/trajectory_RH
       Name: MarkerArray
       Namespaces:
-        {}
+        "": true
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -250,7 +276,7 @@ Visualization Manager:
       Marker Topic: /ocs2_quadruped/desiredVelTrajectory
       Name: MarkerArray
       Namespaces:
-        {}
+        "": true
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -260,6 +286,18 @@ Visualization Manager:
       Namespaces:
         {}
       Queue Size: 100
+      Value: true
+    - Class: rviz/Image
+      Enabled: true
+      Image Topic: /camera/front/image_raw
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
       Value: true
   Enabled: true
   Global Options:
@@ -297,25 +335,27 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -1.789154052734375
-        Y: 2.298610210418701
-        Z: -1.605212926864624
+        X: -2.512227773666382
+        Y: 2.3268237113952637
+        Z: -2.1162967681884766
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4953988194465637
-      Target Frame: <Fixed Frame>
-      Yaw: 5.411746978759766
+      Pitch: 0.5003988146781921
+      Target Frame: base
+      Yaw: 5.536747455596924
     Saved: ~
 Window Geometry:
   Displays:
-    collapsed: true
-  Height: 1366
-  Hide Left Dock: true
+    collapsed: false
+  Height: 1371
+  Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000025d0000051dfc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006700fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c00610079007300000000190000051d000000e000fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000011000000288fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000004800000288000000b500fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004b000000052fc0100000002fb0000000800540069006d00650000000000000004b0000003dd00fffffffb0000000800540069006d00650100000000000004500000000000000000000005000000051d00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730000000000ffffffff0000000000000000
+  Image:
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd00000004000000000000025d00000528fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000001600000248000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d0061006700650100000264000002da0000001600ffffff000000010000011000000523fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000001600000523000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004b000000052fc0100000002fb0000000800540069006d00650000000000000004b00000037000fffffffb0000000800540069006d006501000000000000045000000000000000000000075b0000052800000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730000000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -324,6 +364,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1280
-  X: 48
-  Y: 0
+  Width: 2494
+  X: 66
+  Y: 32

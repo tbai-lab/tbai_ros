@@ -172,7 +172,7 @@ ddp
 
   maxNumIterations                1
   minRelCost                      1e-1
-  constraintTolerance             5e-3
+  constraintTolerance             1e-2
 
   displayInfo                     false
   displayShortSummary             false
@@ -222,7 +222,7 @@ mpc
 
   debugPrint                      false
 
-  mpcDesiredFrequency             30  ; [Hz]
+  mpcDesiredFrequency             20  ; [Hz]
   mrtDesiredFrequency             400 ; [Hz]
 }
 
@@ -263,10 +263,10 @@ initialRobotState
    (22,0)  0.75  ; RH_HFE
    (23,0) -1.60  ; RH_KFE
 
-   ; arm joint state (6 joints - stowed position)
-   (24,0)  2.0    ; arm_sh0
-   (25,0) -3.1    ; arm_sh1
-   (26,0)  3.1    ; arm_el0
+   ; arm joint state (6 joints - stowed)
+   (24,0)  0.0    ; arm_sh0
+   (25,0) -3.14   ; arm_sh1
+   (26,0)  3.06   ; arm_el0
    (27,0)  0.0    ; arm_el1
    (28,0)  0.0    ; arm_wr0
    (29,0)  0.0    ; arm_wr1

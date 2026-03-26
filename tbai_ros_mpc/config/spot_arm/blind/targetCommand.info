@@ -20,8 +20,8 @@ defaultJointState
    (11,0) -1.60   ; RH_KFE
    ; Arm joints (6) - stowed position
    (12,0)  0.0    ; arm_sh0
-   (13,0) -3.1    ; arm_sh1
-   (14,0)  3.1    ; arm_el0
+   (13,0) -3.14   ; arm_sh1
+   (14,0)  3.06   ; arm_el0
    (15,0)  0.0    ; arm_el1
    (16,0)  0.0    ; arm_wr0
    (17,0)  0.0    ; arm_wr1

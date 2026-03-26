@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+    <arg name="robot_name"          default="anymal_b"/>
+    <arg name="tbai_config_path"    default="$(find tbai_ros_anymal_d)/config/deploy_anymal_b_mpc.yaml"/>
+    <arg name="urdf_file"           default="$(find gazebo_robotic_assets)/resources/anymal_b/urdf/anymal.urdf"/>
+    <arg name="run_rviz"            default="true"/>
+
+    <arg name="sqp_settings_file"           default="$(find tbai_ros_mpc)/config/anymal_b/blind/sqp.info"/>
+    <arg name="frame_declaration_file"      default="$(find tbai_ros_mpc)/config/anymal_b/blind/frame_declarations.info"/>
+    <arg name="task_settings_file"          default="$(find tbai_ros_mpc)/config/anymal_b/blind/task.info"/>
+    <arg name="target_command_config_file"  default="$(find tbai_ros_mpc)/config/anymal_b/blind/targetCommand.info"/>
+    <arg name="controller_config_file"      default="$(find tbai_ros_mpc)/config/anymal_b/blind/controllers.info"/>
+    <arg name="gait_file"                   default="$(find tbai_ros_mpc)/config/anymal_b/blind/gait.info"/>
+
+    <arg name="mujoco_simulation" default="false"/>
+    <arg name="mujoco_config_file" default="/home/kb/projects/tbai_mujoco/simulate/configs/config_anymal_b.yaml"/>
+    <group if="$(arg mujoco_simulation)">
+        <node name="mujoco_sim" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
+              args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>
+    </group>
+
+    <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>
+    <param name="robot_name" type="string" value="$(arg robot_name)"/>
+    <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>
+    <env name="TBAI_ROBOT_DESCRIPTION_PATH" value="$(arg urdf_file)"/>
+
+    <param name="sqp_settings_file" type="string" value="$(arg sqp_settings_file)"/>
+    <param name="frame_declaration_file" type="string" value="$(arg frame_declaration_file)"/>
+    <param name="task_settings_file" type="string" value="$(arg task_settings_file)"/>
+    <param name="target_command_config_file" type="string" value="$(arg target_command_config_file)"/>
+    <param name="controller_config_file" type="string" value="$(arg controller_config_file)"/>
+    <param name="gait_file" type="string" value="$(arg gait_file)"/>
+
+    <param name="robot_description" textfile="$(arg urdf_file)"/>
+
+    <node name="deploy_anymal_d_mpc" pkg="tbai_ros_anymal_d" type="deploy_anymal_d_mpc" output="screen"/>
+    <node pkg="tbai_ros_mpc" type="quadruped_mpc_node" name="quadruped_mpc_node" output="screen"/>
+    <node pkg="tbai_ros_ocs2" type="gait_command_node" name="gait_command_node"
+          output="screen" launch-prefix="x-terminal-emulator -e">
+        <param name="robot_name" value="$(arg robot_name)"/>
+    </node>
+    <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/>
+
+    <group if="$(arg run_rviz)">
+        <arg name="rvizconfig" default="$(find tbai_ros_mpc)/launch/rviz/robot.rviz"/>
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen"/>
+    </group>
+</launch>

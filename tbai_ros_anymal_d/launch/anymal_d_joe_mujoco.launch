@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+    <arg name="robot_name"          default="anymal_d"/>
+    <arg name="tbai_config_path"    default="$(find tbai_ros_anymal_d)/config/deploy_anymal_d_joe.yaml"/>
+    <arg name="urdf_file"           default="$(find gazebo_robotic_assets)/resources/anymal_d/urdf/anymal.urdf"/>
+    <arg name="run_rviz"            default="true"/>
+    <arg name="mapping_device"      default="cpu"/>
+
+    <arg name="mujoco_simulation" default="false"/>
+    <arg name="mujoco_config_file" default="/home/kb/projects/tbai_mujoco/simulate/configs/config_anymal_d.yaml"/>
+    <group if="$(arg mujoco_simulation)">
+        <node name="mujoco_sim" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
+              args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>
+    </group>
+
+    <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>
+    <param name="robot_name" type="string" value="$(arg robot_name)"/>
+    <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>
+    <env name="TBAI_ROBOT_DESCRIPTION_PATH" value="$(arg urdf_file)"/>
+    <env name="TBAI_ANYMAL_PUBLISH_IMAGE" value="$(arg mujoco_simulation)"/>
+    <env name="TBAI_ANYMAL_PUBLISH_POINTCLOUD" value="$(arg mujoco_simulation)"/>
+
+    <!-- JOE/MPC params -->
+    <param name="taskFile"                    value="$(find tbai_ros_joe)/config/joe/task.info"/>
+    <param name="referenceFile"               value="$(find tbai_ros_joe)/config/joe/reference.info"/>
+    <param name="gait_file"                   value="$(find tbai_ros_joe)/config/joe/gait.info"/>
+    <param name="urdfFile"                    value="$(arg urdf_file)"/>
+    <param name="sqp_settings_file"           value="$(find tbai_ros_joe)/config/joe/sqp.info"/>
+    <param name="frame_declaration_file"      value="$(find tbai_ros_joe)/config/joe/frame_declarations.info"/>
+    <param name="task_settings_file"          value="$(find tbai_ros_joe)/config/joe/task.info"/>
+    <param name="target_command_config_file"  value="$(find tbai_ros_joe)/config/joe/targetCommand.info"/>
+    <param name="controller_config_file"      value="$(find tbai_ros_joe)/config/joe/controllers.info"/>
+
+    <param name="robot_description" textfile="$(arg urdf_file)"/>
+
+    <node name="deploy_anymal_d_joe" pkg="tbai_ros_anymal_d" type="deploy_anymal_d_joe" output="screen"/>
+    <node pkg="tbai_ros_mpc" type="quadruped_mpc_node" name="quadruped_mpc_node" output="screen"/>
+
+    <node pkg="topic_tools" type="relay" name="pointcloud_relay"
+          args="pointcloud/front_lower /camera/depth/points"/>
+
+    <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen"/>
+    <node pkg="nodelet" type="nodelet" name="voxel_grid" args="load pcl/VoxelGrid pcl_manager" output="screen">
+        <remap from="~input" to="/camera/depth/points"/>
+        <remap from="~output" to="/camera/depth/points_downsampled"/>
+        <rosparam>
+            filter_field_name: z
+            filter_limit_min: 0.01
+            filter_limit_max: 4.0
+            filter_limit_negative: False
+            leaf_size: 0.02
+        </rosparam>
+    </node>
+
+    <include file="$(find tbai_ros_bob)/launch/anymal_d_mapping.launch">
+        <arg name="mapping_device" value="$(arg mapping_device)"/>
+    </include>
+
+    <!-- Convex plane decomposition -->
+    <include file="$(find convex_plane_decomposition_ros)/launch/convex_plane_decomposition.launch">
+        <arg name="parameter_file" default="$(find tbai_ros_joe)/config/joe/convex_plane_decomposition_parameters.yaml"/>
+        <arg name="node_parameter_file" default="$(find tbai_ros_joe)/config/joe/convex_plane_decomposition_node.yaml"/>
+    </include>
+
+    <node pkg="tbai_ros_ocs2" type="gait_command_node" name="gait_command_node"
+          output="screen" launch-prefix="x-terminal-emulator -e">
+        <param name="robot_name" value="$(arg robot_name)"/>
+    </node>
+
+    <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/>
+
+    <group if="$(arg run_rviz)">
+        <arg name="rvizconfig" default="$(find tbai_ros_joe)/launch/rviz/joe.rviz"/>
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen"/>
+    </group>
+</launch>

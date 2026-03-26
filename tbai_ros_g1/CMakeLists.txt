@@ -2,17 +2,27 @@ cmake_minimum_required(VERSION 3.14)
 project(tbai_ros_g1)
 
 add_compile_options(-std=c++17)
+set(CMAKE_CXX_STANDARD 17)
+
+# tbai_sdk (header-only, zenoh-based)
+set(TBAI_SDK_DIR "/home/kb/projects/tbai_sdk")
+set(ZENOH_INSTALL "${TBAI_SDK_DIR}/deps/zenoh-install")
+include_directories(${TBAI_SDK_DIR}/include ${ZENOH_INSTALL}/include)
+add_definitions(-DZENOHCXX_ZENOHC)
+link_directories(${ZENOH_INSTALL}/lib)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   roslib
   std_msgs
   sensor_msgs
+  visualization_msgs
   tbai_ros_core
   tbai_ros_msgs
   tbai_ros_static
   tbai_ros_reference
   kdl_parser
+  robot_state_publisher
   robot_state_publisher
 )
 

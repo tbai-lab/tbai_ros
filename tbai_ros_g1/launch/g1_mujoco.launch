@@ -6,14 +6,14 @@
     <arg name="network_interface" default="lo"/>
     <arg name="unitree_channel" default="1"/>
     <arg name="run_virtual_joystick" default="true"/>
-    <arg name="run_rviz" default="false"/>
+    <arg name="run_rviz" default="true"/>
    
     <!-- MuJoCo simulation -->
     <arg name="mujoco_simulation" default="false"/>
-    <arg name="mujoco_config_file" default="$(find mujoco_robotic_assets)/resources/g1/config.yaml"/>
+    <arg name="mujoco_config_file" default="/home/kb/projects/tbai_mujoco/simulate/configs/config_g1.yaml"/>
     <group if="$(arg mujoco_simulation)">
         <node name="mujoco_sim" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
-              args="unitree_mujoco $(arg mujoco_config_file)"/>
+              args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>
     </group>
 
     <!-- Configure TBAI -->
@@ -21,6 +21,12 @@
     <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>
     <env name="TBAI_G1_NETWORK_INTERFACE" value="$(arg network_interface)"/>
     <env name="TBAI_G1_UNITREE_CHANNEL" value="$(arg unitree_channel)"/>
+    <env name="TBAI_ROBOT_DESCRIPTION_PATH" value="$(find gazebo_robotic_assets)/resources/g1/urdf/g1_29dof.urdf"/>
+
+    <!-- MuJoCo sensor publishing -->
+    <env name="TBAI_G1_PUBLISH_IMAGE" value="$(arg mujoco_simulation)"/>
+    <env name="TBAI_G1_PUBLISH_POINTCLOUD" value="$(arg mujoco_simulation)"/>
+    <env name="TBAI_G1_USE_GROUND_TRUTH" value="$(arg mujoco_simulation)"/>
 
     <!-- Load robot description -->
     <param name="robot_description"

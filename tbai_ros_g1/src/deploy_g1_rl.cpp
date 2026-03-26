@@ -1,8 +1,14 @@
+#include <atomic>
+#include <cstring>
 #include <iostream>
 #include <memory>
+#include <thread>
 
 #include <ros/package.h>
 #include <ros/ros.h>
+#include <sensor_msgs/Image.h>
+#include <sensor_msgs/PointCloud2.h>
+#include <sensor_msgs/PointField.h>
 #include <tbai_core/Env.hpp>
 #include <tbai_core/Logging.hpp>
 #include <tbai_core/Utils.hpp>
@@ -20,6 +26,100 @@
 #include <tbai_ros_g1/G1Twist2Controller.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_static/StaticController.hpp>
+#include <tbai_ros_core/StateVisualizer.hpp>
+#include <tbai_sdk/subscriber.hpp>
+#include <tbai_sdk/messages/robot_msgs.hpp>
+
+// Sensor bridge: subscribes to tbai_sdk zenoh topics and republishes as ROS messages
+class SensorBridge {
+   public:
+    SensorBridge(bool publishImage, bool publishPointcloud) : running_(false) {
+        ros::NodeHandle nh;
+
+        if (publishImage) {
+            imagePublisher_ = nh.advertise<sensor_msgs::Image>("camera/color/image_raw", 1);
+            imageSubscriber_ = std::make_unique<tbai::PollingSubscriber<robot_msgs::ImgFrame>>("rt/camera/image");
+            ROS_INFO("G1 SensorBridge: subscribed to rt/camera/image");
+        }
+
+        if (publishPointcloud) {
+            pointcloudPublisher_ = nh.advertise<sensor_msgs::PointCloud2>("camera/depth/points", 1);
+            pointcloudSubscriber_ = std::make_unique<tbai::PollingSubscriber<robot_msgs::PointCloud2>>("rt/pointcloud");
+            ROS_INFO("G1 SensorBridge: subscribed to rt/pointcloud");
+        }
+
+        if (publishImage || publishPointcloud) {
+            running_ = true;
+            thread_ = std::thread([this, publishImage, publishPointcloud]() {
+                ros::Rate rate(30.0);
+                while (ros::ok() && running_) {
+                    if (publishImage) publishColorImage();
+                    if (publishPointcloud) publishDepthPointcloud();
+                    rate.sleep();
+                }
+            });
+        }
+    }
+
+    ~SensorBridge() {
+        running_ = false;
+        if (thread_.joinable()) thread_.join();
+    }
+
+   private:
+    void publishColorImage() {
+        if (!imageSubscriber_) return;
+        auto frame = imageSubscriber_->take();
+        if (!frame) return;
+
+        sensor_msgs::Image img_msg;
+        img_msg.header.stamp = ros::Time::now();
+        img_msg.header.frame_id = "d435_optical";
+        img_msg.height = frame->height;
+        img_msg.width = frame->width;
+        img_msg.encoding = frame->encoding;
+        img_msg.is_bigendian = frame->is_bigendian;
+        img_msg.step = frame->step;
+        img_msg.data = std::move(frame->data);
+
+        imagePublisher_.publish(img_msg);
+    }
+
+    void publishDepthPointcloud() {
+        if (!pointcloudSubscriber_) return;
+        auto pc = pointcloudSubscriber_->take();
+        if (!pc) return;
+
+        sensor_msgs::PointCloud2 pc2_msg;
+        pc2_msg.header.stamp = ros::Time::now();
+        pc2_msg.header.frame_id = "d435_optical";
+        pc2_msg.height = pc->height;
+        pc2_msg.width = pc->width;
+
+        pc2_msg.fields.resize(pc->fields.size());
+        for (size_t i = 0; i < pc->fields.size(); ++i) {
+            pc2_msg.fields[i].name = pc->fields[i].name;
+            pc2_msg.fields[i].offset = pc->fields[i].offset;
+            pc2_msg.fields[i].datatype = pc->fields[i].datatype;
+            pc2_msg.fields[i].count = pc->fields[i].count;
+        }
+
+        pc2_msg.is_bigendian = pc->is_bigendian;
+        pc2_msg.point_step = pc->point_step;
+        pc2_msg.row_step = pc->row_step;
+        pc2_msg.is_dense = pc->is_dense;
+        pc2_msg.data = std::move(pc->data);
+
+        pointcloudPublisher_.publish(pc2_msg);
+    }
+
+    ros::Publisher imagePublisher_;
+    ros::Publisher pointcloudPublisher_;
+    std::unique_ptr<tbai::PollingSubscriber<robot_msgs::ImgFrame>> imageSubscriber_;
+    std::unique_ptr<tbai::PollingSubscriber<robot_msgs::PointCloud2>> pointcloudSubscriber_;
+    std::atomic<bool> running_;
+    std::thread thread_;
+};
 
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "tbai_ros_deploy_g1_rl");
@@ -31,11 +131,23 @@ int main(int argc, char *argv[]) {
     // Set zero time
     tbai::writeInitTime(tbai::RosTime::rightNow());
 
+    // Start sensor bridge for mujoco image/pointcloud publishing
+    bool publishImage = tbai::getEnvAs<bool>("TBAI_G1_PUBLISH_IMAGE", true, false);
+    bool publishPointcloud = tbai::getEnvAs<bool>("TBAI_G1_PUBLISH_POINTCLOUD", true, false);
+    auto sensorBridge = std::make_unique<SensorBridge>(publishImage, publishPointcloud);
+
     // Initialize G1RobotInterface
     std::shared_ptr<tbai::G1RobotInterface> g1RobotInterface = std::make_shared<tbai::G1RobotInterface>(
         tbai::G1RobotInterfaceArgs()
             .networkInterface(tbai::getEnvAs<std::string>("TBAI_G1_NETWORK_INTERFACE", true, "lo"))
-            .unitreeChannel(tbai::getEnvAs<int>("TBAI_G1_UNITREE_CHANNEL", true, 1)));
+            .unitreeChannel(tbai::getEnvAs<int>("TBAI_G1_UNITREE_CHANNEL", true, 1))
+            .useGroundTruthState(tbai::getEnvAs<bool>("TBAI_G1_USE_GROUND_TRUTH", true, false)));
+
+    // Start state visualizer (TF + contact markers) for all controllers
+    auto jointNames = tbai::fromGlobalConfig<std::vector<std::string>>("joint_names");
+    std::vector<std::string> footFrames = {"left_ankle_roll_link", "right_ankle_roll_link"};
+    auto stateVisualizer = std::make_unique<tbai::StateVisualizer>(
+        g1RobotInterface, jointNames, footFrames, 30.0, true, "pelvis");
 
     std::shared_ptr<tbai::StateSubscriber> stateSubscriber = g1RobotInterface;
     std::shared_ptr<tbai::CommandPublisher> commandPublisher = g1RobotInterface;

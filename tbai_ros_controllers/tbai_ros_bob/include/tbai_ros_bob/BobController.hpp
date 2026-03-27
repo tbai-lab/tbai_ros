@@ -45,11 +45,6 @@ class RosBobController : public tbai::BobController {
     ContactVisualizer contactVisualizer_;
 
     scalar_t timeSinceLastVisualizationUpdate_;
-
-    bool publishState_;
-    ros::Publisher statePublisher_;
-
-    void publishEstimatedState();
 };
 
 }  // namespace rl

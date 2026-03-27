@@ -15,7 +15,6 @@ find_package(catkin REQUIRED COMPONENTS
     robot_state_publisher
     interactive_markers
     tbai_ros_core
-    tbai_ros_msgs
     tbai_ros_ocs2
     grid_map_core
     grid_map_ros

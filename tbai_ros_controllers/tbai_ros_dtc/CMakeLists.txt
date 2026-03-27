@@ -9,7 +9,6 @@ find_package(Torch REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  tbai_ros_msgs
   tbai_ros_core
   tbai_ros_static
   tbai_ros_ocs2

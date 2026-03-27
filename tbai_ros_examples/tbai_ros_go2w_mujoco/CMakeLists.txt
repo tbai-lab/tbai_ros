@@ -18,7 +18,6 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   tbai_ros_core
-  tbai_ros_msgs
   tbai_ros_static
   tbai_ros_reference
   kdl_parser
@@ -34,7 +33,7 @@ find_package(orocos_kdl REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp roslib std_msgs sensor_msgs tbai_ros_core tbai_ros_msgs tbai_ros_static tbai_ros_reference kdl_parser robot_state_publisher
+  CATKIN_DEPENDS roscpp roslib std_msgs sensor_msgs tbai_ros_core tbai_ros_static tbai_ros_reference kdl_parser robot_state_publisher
   DEPENDS Eigen3 orocos_kdl
 )
 

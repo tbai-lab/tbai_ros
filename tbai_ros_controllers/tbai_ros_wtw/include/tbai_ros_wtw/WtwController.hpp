@@ -40,10 +40,6 @@ class RosWtwController : public tbai::WtwController {
    private:
     StateVisualizer stateVisualizer_;
     ContactVisualizer contactVisualizer_;
-    ros::Publisher statePublisher_;
-    bool publishState_;
-
-    void publishEstimatedState();
 
     scalar_t timeSinceLastVisualizationUpdate_;
 };

@@ -10,7 +10,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
-  <depend>tbai_ros_msgs</depend>
   <depend>tbai_ros_core</depend>
   <depend>tf</depend>
   <depend>urdf</depend>

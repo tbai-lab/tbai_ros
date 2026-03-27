@@ -14,7 +14,6 @@
 #include <tbai_core/Rotations.hpp>
 #include <tbai_core/Types.hpp>
 #include <tbai_core/config/Config.hpp>
-#include <tbai_ros_msgs/EstimatedState.h>
 #include <urdf/model.h>
 #include <visualization_msgs/MarkerArray.h>
 
@@ -40,13 +39,6 @@ RosStaticController::RosStaticController(std::shared_ptr<tbai::RobotInterface> r
     // Setup pinocchio model
     setupPinocchioModel();
     footFrameNames_ = {"LF_FOOT", "RF_FOOT", "LH_FOOT", "RH_FOOT"};
-
-    publishState_ = tbai::fromGlobalConfig<bool>("static_controller/publish_state", false);
-    TBAI_LOG_INFO(logger_, "Controller state publishing is {}", publishState_ ? "enabled" : "disabled");
-    if (publishState_) {
-        statePublisher_ = ros::NodeHandle().advertise<tbai_ros_msgs::EstimatedState>(
-            tbai::fromGlobalConfig<std::string>("static/state_topic", "estimated_state"), 10);
-    }
 
     baseFrameName_ = tbai::fromGlobalConfig<std::string>("base_name");
 
@@ -85,9 +77,6 @@ void RosStaticController::postStep(scalar_t currentTime, scalar_t dt) {
         publishJointAngles(state_.x, currentRosTime);
         if (!fixedBase_) {
             visualizeContactPoints(state_.x, state_.contactFlags, currentRosTime);
-        }
-        if (publishState_) {
-            publishEstimatedState();
         }
         timeSinceLastVisualizationUpdate_ = 0.0;
     } else {
@@ -143,51 +132,6 @@ void RosStaticController::publishJointAngles(const vector_t &currentState, const
         jointPositionMap[jointNames_[i]] = currentState(i + offset);
     }
     robotStatePublisherPtr_->publishTransforms(jointPositionMap, currentTime);
-}
-
-/*********************************************************************************************************************/
-/*********************************************************************************************************************/
-/*********************************************************************************************************************/
-void RosStaticController::publishEstimatedState() {
-    tbai_ros_msgs::EstimatedState stateMsg;
-    stateMsg.timestamp = state_.timestamp;
-
-    // Resize dynamic arrays
-    const size_t baseStateSize = fixedBase_ ? 0 : 12;
-    const size_t numJoints = (state_.x.size() - baseStateSize) / 2;  // state = base + n_joints + n_joints
-    stateMsg.joint_angles.resize(numJoints);
-    stateMsg.joint_velocities.resize(numJoints);
-    stateMsg.contact_flags.resize(state_.contactFlags.size());
-
-    if (!fixedBase_) {
-        // Base position
-        std::copy(state_.x.data() + 3, state_.x.data() + 3 + 3, stateMsg.base_position.begin());  // position
-
-        // Base orientation
-        tbai::quaternion_t quat = tbai::ocs2rpy2quat(state_.x.head<3>());
-        std::copy(quat.coeffs().data(), quat.coeffs().data() + 4,
-                  stateMsg.base_orientation_xyzw.begin());  // orientation
-
-        // Base linear velocity
-        std::copy(state_.x.data() + 3 + 3 + 3, state_.x.data() + 3 + 3 + 3 + 3,
-                  stateMsg.base_lin_vel.begin());  // linear velocity
-
-        // Base angular velocity
-        std::copy(state_.x.data() + 3 + 3, state_.x.data() + 3 + 3 + 3,
-                  stateMsg.base_ang_vel.begin());  // angular velocity
-    }
-
-    // Joint positions
-    std::copy(state_.x.data() + baseStateSize, state_.x.data() + baseStateSize + numJoints,
-              stateMsg.joint_angles.begin());
-
-    // Joint velocities
-    std::copy(state_.x.data() + baseStateSize + numJoints, state_.x.data() + baseStateSize + numJoints + numJoints,
-              stateMsg.joint_velocities.begin());
-
-    // Contact flags
-    std::copy(state_.contactFlags.begin(), state_.contactFlags.end(), stateMsg.contact_flags.begin());
-    statePublisher_.publish(stateMsg);
 }
 
 /*********************************************************************************************************************/

@@ -40,10 +40,6 @@ class RosNp3oController : public tbai::Np3oController {
    private:
     StateVisualizer stateVisualizer_;
     ContactVisualizer contactVisualizer_;
-    ros::Publisher statePublisher_;
-    bool publishState_;
-
-    void publishEstimatedState();
 
     scalar_t timeSinceLastVisualizationUpdate_;
 };

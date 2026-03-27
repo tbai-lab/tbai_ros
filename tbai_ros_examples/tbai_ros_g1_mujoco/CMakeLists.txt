@@ -18,7 +18,6 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   visualization_msgs
   tbai_ros_core
-  tbai_ros_msgs
   tbai_ros_static
   tbai_ros_reference
   kdl_parser
@@ -34,7 +33,7 @@ find_package(Torch REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp roslib std_msgs sensor_msgs tbai_ros_core tbai_ros_msgs tbai_ros_static tbai_ros_reference
+  CATKIN_DEPENDS roscpp roslib std_msgs sensor_msgs tbai_ros_core tbai_ros_static tbai_ros_reference
   DEPENDS Eigen3
 )
 

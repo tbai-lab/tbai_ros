@@ -9,7 +9,6 @@ find_package(catkin REQUIRED COMPONENTS
   urdf
   kdl_parser
   robot_state_publisher
-  tbai_ros_msgs
   tbai_ros_core
   geometry_msgs
 )

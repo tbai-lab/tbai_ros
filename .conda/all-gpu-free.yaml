@@ -30,7 +30,6 @@ dependencies:
 - ros-distro-mutex 0.5.0.*
 - libprotobuf *
 - colcon-common-extensions *
-- doxygen *
 - ros-noetic-ros-control *
 - ros-noetic-ros-controllers *
 - mpfr *

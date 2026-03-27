@@ -243,21 +243,6 @@ pixi-generate-conda-envs:
         pixi workspace export conda-environment -e $env > .conda/$env.yaml
     done
 
-# Open documentation in browser
-[group("3. development")]
-open-docs:
-    #!/usr/bin/env bash
-    docs_path={{justfile_path}}/../../build/tbai_ros_docs/output/doxygen/html/index.html
-    echo "Opening documentation in browser: $docs_path"
-    google-chrome $docs_path
-
-# Rebuild documentation
-[group("3. development")]
-rebuild-docs:
-    #!/usr/bin/env bash
-    catkin clean tbai_ros_docs
-    catkin build tbai_ros_docs
-
 # Clean ROS workspace and remove tbai
 [group("3. development")]
 clean:

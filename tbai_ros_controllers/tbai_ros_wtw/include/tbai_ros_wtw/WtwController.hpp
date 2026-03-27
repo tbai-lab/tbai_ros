@@ -13,11 +13,11 @@
 #include <pinocchio/algorithm/kinematics.hpp>
 #include <pinocchio/multibody/data.hpp>
 #include <pinocchio/multibody/model.hpp>
-#include <tbai_wtw/WtwController.hpp>
 #include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_gridmap/GridmapInterface.hpp>
-#include <tbai_ros_wtw/Visualizers.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
+#include <tbai_ros_wtw/Visualizers.hpp>
+#include <tbai_wtw/WtwController.hpp>
 #include <torch/script.h>
 
 namespace tbai {

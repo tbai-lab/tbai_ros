@@ -39,8 +39,7 @@ void RosWtwController::changeController(const std::string &controllerType, scala
     preStep(currentTime, 0.0);
 }
 
-void RosWtwController::stopController() {
-}
+void RosWtwController::stopController() {}
 
 bool RosWtwController::ok() const {
     return ros::ok();

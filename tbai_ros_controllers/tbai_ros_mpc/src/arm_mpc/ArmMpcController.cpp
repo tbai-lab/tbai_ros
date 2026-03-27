@@ -146,7 +146,6 @@ std::vector<MotorCommand> ArmMpcController::getMotorCommands(scalar_t currentTim
 
         const size_t nJoints = 7;
         desiredJointAcceleration = 0 * (dummyInput.tail(nJoints) - desiredInput.tail(nJoints)) / time_eps;
-
     }
 
     // Get motor commands from WBC

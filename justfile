@@ -183,7 +183,7 @@ franka_arm_mpc_dummy:
 #******************************************************************************************************************#
 
 # Format C++ code using clang-format, disabled for 'dependencies' folder
-[group("4. development")]
+[group("3. development")]
 format:
     #!/usr/bin/env bash
     folders=$(ls -d */ | grep -v dependencies)
@@ -195,7 +195,7 @@ format:
     done
 
 # Run cpplint on all folders, disabled for 'dependencies' folder
-[group("4. development")]
+[group("3. development")]
 lint:
     #!/usr/bin/env bash
     folders=$(ls -d */ | grep -v dependencies)
@@ -204,7 +204,7 @@ lint:
     done
 
 # Build ROS packages (only those related to tbai_ros)
-[group("4. development")]
+[group("3. development")]
 build:
     #!/usr/bin/env bash
     ros_packages=""
@@ -222,7 +222,7 @@ build:
     catkin build $ros_packages
 
 # Run tests for ROS packages
-[group("4. development")]
+[group("3. development")]
 test:
     #!/usr/bin/env bash
     folders=$(ls -d */ | grep -v dependencies)
@@ -238,13 +238,13 @@ test:
     catkin test $ros_packages
 
 # List all pixi environments\
-[group("4. development")]
+[group("3. development")]
 pixi-list-envs:
     #!/usr/bin/env bash
     pixi workspace environment list | grep -E '^- ' | cut -d':' -f1 | sed 's/^- //'
 
 # Generate conda environments for all pixi environments
-[group("4. development")]
+[group("3. development")]
 pixi-generate-conda-envs:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -254,7 +254,7 @@ pixi-generate-conda-envs:
     done
 
 # Open documentation in browser
-[group("4. development")]
+[group("3. development")]
 open-docs:
     #!/usr/bin/env bash
     docs_path={{justfile_path}}/../../build/tbai_ros_docs/output/doxygen/html/index.html
@@ -262,14 +262,14 @@ open-docs:
     google-chrome $docs_path
 
 # Rebuild documentation
-[group("4. development")]
+[group("3. development")]
 rebuild-docs:
     #!/usr/bin/env bash
     catkin clean tbai_ros_docs
     catkin build tbai_ros_docs
 
 # Clean ROS workspace and remove tbai
-[group("4. development")]
+[group("3. development")]
 clean:
     #!/usr/bin/env bash
     CURRENT_DIR=$(pwd)
@@ -282,7 +282,7 @@ clean:
     rm -rf ${tbai_build_dir}
 
 # Clone tbai repository (skips if already exists)
-[group("4. development")]
+[group("3. development")]
 clone-tbai:
     #!/usr/bin/env bash
     if [[ ! -d dependencies/tbai ]]; then
@@ -296,7 +296,7 @@ clone-tbai:
     fi
 
 # Build tbai library
-[group("4. development")]
+[group("3. development")]
 build-tbai:
     #!/usr/bin/env bash
     cmake -B{{tbai_build_dir}} -Sdependencies/tbai -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
@@ -304,12 +304,12 @@ build-tbai:
     cmake --build {{tbai_build_dir}} --target install
 
 # Remove tbai dependencies
-[group("4. development")]
+[group("3. development")]
 remove-tbai:
     #!/usr/bin/env bash
     rm -rf dependencies/tbai && rm -rf ${tbai_build_dir}
 
-[group("4. development")]
+[group("3. development")]
 clone-mujoco-robotic-assets:
     #!/usr/bin/env bash
     if [[ ! -d dependencies/mujoco_robotic_assets ]]; then
@@ -322,17 +322,17 @@ clone-mujoco-robotic-assets:
         fi
     fi
 
-[group("4. development")]
+[group("3. development")]
 build-mujoco-robotic-assets:
     #!/usr/bin/env bash
     catkin build mujoco_robotic_assets
 
-[group("4. development")]
+[group("3. development")]
 remove-mujoco-robotic-assets:
     #!/usr/bin/env bash
     rm -rf dependencies/mujoco_robotic_assets
 
-[group("4. development")]
+[group("3. development")]
 clone-unitree-mujoco:
     #!/usr/bin/env bash
     if [[ ! -d dependencies/unitree_mujoco ]]; then
@@ -345,30 +345,30 @@ clone-unitree-mujoco:
         fi
     fi
 
-[group("4. development")]
+[group("3. development")]
 build-unitree-mujoco:
     #!/usr/bin/env bash
     cmake -B{{unitree_mujoco_build_dir}} -Sdependencies/unitree_mujoco -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
     cmake --build {{unitree_mujoco_build_dir}} --parallel 8
     cmake --build {{unitree_mujoco_build_dir}} --target install
 
-[group("4. development")]
+[group("3. development")]
 remove-unitree-mujoco:
     #!/usr/bin/env bash
     rm -rf dependencies/unitree_mujoco
     rm -rf {{unitree_mujoco_build_dir}}
 
-[group("4. development")]
+[group("3. development")]
 install-tbai-cbf-mppi: clone-tbai
     #!/usr/bin/env bash
     pip3 install git+https://github.com/tbai-lab/tbai_cbf_mppi.git
 
 # Build all ROS packages
-[group("4. development")]
+[group("3. development")]
 ros-build-all: build
 
 # Build go2 ROS packages
-[group("4. development")]
+[group("3. development")]
 ros-build-go2: 
     #!/usr/bin/env bash
     catkin build tbai_ros_go2_rl_mujoco

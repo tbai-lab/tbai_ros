@@ -241,7 +241,7 @@ clean:
     rm -rf ${tbai_build_dir}
 
 # Clone tbai repository (skips if already exists)
-[group("3. development")]
+[group("4. tbai")]
 clone-tbai:
     #!/usr/bin/env bash
     if [[ ! -d thirdparty/tbai ]]; then
@@ -255,7 +255,7 @@ clone-tbai:
     fi
 
 # Build tbai library
-[group("3. development")]
+[group("4. tbai")]
 build-tbai:
     #!/usr/bin/env bash
     cmake -B{{tbai_build_dir}} -Sthirdparty/tbai -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
@@ -263,12 +263,12 @@ build-tbai:
     cmake --build {{tbai_build_dir}} --target install
 
 # Remove tbai dependencies
-[group("3. development")]
+[group("4. tbai")]
 remove-tbai:
     #!/usr/bin/env bash
     rm -rf thirdparty/tbai && rm -rf ${tbai_build_dir}
 
-[group("3. development")]
+[group("4. tbai")]
 install-tbai-cbf-mppi: clone-tbai
     #!/usr/bin/env bash
     pip3 install git+https://github.com/tbai-lab/tbai_cbf_mppi.git

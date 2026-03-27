@@ -325,6 +325,9 @@ int main(int argc, char *argv[]) {
         t.join();
     }
 
+    // Remove threads
+    loaderThreads.clear();
+
     TBAI_LOG_INFO(logger, "Controllers initialized. Starting main loop...");
 
     // Start controller loop

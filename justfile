@@ -45,126 +45,120 @@ fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all install-tb
 go2_mpc_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_mpc deploy_go2_mpc.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true
+    roslaunch tbai_ros_go2_mpc_mujoco deploy_go2_mpc.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true
 
 # Go2 NP3O in Mujoco
 [group("2. demos")]
 go2_np3o_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true publish_pointcloud:=false
+    roslaunch tbai_ros_go2_rl_mujoco deploy_go2_np3o.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true publish_pointcloud:=false
 
 # Go2 NP3O with MPPI in Mujoco
 [group("2. demos")]
 go2_np3o_mppi_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o_mppi.launch run_go2_joystick:=false run_virtual_joystick:=true network_interface:=lo mujoco_simulation:=true run_rviz:=true
+    roslaunch tbai_ros_go2_rl_mujoco deploy_go2_np3o_mppi.launch run_go2_joystick:=false run_virtual_joystick:=true network_interface:=lo mujoco_simulation:=true run_rviz:=true
 
-# Go2 Safe in Mujoco
-[group("2. demos")]
-go2_safe_mujoco:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_safe deploy_go2_safe.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true
 
 # G1 humanoid in MuJoCo
 [group("2. demos")]
 g1_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_g1 g1_mujoco.launch mujoco_simulation:=true run_rviz:=true
+    roslaunch tbai_ros_g1_mujoco g1_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
 # ANYmal B blind MPC in MuJoCo
 [group("2. demos")]
 anymal_b_mpc_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_anymal_d anymal_b_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
+    roslaunch tbai_ros_anymal_b_mujoco anymal_b_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
 # ANYmal C blind MPC in MuJoCo
 [group("2. demos")]
 anymal_c_mpc_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_anymal_d anymal_c_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
+    roslaunch tbai_ros_anymal_c_mujoco anymal_c_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
 # ANYmal D blind MPC in MuJoCo
 [group("2. demos")]
 anymal_d_mpc_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_anymal_d anymal_d_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
 # ANYmal D blind Bob in MuJoCo
 [group("2. demos")]
 anymal_d_bob_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_anymal_d anymal_d_bob_mujoco.launch mujoco_simulation:=true run_rviz:=true
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_bob_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
 # ANYmal D perceptive Bob in MuJoCo
 [group("2. demos")]
 anymal_d_bob_perceptive_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_anymal_d anymal_d_bob_perceptive_mujoco.launch mujoco_simulation:=true run_rviz:=true
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_bob_perceptive_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
 # ANYmal D blind DTC in MuJoCo
 [group("2. demos")]
 anymal_d_dtc_blind_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_anymal_d anymal_d_dtc_blind_mujoco.launch mujoco_simulation:=true run_rviz:=true
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_dtc_blind_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
 # ANYmal D perceptive DTC in MuJoCo
 [group("2. demos")]
 anymal_d_dtc_perceptive_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_anymal_d anymal_d_dtc_perceptive_mujoco.launch mujoco_simulation:=true run_rviz:=true
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_dtc_perceptive_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
 # ANYmal D JOE in MuJoCo
 [group("2. demos")]
 anymal_d_joe_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_anymal_d anymal_d_joe_mujoco.launch mujoco_simulation:=true run_rviz:=true
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_joe_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
 # Spot in MuJoCo (with MPC + RViz)
 [group("2. demos")]
 spot_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_spot spot_mujoco.launch mujoco_simulation:=true run_rviz:=true
+    roslaunch tbai_ros_spot_mujoco spot_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
 # Spot Arm in MuJoCo (with MPC + RViz)
 [group("2. demos")]
 spot_arm_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_spot spot_arm_mujoco.launch mujoco_simulation:=true run_rviz:=true
+    roslaunch tbai_ros_spot_mujoco spot_arm_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
 # Franka Panda in MuJoCo (with MPC + RViz)
 [group("2. demos")]
 franka_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_franka franka_mujoco.launch mujoco_simulation:=true run_rviz:=true enable_mpc:=true
+    roslaunch tbai_ros_franka_mujoco franka_mujoco.launch mujoco_simulation:=true run_rviz:=true enable_mpc:=true
 
 # Go2W (wheeled) drive in MuJoCo
 [group("2. demos")]
 go2w_drive_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_go2w go2w_mujoco_drive.launch run_rviz:=true
+    roslaunch tbai_ros_go2w_mujoco go2w_mujoco_drive.launch run_rviz:=true
 
 # Go2W (wheeled) handstand in MuJoCo
 [group("2. demos")]
 go2w_handstand_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_go2w go2w_mujoco_handstand.launch run_rviz:=false
+    roslaunch tbai_ros_go2w_mujoco go2w_mujoco_handstand.launch run_rviz:=false
 
 # Spot with arm, MPC, dummy
 [group("2. demos")]
@@ -189,28 +183,28 @@ franka_arm_mpc_dummy:
 deploy-go2-np3o:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=true mapping_device:=cpu
+    roslaunch tbai_ros_go2_rl_mujoco deploy_go2_np3o.launch publish_pointcloud:=true mapping_device:=cpu
 
 # Deploy go2 np3o policy with an MPPI safety controller
 [group("3. deployment")]
 deploy-go2-np3o-mppi:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o_mppi.launch publish_pointcloud:=true mapping_device:=cpu
+    roslaunch tbai_ros_go2_rl_mujoco deploy_go2_np3o_mppi.launch publish_pointcloud:=true mapping_device:=cpu
 
 # Deploy go2 np3o policy with a safe controller
 [group("3. deployment")]
 deploy-go2-np3o-safe:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o_safe.launch publish_pointcloud:=true mapping_device:=cpu
+    roslaunch tbai_ros_go2_rl_mujoco deploy_go2_np3o_safe.launch publish_pointcloud:=true mapping_device:=cpu
 
 # Deploy go2 MPC policy
 [group("3. deployment")]
 deploy-go2-mpc:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_rl deploy_go2_mpc.launch publish_pointcloud:=false mapping_device:=none
+    roslaunch tbai_ros_go2_rl_mujoco deploy_go2_mpc.launch publish_pointcloud:=false mapping_device:=none
 
 #******************************************************************************************************************#
 #******************************************************************************************************************#
@@ -242,7 +236,7 @@ lint:
 build:
     #!/usr/bin/env bash
     ros_packages=""
-    search_dirs=(./ tbai_ros_deploy_go2/)
+    search_dirs=(./ tbai_ros_examples/ tbai_ros_controllers/ tbai_ros_examples/tbai_ros_go2/)
     for search_dir in ${search_dirs[@]}; do
         for folder in "$search_dir"*/; do
             folder=${folder%/}
@@ -405,5 +399,5 @@ ros-build-all: build
 [group("4. development")]
 ros-build-go2: 
     #!/usr/bin/env bash
-    catkin build tbai_ros_deploy_go2_rl
+    catkin build tbai_ros_go2_rl_mujoco
 

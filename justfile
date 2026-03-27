@@ -1,6 +1,5 @@
 justfile_path := `realpath justfile`
 tbai_build_dir := "/tmp/tbai_build_123"
-unitree_mujoco_build_dir := "/tmp/unitree_mujoco_build_123"
 current_dir := `realpath justfile`
 
 # Show available commands
@@ -24,15 +23,13 @@ fresh-install-go2-gpu-free: clean clone-tbai build-tbai ros-build-go2 install-tb
 
 # Fresh install all environment
 [group("1. fresh")]
-fresh-install-all: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi clone-mujoco-robotic-assets build-mujoco-robotic-assets clone-unitree-mujoco build-unitree-mujoco
-    #!/usr/bin/env bash
+fresh-install-all: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi clone-mujoco-robotic-assets build-mujoco-robotic-assets    #!/usr/bin/env bash
     catkin build elevation_mapping elevation_mapping_cupy
     echo "All good 🤗"
 
 # Fresh install all-gpu-free environment
 [group("1. fresh")]
-fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi clone-mujoco-robotic-assets build-mujoco-robotic-assets clone-unitree-mujoco build-unitree-mujoco
-    #!/usr/bin/env bash
+fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi clone-mujoco-robotic-assets build-mujoco-robotic-assets    #!/usr/bin/env bash
     catkin build elevation_mapping
     echo "All good 🤗"
 
@@ -331,32 +328,6 @@ build-mujoco-robotic-assets:
 remove-mujoco-robotic-assets:
     #!/usr/bin/env bash
     rm -rf dependencies/mujoco_robotic_assets
-
-[group("3. development")]
-clone-unitree-mujoco:
-    #!/usr/bin/env bash
-    if [[ ! -d dependencies/unitree_mujoco ]]; then
-        git clone https://github.com/tbai-lab/unitree_mujoco.git --single-branch --branch=main dependencies/unitree_mujoco
-    else
-        echo "[TBAI] dependencies/unitree_mujoco already exists, skipping clone"
-        if [[ -d dependencies/unitree_mujoco/.git ]]; then
-            echo "[TBAI] dependencies/unitree_mujoco exists, pulling latest changes"
-            git -C dependencies/unitree_mujoco pull
-        fi
-    fi
-
-[group("3. development")]
-build-unitree-mujoco:
-    #!/usr/bin/env bash
-    cmake -B{{unitree_mujoco_build_dir}} -Sdependencies/unitree_mujoco -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-    cmake --build {{unitree_mujoco_build_dir}} --parallel 8
-    cmake --build {{unitree_mujoco_build_dir}} --target install
-
-[group("3. development")]
-remove-unitree-mujoco:
-    #!/usr/bin/env bash
-    rm -rf dependencies/unitree_mujoco
-    rm -rf {{unitree_mujoco_build_dir}}
 
 [group("3. development")]
 install-tbai-cbf-mppi: clone-tbai

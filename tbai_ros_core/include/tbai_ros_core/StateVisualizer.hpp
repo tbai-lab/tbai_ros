@@ -11,25 +11,25 @@
 #include <kdl_parser/kdl_parser.hpp>
 #include <robot_state_publisher/robot_state_publisher.h>
 #include <ros/ros.h>
-#include <tf2_ros/transform_broadcaster.h>
-#include <visualization_msgs/MarkerArray.h>
-
 #include <tbai_core/Rotations.hpp>
 #include <tbai_core/Types.hpp>
 #include <tbai_core/control/Subscribers.hpp>
+#include <tf2_ros/transform_broadcaster.h>
+#include <visualization_msgs/MarkerArray.h>
 
 namespace tbai {
 
 class StateVisualizer {
    public:
-    StateVisualizer(std::shared_ptr<tbai::StateSubscriber> interface,
-                    const std::vector<std::string> &jointNames,
-                    const std::vector<std::string> &footFrameNames,
-                    double rate = 30.0,
-                    bool enableContactVis = true,
+    StateVisualizer(std::shared_ptr<tbai::StateSubscriber> interface, const std::vector<std::string> &jointNames,
+                    const std::vector<std::string> &footFrameNames, double rate = 30.0, bool enableContactVis = true,
                     const std::string &baseName = "")
-        : interface_(interface), jointNames_(jointNames), footFrameNames_(footFrameNames),
-          baseName_(baseName), enableContactVis_(enableContactVis), running_(true) {
+        : interface_(interface),
+          jointNames_(jointNames),
+          footFrameNames_(footFrameNames),
+          baseName_(baseName),
+          enableContactVis_(enableContactVis),
+          running_(true) {
         ros::NodeHandle nh;
         if (enableContactVis_ && !footFrameNames_.empty()) {
             contactPublisher_ = nh.advertise<visualization_msgs::MarkerArray>("/contact_points", 1);
@@ -106,7 +106,8 @@ class StateVisualizer {
             marker.header.frame_id = footFrameNames_[i];  // Relative to foot TF frame
             marker.id = i;
             marker.type = visualization_msgs::Marker::SPHERE;
-            marker.action = state.contactFlags[i] ? visualization_msgs::Marker::ADD : visualization_msgs::Marker::DELETE;
+            marker.action =
+                state.contactFlags[i] ? visualization_msgs::Marker::ADD : visualization_msgs::Marker::DELETE;
             marker.pose.position.x = 0.0;
             marker.pose.position.y = 0.0;
             marker.pose.position.z = 0.0;

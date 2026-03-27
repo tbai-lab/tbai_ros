@@ -1,5 +1,0 @@
-<library path="lib/libUnitreeGazeboInterface">
-  <class name="tbai_ros_gazebo_unitree/UnitreeGazeboInterface"
-         type="gazebo::UnitreeGazeboInterface"
-         base_class_type="gazebo::ModelPlugin"/>
-</library>

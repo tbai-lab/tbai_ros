@@ -3,7 +3,7 @@
     <!-- Required arguments -->
     <arg name="robot_name"          default="spot_arm"/>
     <arg name="tbai_config_path"    default="$(find tbai_ros_mpc)/config/spot_arm/blind/default_config_spot.yaml"/>
-    <arg name="urdf_file"           default="/home/kb/projects/ros_test/src/tbai_ros/thirdparty/tbai_descriptions/robots/spot_arm/spot_arm.urdf"/>
+    <arg name="urdf_file"           default="$(find tbai_descriptions)/urdf/robots/spot_arm/spot_arm.urdf"/>
 
     <arg name="sqp_settings_file" default="$(find tbai_ros_mpc)/config/spot_arm/blind/sqp.info"/>
     <arg name="frame_declaration_file" default="$(find tbai_ros_mpc)/config/spot_arm/blind/frame_declarations.info"/>

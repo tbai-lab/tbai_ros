@@ -2,13 +2,13 @@
 <launch>
     <arg name="robot_name"          default="anymal_d"/>
     <arg name="tbai_config_path"    default="$(find tbai_ros_anymal_d_mujoco)/config/deploy_anymal_d_bob_perceptive.yaml"/>
-    <arg name="urdf_file"           default="/home/kb/projects/ros_test/src/tbai_ros/thirdparty/tbai_descriptions/robots/anymal_d/anymal_d.urdf"/>
+    <arg name="urdf_file"           default="$(find tbai_descriptions)/urdf/robots/anymal_d/anymal_d.urdf"/>
     <arg name="run_rviz"            default="true"/>
     <arg name="mapping_device"      default="cpu"/>
 
     <!-- MuJoCo simulation -->
     <arg name="mujoco_simulation" default="false"/>
-    <arg name="mujoco_config_file" default="/home/kb/projects/tbai_mujoco_descriptions/robots/anymal_d/config.yaml"/>
+    <arg name="mujoco_config_file" default="$(find tbai_descriptions)/mujoco/robots/anymal_d/config.yaml"/>
     <group if="$(arg mujoco_simulation)">
         <node name="mujoco_sim" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
               args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>

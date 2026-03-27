@@ -10,7 +10,7 @@
    
     <!-- MuJoCo simulation -->
     <arg name="mujoco_simulation" default="false"/>
-    <arg name="mujoco_config_file" default="/home/kb/projects/tbai_mujoco_descriptions/robots/g1/config.yaml"/>
+    <arg name="mujoco_config_file" default="$(find tbai_descriptions)/mujoco/robots/g1/config.yaml"/>
     <group if="$(arg mujoco_simulation)">
         <node name="mujoco_sim" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
               args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>
@@ -21,7 +21,7 @@
     <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>
     <env name="TBAI_G1_NETWORK_INTERFACE" value="$(arg network_interface)"/>
     <env name="TBAI_G1_UNITREE_CHANNEL" value="$(arg unitree_channel)"/>
-    <env name="TBAI_ROBOT_DESCRIPTION_PATH" value="/home/kb/projects/ros_test/src/tbai_ros/thirdparty/tbai_descriptions/robots/g1/g1.urdf"/>
+    <env name="TBAI_ROBOT_DESCRIPTION_PATH" value="$(find tbai_descriptions)/urdf/robots/g1/g1.urdf"/>
 
     <!-- MuJoCo sensor publishing -->
     <env name="TBAI_G1_PUBLISH_IMAGE" value="$(arg mujoco_simulation)"/>
@@ -30,7 +30,7 @@
 
     <!-- Load robot description -->
     <param name="robot_description"
-           command="cat /home/kb/projects/ros_test/src/tbai_ros/thirdparty/tbai_descriptions/robots/g1/g1.urdf"/>
+           command="cat $(find tbai_descriptions)/urdf/robots/g1/g1.urdf"/>
 
     <!-- Launch G1 RL controller node -->
     <node name="deploy_g1_rl" pkg="tbai_ros_g1_mujoco" type="deploy_g1_rl" output="screen"/>

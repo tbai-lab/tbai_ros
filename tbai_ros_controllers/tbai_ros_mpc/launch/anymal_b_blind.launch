@@ -3,7 +3,7 @@
     <!-- Required arguments -->
     <arg name="robot_name"          default="anymal_b"/>
     <arg name="tbai_config_path"    default="$(find tbai_ros_mpc)/config/anymal_b/blind/default_config_anymal_b.yaml"/>
-    <arg name="urdf_file"           default="/home/kb/projects/ros_test/src/tbai_ros/thirdparty/tbai_descriptions/robots/anymal_b/anymal_b.urdf"/>
+    <arg name="urdf_file"           default="$(find tbai_descriptions)/urdf/robots/anymal_b/anymal_b.urdf"/>
 
     <arg name="sqp_settings_file" default="$(find tbai_ros_mpc)/config/anymal_b/blind/sqp.info"/>
     <arg name="frame_declaration_file" default="$(find tbai_ros_mpc)/config/anymal_b/blind/frame_declarations.info"/>

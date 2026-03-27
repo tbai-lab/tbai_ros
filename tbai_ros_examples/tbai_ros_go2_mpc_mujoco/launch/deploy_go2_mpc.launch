@@ -6,7 +6,7 @@
     <arg name="controllers_args"    default="joint_controller"/>
     <arg name="tbai_config_path"    default="$(find tbai_ros_go2_mpc_mujoco)/config/deploy_go2_mpc.yaml"/>
     <arg name="description_name"    default="robot_description"/>
-    <arg name="description_file"    default="/home/kb/projects/ros_test/src/tbai_ros/thirdparty/tbai_descriptions/robots/go2/go2.urdf"/>
+    <arg name="description_file"    default="$(find tbai_descriptions)/urdf/robots/go2/go2.urdf"/>
 
     <arg name="sqp_settings_file" default="$(find tbai_ros_go2_mpc_mujoco)/config/sqp.info"/>
     <arg name="frame_declaration_file" default="$(find tbai_ros_go2_mpc_mujoco)/config/frame_declarations.info"/>
@@ -31,7 +31,7 @@
     <param name="gait_file" type="string" value="$(arg gait_file)"/>
 
     <arg name="mujoco_simulation"            default="false"/>
-    <arg name="mujoco_config_file"          default="/home/kb/projects/tbai_mujoco_descriptions/robots/go2/config.yaml"/>
+    <arg name="mujoco_config_file"          default="$(find tbai_descriptions)/mujoco/robots/go2/config.yaml"/>
     <group if="$(arg mujoco_simulation)">
         <node name="dsa" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
         args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>

@@ -54,35 +54,45 @@ class SensorBridge {
             }
         }
         running_ = true;
-        thread_ = std::thread([this]() {
-            ros::Rate rate(30.0);
-            while (ros::ok() && running_) {
-                for (size_t i = 0; i < imgSubs_.size(); ++i) {
-                    auto f = imgSubs_[i]->take();
-                    if (f) { sensor_msgs::Image m; m.header.stamp=ros::Time::now(); m.header.frame_id=imgFrameIds_[i];
-                        m.height=f->height; m.width=f->width; m.encoding=f->encoding; m.is_bigendian=f->is_bigendian;
-                        m.step=f->step; m.data=std::move(f->data); imgPubs_[i].publish(m); }
+        if (!imgSubs_.empty()) {
+            imgThread_ = std::thread([this]() {
+                ros::Rate rate(100.0);
+                while (ros::ok() && running_) {
+                    for (size_t i = 0; i < imgSubs_.size(); ++i) {
+                        auto f = imgSubs_[i]->take();
+                        if (f) { sensor_msgs::Image m; m.header.stamp=ros::Time::now(); m.header.frame_id=imgFrameIds_[i];
+                            m.height=f->height; m.width=f->width; m.encoding=f->encoding; m.is_bigendian=f->is_bigendian;
+                            m.step=f->step; m.data=std::move(f->data); imgPubs_[i].publish(m); }
+                    }
+                    rate.sleep();
                 }
-                for (size_t i = 0; i < pcSubs_.size(); ++i) {
-                    auto p = pcSubs_[i]->take();
-                    if (p) { sensor_msgs::PointCloud2 m; m.header.stamp=ros::Time::now(); m.header.frame_id=pcFrameIds_[i];
-                        m.height=p->height; m.width=p->width; m.fields.resize(p->fields.size());
-                        for (size_t j=0;j<p->fields.size();++j) { m.fields[j].name=p->fields[j].name; m.fields[j].offset=p->fields[j].offset;
-                            m.fields[j].datatype=p->fields[j].datatype; m.fields[j].count=p->fields[j].count; }
-                        m.is_bigendian=p->is_bigendian; m.point_step=p->point_step; m.row_step=p->row_step;
-                        m.is_dense=p->is_dense; m.data=std::move(p->data); pcPubs_[i].publish(m); }
+            });
+        }
+        if (!pcSubs_.empty()) {
+            pcThread_ = std::thread([this]() {
+                ros::Rate rate(100.0);
+                while (ros::ok() && running_) {
+                    for (size_t i = 0; i < pcSubs_.size(); ++i) {
+                        auto p = pcSubs_[i]->take();
+                        if (p) { sensor_msgs::PointCloud2 m; m.header.stamp=ros::Time::now(); m.header.frame_id=pcFrameIds_[i];
+                            m.height=p->height; m.width=p->width; m.fields.resize(p->fields.size());
+                            for (size_t j=0;j<p->fields.size();++j) { m.fields[j].name=p->fields[j].name; m.fields[j].offset=p->fields[j].offset;
+                                m.fields[j].datatype=p->fields[j].datatype; m.fields[j].count=p->fields[j].count; }
+                            m.is_bigendian=p->is_bigendian; m.point_step=p->point_step; m.row_step=p->row_step;
+                            m.is_dense=p->is_dense; m.data=std::move(p->data); pcPubs_[i].publish(m); }
+                    }
+                    rate.sleep();
                 }
-                rate.sleep();
-            }
-        });
+            });
+        }
     }
-    ~SensorBridge() { running_=false; if(thread_.joinable()) thread_.join(); }
+    ~SensorBridge() { running_=false; if(imgThread_.joinable()) imgThread_.join(); if(pcThread_.joinable()) pcThread_.join(); }
    private:
     std::vector<ros::Publisher> imgPubs_, pcPubs_;
     std::vector<std::unique_ptr<tbai::PollingSubscriber<robot_msgs::ImgFrame>>> imgSubs_;
     std::vector<std::unique_ptr<tbai::PollingSubscriber<robot_msgs::PointCloud2>>> pcSubs_;
     std::vector<std::string> imgFrameIds_, pcFrameIds_;
-    std::atomic<bool> running_; std::thread thread_;
+    std::atomic<bool> running_; std::thread imgThread_, pcThread_;
 };
 
 int main(int argc, char *argv[]) {

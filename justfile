@@ -40,89 +40,12 @@ fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all install-tb
 #******************************************************************************************************************#
 #******************************************************************************************************************#
 
-# Go2 blind MPC in Gazebo
-[group("2. demos")]
-go2_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc go2_blind.launch gui:=true
-
-# Go2 perceptive MPC in Gazebo
-[group("2. demos")]
-go2_perceptive_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc go2_perceptive.launch gui:=true
-
-# ANYmal B blind MPC in Gazebo
-[group("2. demos")]
-anymal_b_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc anymal_b_blind.launch gui:=true
-
-# ANYmal C blind MPC in Gazebo
-[group("2. demos")]
-anymal_c_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc anymal_c_blind.launch gui:=true
-
-# ANYmal D blind MPC in Gazebo
-[group("2. demos")]
-anymal_d_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc anymal_d_blind.launch gui:=true
-
-# ANYmal D perceptive MPC in Gazebo
-[group("2. demos")]
-anymal_d_perceptive_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc anymal_d_perceptive.launch gui:=true
-
-# Spot blind MPC in Gazebo
-[group("2. demos")]
-spot_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc spot_blind.launch gui:=true
-
 # Go2 MPC in Mujoco
 [group("2. demos")]
 go2_mpc_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
     roslaunch tbai_ros_deploy_go2_mpc deploy_go2_mpc.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true
-
-# ANYmal D perceptive DTC in Gazebo
-[group("2. demos")]
-anymal_d_dtc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_dtc simple_perceptive.launch gui:=true
-
-# ANYmal D blind DTC in Gazebo
-[group("2. demos")]
-anymal_d_dtc_blind_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_dtc simple_blind.launch gui:=true
-
-# ANYmal D perceptive Joe in Gazebo
-[group("2. demos")]
-anymal_d_joe_perceptive_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_joe simple_perceptive.launch gui:=true
-
-# Go2 NP3O in Gazebo
-[group("2. demos")]
-go2_np3o_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_np3o simple_go2.launch gui:=true
 
 # Go2 NP3O in Mujoco
 [group("2. demos")]
@@ -138,40 +61,12 @@ go2_np3o_mppi_mujoco:
     source $(catkin locate)/devel/setup.bash
     roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o_mppi.launch run_go2_joystick:=false run_virtual_joystick:=true network_interface:=lo mujoco_simulation:=true run_rviz:=true
 
-# Go2 Safe in Gazebo
-[group("2. demos")]
-go2_safe_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_safe simple_go2_safe.launch gui:=true
-
 # Go2 Safe in Mujoco
 [group("2. demos")]
 go2_safe_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
     roslaunch tbai_ros_deploy_go2_safe deploy_go2_safe.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true
-
-# ANYmal D blind Bob in Gazebo
-[group("2. demos")]
-anymal_d_bob_blind_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_bob anymal_d_blind.launch gui:=true
-
-# ANYmal D perceptive Bob in Gazebo
-[group("2. demos")]
-anymal_d_bob_perceptive_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_bob anymal_d_perceptive.launch gui:=true
-
-# Go2 blind Bob in Gazebo
-[group("2. demos")]
-go2_bob_blind_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_bob go2_blind.launch gui:=true
 
 # G1 humanoid in MuJoCo
 [group("2. demos")]
@@ -278,46 +173,12 @@ spot_arm_mpc_dummy:
     source $(catkin locate)/devel/setup.bash
     roslaunch tbai_ros_mpc spot_arm_blind.launch dummy:=true
 
-# Spot with arm, MPC, Gazebo
-[group("2. demos")]
-spot_arm_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc spot_arm_blind.launch dummy:=false gui:=true
-
 # Franka arm, MPC, dummy
 [group("2. demos")]
 franka_arm_mpc_dummy:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
     roslaunch tbai_ros_mpc franka.launch dummy:=true
-
-# Franka arm, MPC, dummy
-[group("2. demos")]
-franka_arm_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc franka.launch dummy:=false gui:=false
-
-# Go2W (wheeled) drive in MuJoCo
-[group("2. demos")]
-go2w_drive_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    echo "This example requires two terminals:"
-    echo "roslaunch tbai_ros_gazebo_unitree go2w_gazebo_unitree.launch"
-    echo "roslaunch tbai_ros_go2w go2w_mujoco_drive.launch mujoco_simulation:=false"
-    echo "We are working on a fix! 🤗"
-    
-# Go2W (wheeled) handstand in MuJoCo
-[group("2. demos")]
-go2w_handstand_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    echo "This example requires two terminals:"
-    echo "roslaunch tbai_ros_gazebo_unitree go2w_gazebo_unitree.launch"
-    echo "roslaunch tbai_ros_go2w go2w_mujoco_handstand.launch mujoco_simulation:=false"
-    echo "We are working on a fix! 🤗"
 
 #******************************************************************************************************************#
 #******************************************************************************************************************#

@@ -51,13 +51,6 @@ target_link_libraries(${PROJECT_NAME}
     tbai::np3o
 )
 
-add_executable(simple
-    src/simple.cpp
-)
-target_link_libraries(simple
-    ${catkin_LIBRARIES} ${PROJECT_NAME} yaml-cpp
-)
-
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

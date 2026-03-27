@@ -51,16 +51,3 @@ target_link_libraries(${PROJECT_NAME}
     tbai::bob
 )
 
-add_executable(simple_blind
-    src/simple_blind.cpp
-)
-target_link_libraries(simple_blind
-    ${catkin_LIBRARIES} yaml-cpp ${PROJECT_NAME}
-)
-
-add_executable(simple_perceptive
-    src/simple_perceptive.cpp
-)
-target_link_libraries(simple_perceptive
-    ${catkin_LIBRARIES} yaml-cpp ${PROJECT_NAME}
-)

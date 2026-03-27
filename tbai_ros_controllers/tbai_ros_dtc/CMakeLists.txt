@@ -52,14 +52,6 @@ target_link_libraries(${PROJECT_NAME}
 )
 target_compile_options(${PROJECT_NAME} PUBLIC ${OCS2_CXX_FLAGS})
 
-add_executable(simple
-    src/simple.cpp
-)
-target_link_libraries(simple
-    ${catkin_LIBRARIES} ${PROJECT_NAME} yaml-cpp
-)
-target_compile_options(simple PUBLIC ${OCS2_CXX_FLAGS})
-
 install(
   DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}

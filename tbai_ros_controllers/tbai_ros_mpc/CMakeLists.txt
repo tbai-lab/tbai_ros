@@ -68,20 +68,6 @@ target_link_libraries(quadruped_mpc_node
 )
 target_compile_options(quadruped_mpc_node PRIVATE ${OCS2_CXX_FLAGS})
 
-add_executable(simple_blind
-    src/quadruped_mpc/simple_blind.cpp
-)
-target_link_libraries(simple_blind
-    ${catkin_LIBRARIES} yaml-cpp ${PROJECT_NAME}
-)
-
-add_executable(simple_perceptive
-    src/quadruped_mpc/simple_perceptive.cpp
-)
-target_link_libraries(simple_perceptive
-    ${catkin_LIBRARIES} yaml-cpp ${PROJECT_NAME}
-)
-
 ## Quadruped Dummy MRT node
 add_executable(quadruped_dummy_mrt_node
     src/quadruped_mpc/QuadrupedDummyMRT.cpp
@@ -141,15 +127,6 @@ target_link_libraries(quadruped_arm_dummy_mrt_node
 )
 target_compile_options(quadruped_arm_dummy_mrt_node PRIVATE ${OCS2_CXX_FLAGS})
 
-## Quadruped ARM simple_blind node (MPC + WBC)
-add_executable(simple_arm_blind
-    src/quadruped_arm_mpc/simple_blind.cpp
-)
-target_link_libraries(simple_arm_blind
-    ${catkin_LIBRARIES} yaml-cpp tbai_ros_quadruped_arm_mpc
-)
-target_compile_options(simple_arm_blind PRIVATE ${OCS2_CXX_FLAGS})
-
 ## Arm MPC visualization library (generic arm manipulator)
 add_library(tbai_ros_arm_mpc
     src/arm_mpc/ArmDummyVisualization.cpp
@@ -201,14 +178,3 @@ target_link_libraries(arm_target
 )
 target_compile_options(arm_target PRIVATE ${OCS2_CXX_FLAGS})
 
-## Arm WBC simple node
-add_executable(simple_arm_wbc
-    src/arm_mpc/simple_arm_wbc.cpp
-)
-target_link_libraries(simple_arm_wbc
-    ${catkin_LIBRARIES}
-    tbai_ros_arm_mpc
-    spdlog::spdlog
-    yaml-cpp
-)
-target_compile_options(simple_arm_wbc PRIVATE ${OCS2_CXX_FLAGS})

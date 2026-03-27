@@ -178,34 +178,6 @@ franka_arm_mpc_dummy:
 #******************************************************************************************************************#
 #******************************************************************************************************************#
 
-# Deploy go2 np3o policy
-[group("3. deployment")]
-deploy-go2-np3o:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_go2_rl_mujoco deploy_go2_np3o.launch publish_pointcloud:=true mapping_device:=cpu
-
-# Deploy go2 np3o policy with an MPPI safety controller
-[group("3. deployment")]
-deploy-go2-np3o-mppi:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_go2_rl_mujoco deploy_go2_np3o_mppi.launch publish_pointcloud:=true mapping_device:=cpu
-
-# Deploy go2 np3o policy with a safe controller
-[group("3. deployment")]
-deploy-go2-np3o-safe:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_go2_rl_mujoco deploy_go2_np3o_safe.launch publish_pointcloud:=true mapping_device:=cpu
-
-# Deploy go2 MPC policy
-[group("3. deployment")]
-deploy-go2-mpc:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_go2_rl_mujoco deploy_go2_mpc.launch publish_pointcloud:=false mapping_device:=none
-
 #******************************************************************************************************************#
 #******************************************************************************************************************#
 #******************************************************************************************************************#

@@ -5,7 +5,7 @@
     <arg name="controllers_args"    default="joint_controller"/>
     <arg name="tbai_config_path"    default="$(find tbai_ros_static)/config/default_config_spot_arm.yaml"/>
     <arg name="description_name"    default="robot_description"/>
-    <arg name="description_file"    default="$(find tbai_ros_description)/urdf/spot_arm_gazebo_blind.urdf.xacro"/>
+    <arg name="description_file"    default="/home/kb/projects/ros_test/src/tbai_ros/dependencies/tbai_descriptions/robots/spot_arm/spot_arm.urdf"/>
 
     <!-- Gazebo parameters -->
     <arg name="gui" default="false"/>

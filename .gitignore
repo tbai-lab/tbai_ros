@@ -3,6 +3,7 @@ __pycache__/
 tbai/
 mujoco_robotic_assets/
 unitree_mujoco/
+dependencies/tbai_descriptions/
 pixi.lock
 
 *.mp4

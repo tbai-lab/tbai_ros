@@ -9,8 +9,8 @@
     <arg name="controllers_args"    default="joint_controller"/>
     <arg name="tbai_config_path"    default="$(find tbai_ros_mpc)/config/anymal_c/blind/default_config_anymal_c.yaml"/>
     <arg name="description_name"    default="robot_description"/>
-    <arg name="description_file"    default="$(find tbai_ros_description)/urdf/anymal_c_gazebo_blind.urdf.xacro"/>
-    <arg name="urdf_file"           default="$(find gazebo_robotic_assets)/resources/anymal_c/urdf/anymal.urdf"/>
+    <arg name="description_file"    default="/home/kb/projects/ros_test/src/tbai_ros/dependencies/tbai_descriptions/robots/anymal_c/anymal_c.urdf"/>
+    <arg name="urdf_file"           default="/home/kb/projects/ros_test/src/tbai_ros/dependencies/tbai_descriptions/robots/anymal_c/anymal_c.urdf"/>
 
     <arg name="sqp_settings_file" default="$(find tbai_ros_mpc)/config/anymal_c/blind/sqp.info"/>
     <arg name="frame_declaration_file" default="$(find tbai_ros_mpc)/config/anymal_c/blind/frame_declarations.info"/>

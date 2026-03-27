@@ -2,7 +2,7 @@
 <launch>
     <arg name="robot_name"          default="spot"/>
     <arg name="tbai_config_path"    default="$(find tbai_ros_spot)/config/deploy_spot.yaml"/>
-    <arg name="urdf_file"           default="$(find gazebo_robotic_assets)/resources/spot/urdf/spot.urdf"/>
+    <arg name="urdf_file"           default="/home/kb/projects/ros_test/src/tbai_ros/dependencies/tbai_descriptions/robots/spot/spot.urdf"/>
     <arg name="run_rviz"            default="true"/>
 
     <!-- MPC config files -->

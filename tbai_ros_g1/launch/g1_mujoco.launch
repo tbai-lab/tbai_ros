@@ -21,7 +21,7 @@
     <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>
     <env name="TBAI_G1_NETWORK_INTERFACE" value="$(arg network_interface)"/>
     <env name="TBAI_G1_UNITREE_CHANNEL" value="$(arg unitree_channel)"/>
-    <env name="TBAI_ROBOT_DESCRIPTION_PATH" value="$(find gazebo_robotic_assets)/resources/g1/urdf/g1_29dof.urdf"/>
+    <env name="TBAI_ROBOT_DESCRIPTION_PATH" value="/home/kb/projects/ros_test/src/tbai_ros/dependencies/tbai_descriptions/robots/g1/g1.urdf"/>
 
     <!-- MuJoCo sensor publishing -->
     <env name="TBAI_G1_PUBLISH_IMAGE" value="$(arg mujoco_simulation)"/>
@@ -30,7 +30,7 @@
 
     <!-- Load robot description -->
     <param name="robot_description"
-           command="cat $(find gazebo_robotic_assets)/resources/g1/urdf/g1_29dof.urdf"/>
+           command="cat /home/kb/projects/ros_test/src/tbai_ros/dependencies/tbai_descriptions/robots/g1/g1.urdf"/>
 
     <!-- Launch G1 RL controller node -->
     <node name="deploy_g1_rl" pkg="tbai_ros_g1" type="deploy_g1_rl" output="screen"/>

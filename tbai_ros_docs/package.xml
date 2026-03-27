@@ -11,7 +11,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <doc_depend>doxygen</doc_depend>
   <depend>tbai_ros_core</depend>
-  <depend>tbai_ros_gazebo</depend>
+  <depend>tbai_descriptions</depend>
   <depend>tbai_ros_static</depend>
 
   <export>

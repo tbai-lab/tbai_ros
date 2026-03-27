@@ -18,7 +18,7 @@
   <depend>robot_state_publisher</depend>
   <depend>geometry_msgs</depend>
   <depend>tbai</depend>
-  <depend>tbai_ros_description</depend>
+  <depend>tbai_descriptions</depend>
   <export>
   </export>
 </package>

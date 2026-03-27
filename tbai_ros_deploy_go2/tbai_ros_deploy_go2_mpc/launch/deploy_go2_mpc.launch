@@ -31,7 +31,7 @@
     <param name="gait_file" type="string" value="$(arg gait_file)"/>
 
     <arg name="mujoco_simulation"            default="false"/>
-    <arg name="mujoco_config_file"          default="/home/kb/projects/tbai_mujoco/simulate/configs/config_go2.yaml"/>
+    <arg name="mujoco_config_file"          default="/home/kb/projects/tbai_mujoco_descriptions/robots/go2/config.yaml"/>
     <group if="$(arg mujoco_simulation)">
         <node name="dsa" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
         args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>

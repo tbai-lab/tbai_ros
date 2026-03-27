@@ -8,7 +8,7 @@
 
     <!-- MuJoCo simulation -->
     <arg name="mujoco_simulation" default="true"/>
-    <arg name="mujoco_config_file" default="/home/kb/projects/tbai_mujoco/simulate/configs/config_go2w.yaml"/>
+    <arg name="mujoco_config_file" default="/home/kb/projects/tbai_mujoco_descriptions/robots/go2w/config.yaml"/>
     <group if="$(arg mujoco_simulation)">
         <node name="mujoco_sim" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
               args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>

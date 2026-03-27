@@ -69,4 +69,3 @@ reference_generator:
     topic: "cmd_vel"
 
 
-estimator_type: "muse"

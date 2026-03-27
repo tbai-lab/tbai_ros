@@ -49,4 +49,3 @@ reference_generator:
   twist:
     topic: "cmd_vel"
 
-estimator_type: "muse"

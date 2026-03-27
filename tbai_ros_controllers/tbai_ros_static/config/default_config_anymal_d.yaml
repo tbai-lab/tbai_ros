@@ -18,4 +18,3 @@ static_controller:
   interpolation_time: 1.0 # s
   rate: 50 # Hz
 
-estimator_type: "muse"

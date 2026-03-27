@@ -259,8 +259,7 @@ clone-tbai:
 build-tbai:
     #!/usr/bin/env bash
     cmake -B{{tbai_build_dir}} -Sthirdparty/tbai -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-    cmake --build {{tbai_build_dir}} --parallel 8
-    cmake --build {{tbai_build_dir}} --target install
+    cmake --build {{tbai_build_dir}} --parallel 8 --target install
 
 # Remove tbai dependencies
 [group("4. tbai")]

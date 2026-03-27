@@ -48,18 +48,3 @@ target_include_directories(deploy_go2_rl
     "${catkin_INCLUDE_DIRS}" include
 )
 
-add_executable(go2_joystick_node
-    src/go2_joystick_node.cpp
-)
-target_link_libraries(go2_joystick_node
-    PUBLIC
-    ${catkin_LIBRARIES}
-    tbai::core
-    tbai::deploy_go2
-    tbai::reference
-    zenohc
-)
-target_include_directories(go2_joystick_node
-    PRIVATE
-    "${catkin_INCLUDE_DIRS}" include
-)

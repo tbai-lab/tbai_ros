@@ -10,7 +10,6 @@ dependencies:
 - fmt 10.2.1.*
 - spdlog 1.13.0.*
 - libtorch ==2.1.0 *cpu_generic*
-- cpp-argparse *
 - eigen 3.4.0.*
 - gtest *
 - pybind11 2.13.6.*
@@ -20,18 +19,12 @@ dependencies:
 - huggingface_hub *
 - catkin_tools *
 - make *
-- rosdep *
 - python 3.11.*
 - python >=3.11.8,<3.14
-- compilers *
 - pkg-config *
-- ninja *
 - ros-noetic-desktop-full 1.5.0.*
 - ros-distro-mutex 0.5.0.*
 - libprotobuf *
-- colcon-common-extensions *
-- ros-noetic-ros-control *
-- ros-noetic-ros-controllers *
 - mpfr *
 - glpk *
 - ros-noetic-octomap-mapping *
@@ -42,7 +35,5 @@ dependencies:
 - just >=1.42.4,<2
 - pip
 - pip:
-  - simple-parsing>=0.1.7, <0.2
-  - ruamel-yaml>=0.18.14, <0.19
   - shapely>=2.1.1, <3
 

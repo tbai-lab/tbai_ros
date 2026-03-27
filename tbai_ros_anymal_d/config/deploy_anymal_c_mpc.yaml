@@ -28,11 +28,6 @@ mpc_controller:
     traj_knots: 10
     blind: true
 
-anymal_c:
-  joint_controller:
-      type: tbai_ros_gazebo/JointController
-      joints: *jn
-
 reference_generator:
   type: "twist"
 
@@ -50,16 +45,3 @@ reference_generator:
     topic: "cmd_vel"
 
 estimator_type: "muse"
-
-gazebo:
-  contact_sensor:
-    enabled: true
-    update_rate: 200 # Hz
-
-  ground_truth_state_publisher:
-    enabled: false
-    update_rate: 400 # Hz
-
-  muse_state_publisher:
-    enabled: true
-    update_rate: 200 # Hz

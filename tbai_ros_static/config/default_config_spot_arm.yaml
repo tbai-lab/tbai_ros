@@ -18,22 +18,4 @@ static_controller:
   interpolation_time: 1.0 # s
   rate: 50 # Hz
 
-spot_arm:
-  joint_controller:
-      type: tbai_ros_gazebo/JointController
-      joints: *jn
-
 estimator_type: "ground_truth"
-
-gazebo:
-  contact_sensor:
-    enabled: false
-    update_rate: 200 # Hz
-
-  ground_truth_state_publisher:
-    enabled: true
-    update_rate: 400 # Hz
-
-  muse_state_publisher:
-    enabled: false
-    update_rate: 200 # Hz

@@ -25,9 +25,9 @@ class RosG1Twist2Controller : public tbai::g1::G1Twist2Controller {
      * @param timeEnd End time in motion file (-1 for full duration)
      * @param controllerName Name for logging
      */
-    RosG1Twist2Controller(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
-                          const std::string &policyPath, const std::string &motionFilePath, float timeStart = 0.0f,
-                          float timeEnd = -1.0f, const std::string &controllerName = "RosG1Twist2Controller");
+    RosG1Twist2Controller(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr, const std::string &policyPath,
+                          const std::string &motionFilePath, float timeStart = 0.0f, float timeEnd = -1.0f,
+                          const std::string &controllerName = "RosG1Twist2Controller");
 
     void preStep(scalar_t currentTime, scalar_t dt) override;
 

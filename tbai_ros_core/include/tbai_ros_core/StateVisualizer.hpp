@@ -4,8 +4,8 @@
 #include <memory>
 #include <string>
 #include <thread>
-#include <vector>
 #include <tuple>
+#include <vector>
 
 #include <robot_state_publisher/robot_state_publisher.h>
 #include <ros/ros.h>
@@ -18,7 +18,8 @@ class StateVisualizer {
    public:
     StateVisualizer(std::shared_ptr<tbai::RobotInterface> interface, const std::vector<std::string> &jointNames,
                     const std::vector<std::string> &footFrameNames, double rate = 30.0, bool enableContactVis = true,
-                    const std::string &baseName = "", const std::tuple<uint8_t, uint8_t, uint8_t> &contactColor = std::make_tuple(255, 0, 0));
+                    const std::string &baseName = "",
+                    const std::tuple<uint8_t, uint8_t, uint8_t> &contactColor = std::make_tuple(255, 0, 0));
     ~StateVisualizer();
 
    private:

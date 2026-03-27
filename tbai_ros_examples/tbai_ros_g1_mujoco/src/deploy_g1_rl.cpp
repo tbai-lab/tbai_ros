@@ -204,8 +204,8 @@ int main(int argc, char *argv[]) {
         auto modelPath = tbai::downloadFromHuggingFace(repo, model);
         auto motionPath = tbai::downloadFromHuggingFace(repo, motionFile);
         TBAI_LOG_INFO(logger, "Loaded G1MimicDance102: {}/{}", repo, model);
-        addCtrl(std::make_shared<tbai::g1::RosG1MimicController>(
-            g1RobotInterface, modelPath, motionPath, fps, ts, te, "G1MimicDance102"));
+        addCtrl(std::make_shared<tbai::g1::RosG1MimicController>(g1RobotInterface, modelPath, motionPath, fps, ts, te,
+                                                                 "G1MimicDance102"));
     });
 
     // Mimic gangnam
@@ -219,8 +219,8 @@ int main(int argc, char *argv[]) {
         auto modelPath = tbai::downloadFromHuggingFace(repo, model);
         auto motionPath = tbai::downloadFromHuggingFace(repo, motionFile);
         TBAI_LOG_INFO(logger, "Loaded G1MimicGangnam: {}/{}", repo, model);
-        addCtrl(std::make_shared<tbai::g1::RosG1MimicController>(
-            g1RobotInterface, modelPath, motionPath, fps, ts, te, "G1MimicGangnam"));
+        addCtrl(std::make_shared<tbai::g1::RosG1MimicController>(g1RobotInterface, modelPath, motionPath, fps, ts, te,
+                                                                 "G1MimicGangnam"));
     });
 
     // BeyondMimic Dance
@@ -253,8 +253,8 @@ int main(int argc, char *argv[]) {
             auto ts = tbai::fromGlobalConfig<float>(configPrefix + "/time_start");
             auto te = tbai::fromGlobalConfig<float>(configPrefix + "/time_end");
             TBAI_LOG_INFO(logger, "Loaded {}: {}", ctrlName, motionFile);
-            addCtrl(std::make_shared<tbai::g1::RosG1Twist2Controller>(
-                g1RobotInterface, twistModelPath, motionPath, ts, te, ctrlName));
+            addCtrl(std::make_shared<tbai::g1::RosG1Twist2Controller>(g1RobotInterface, twistModelPath, motionPath, ts,
+                                                                      te, ctrlName));
         });
     };
     loadTwist("g1_twist_walk1", "G1TwistWalk1");
@@ -275,8 +275,8 @@ int main(int argc, char *argv[]) {
             auto ts = tbai::fromGlobalConfig<float>(configPrefix + "/time_start");
             auto te = tbai::fromGlobalConfig<float>(configPrefix + "/time_end");
             TBAI_LOG_INFO(logger, "Loaded {}: {}/{}", ctrlName, repo, model);
-            addCtrl(std::make_shared<tbai::g1::RosG1PBHCController>(
-                g1RobotInterface, modelPath, motionPath, ts, te, ctrlName));
+            addCtrl(std::make_shared<tbai::g1::RosG1PBHCController>(g1RobotInterface, modelPath, motionPath, ts, te,
+                                                                    ctrlName));
         });
     };
     loadPBHC("g1_pbhc_horse_stance_punch", "G1PBHCHorseStancePunch");
@@ -289,8 +289,8 @@ int main(int argc, char *argv[]) {
         auto model = tbai::fromGlobalConfig<std::string>("g1_asap_locomotion/hf_model");
         auto path = tbai::downloadFromHuggingFace(repo, model);
         TBAI_LOG_INFO(logger, "Loaded G1ASAPLocomotion: {}/{}", repo, model);
-        addCtrl(std::make_shared<tbai::g1::RosG1ASAPController>(
-            g1RobotInterface, referenceVelocityPtr, path, "G1ASAPLocomotion"));
+        addCtrl(std::make_shared<tbai::g1::RosG1ASAPController>(g1RobotInterface, referenceVelocityPtr, path,
+                                                                "G1ASAPLocomotion"));
     });
 
     // ASAP Mimic controllers
@@ -301,8 +301,8 @@ int main(int argc, char *argv[]) {
             auto path = tbai::downloadFromHuggingFace(repo, model);
             auto motionLength = tbai::fromGlobalConfig<float>(configPrefix + "/motion_length");
             TBAI_LOG_INFO(logger, "Loaded {}: {}/{}", ctrlName, repo, model);
-            addCtrl(std::make_shared<tbai::g1::RosG1ASAPMimicController>(
-                g1RobotInterface, path, motionLength, ctrlName));
+            addCtrl(
+                std::make_shared<tbai::g1::RosG1ASAPMimicController>(g1RobotInterface, path, motionLength, ctrlName));
         });
     };
     loadASAPMimic("g1_asap_cr7", "G1ASAPCR7");

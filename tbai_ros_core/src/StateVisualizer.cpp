@@ -18,7 +18,8 @@ StateVisualizer::StateVisualizer(std::shared_ptr<tbai::RobotInterface> interface
       footFrameNames_(footFrameNames),
       baseName_(baseName),
       enableContactVis_(enableContactVis),
-      contactColorNormalized_(std::make_tuple(std::get<0>(contactColor)/255.0, std::get<1>(contactColor)/255.0, std::get<2>(contactColor)/255.0)),
+      contactColorNormalized_(std::make_tuple(std::get<0>(contactColor) / 255.0, std::get<1>(contactColor) / 255.0,
+                                              std::get<2>(contactColor) / 255.0)),
       running_(true) {
     ros::NodeHandle nh;
     if (enableContactVis_ && !footFrameNames_.empty()) {
@@ -76,7 +77,7 @@ void StateVisualizer::publishJointTF(const State &state, const ros::Time &stamp)
     }
 
     std::map<std::string, double> positions;
-    constexpr size_t jointOffset = 12; // base position + orientation + base velocity + base angular velocity
+    constexpr size_t jointOffset = 12;  // base position + orientation + base velocity + base angular velocity
     for (size_t i = 0; i < jointNames_.size(); ++i) {
         if (jointOffset + i < static_cast<size_t>(state.x.size())) {
             positions[jointNames_[i]] = state.x[jointOffset + i];

@@ -176,7 +176,7 @@ franka_arm_mpc_dummy:
 [group("3. development")]
 format:
     #!/usr/bin/env bash
-    folders=$(ls -d */ | grep -v dependencies)
+    folders=$(ls -d */ | grep -v thirdparty)
     for folder in $folders; do
         for file in $(find $folder -name "*.hpp" -o -name "*.cpp"); do
             echo "[TBAI] Formatting $file"

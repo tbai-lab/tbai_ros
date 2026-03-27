@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+    <!-- Arguments -->
+    <arg name="tbai_config_path" default="$(find tbai_ros_franka_mujoco)/config/deploy_franka.yaml"/>
+    <arg name="run_rviz" default="true"/>
+    <arg name="enable_mpc" default="true"/>
+
+    <!-- MPC/WBC specific paths -->
+    <arg name="taskFile"  default="$(find tbai_ros_mpc)/config/franka/task.info"/>
+    <arg name="urdfFile"  default="/home/kb/projects/ros_test/src/tbai_ros/dependencies/tbai_descriptions/robots/franka_panda/franka_panda.urdf"/>
+    <arg name="libFolder" default="/tmp/tbai_arm_wbc"/>
+
+    <!-- MuJoCo simulation -->
+    <arg name="mujoco_simulation" default="false"/>
+    <arg name="mujoco_config_file" default="/home/kb/projects/tbai_mujoco_descriptions/robots/franka_panda/config.yaml"/>
+    <group if="$(arg mujoco_simulation)">
+        <node name="mujoco_sim" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
+              args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>
+    </group>
+
+    <!-- Configure TBAI -->
+    <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>
+    <param name="robot_name" type="string" value="arm"/>
+    <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>
+
+    <!-- MPC parameters (loaded to ROS param server for ArmMpcController) -->
+    <group if="$(arg enable_mpc)">
+        <param name="taskFile" type="string" value="$(arg taskFile)"/>
+        <param name="urdfFile" type="string" value="$(arg urdfFile)"/>
+        <param name="libFolder" type="string" value="$(arg libFolder)"/>
+    </group>
+
+    <!-- MuJoCo sensor publishing -->
+    <env name="TBAI_FRANKA_PUBLISH_IMAGE" value="$(arg mujoco_simulation)"/>
+    <env name="TBAI_FRANKA_PUBLISH_POINTCLOUD" value="$(arg mujoco_simulation)"/>
+
+    <!-- Load robot description (for RViz visualization) -->
+    <param name="robot_description" textfile="$(arg urdfFile)"/>
+
+    <!-- Launch Franka controller node -->
+    <node name="deploy_franka" pkg="tbai_ros_franka_mujoco" type="deploy_franka" output="screen"/>
+
+    <!-- Launch virtual joystick -->
+    <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/>
+
+    <!-- Start RViz -->
+    <group if="$(arg run_rviz)">
+        <arg name="rvizconfig" default="$(find tbai_ros_mpc)/rviz/arm.rviz"/>
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen"/>
+    </group>
+
+</launch>

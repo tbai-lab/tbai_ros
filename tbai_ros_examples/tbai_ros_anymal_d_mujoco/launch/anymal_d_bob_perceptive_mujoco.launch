@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+    <arg name="robot_name"          default="anymal_d"/>
+    <arg name="tbai_config_path"    default="$(find tbai_ros_anymal_d_mujoco)/config/deploy_anymal_d_bob_perceptive.yaml"/>
+    <arg name="urdf_file"           default="/home/kb/projects/ros_test/src/tbai_ros/dependencies/tbai_descriptions/robots/anymal_d/anymal_d.urdf"/>
+    <arg name="run_rviz"            default="true"/>
+    <arg name="mapping_device"      default="cpu"/>
+
+    <!-- MuJoCo simulation -->
+    <arg name="mujoco_simulation" default="false"/>
+    <arg name="mujoco_config_file" default="/home/kb/projects/tbai_mujoco_descriptions/robots/anymal_d/config.yaml"/>
+    <group if="$(arg mujoco_simulation)">
+        <node name="mujoco_sim" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
+              args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>
+    </group>
+
+    <!-- Configure TBAI -->
+    <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>
+    <param name="robot_name" type="string" value="$(arg robot_name)"/>
+    <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>
+    <env name="TBAI_ROBOT_DESCRIPTION_PATH" value="$(arg urdf_file)"/>
+    <env name="TBAI_ANYMAL_PUBLISH_IMAGE" value="$(arg mujoco_simulation)"/>
+    <env name="TBAI_ANYMAL_PUBLISH_POINTCLOUD" value="$(arg mujoco_simulation)"/>
+
+    <!-- Load robot description -->
+    <param name="robot_description" textfile="$(arg urdf_file)"/>
+
+    <!-- Deploy node (Bob perceptive uses same binary as blind) -->
+    <node name="deploy_anymal_d_bob" pkg="tbai_ros_anymal_d_mujoco" type="deploy_anymal_d_bob" output="screen"/>
+
+    <!-- Voxel grid downsampling per camera -->
+    <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen"/>
+
+    <node pkg="nodelet" type="nodelet" name="voxel_grid_front" args="load pcl/VoxelGrid pcl_manager" output="screen">
+        <remap from="~input" to="/pointcloud/front_lower"/>
+        <remap from="~output" to="/pointcloud/front_lower_downsampled"/>
+        <rosparam>
+            filter_field_name: z
+            filter_limit_min: 0.01
+            filter_limit_max: 4.0
+            filter_limit_negative: False
+            leaf_size: 0.02
+        </rosparam>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="voxel_grid_left" args="load pcl/VoxelGrid pcl_manager" output="screen">
+        <remap from="~input" to="/pointcloud/left"/>
+        <remap from="~output" to="/pointcloud/left_downsampled"/>
+        <rosparam>
+            filter_field_name: z
+            filter_limit_min: 0.01
+            filter_limit_max: 4.0
+            filter_limit_negative: False
+            leaf_size: 0.02
+        </rosparam>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="voxel_grid_right" args="load pcl/VoxelGrid pcl_manager" output="screen">
+        <remap from="~input" to="/pointcloud/right"/>
+        <remap from="~output" to="/pointcloud/right_downsampled"/>
+        <rosparam>
+            filter_field_name: z
+            filter_limit_min: 0.01
+            filter_limit_max: 4.0
+            filter_limit_negative: False
+            leaf_size: 0.02
+        </rosparam>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="voxel_grid_rear_upper" args="load pcl/VoxelGrid pcl_manager" output="screen">
+        <remap from="~input" to="/pointcloud/rear_upper"/>
+        <remap from="~output" to="/pointcloud/rear_upper_downsampled"/>
+        <rosparam>
+            filter_field_name: z
+            filter_limit_min: 0.01
+            filter_limit_max: 4.0
+            filter_limit_negative: False
+            leaf_size: 0.02
+        </rosparam>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="voxel_grid_rear_lower" args="load pcl/VoxelGrid pcl_manager" output="screen">
+        <remap from="~input" to="/pointcloud/rear_lower"/>
+        <remap from="~output" to="/pointcloud/rear_lower_downsampled"/>
+        <rosparam>
+            filter_field_name: z
+            filter_limit_min: 0.01
+            filter_limit_max: 4.0
+            filter_limit_negative: False
+            leaf_size: 0.02
+        </rosparam>
+    </node>
+
+    <!-- Elevation mapping with multiple input sources -->
+    <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen">
+        <rosparam command="load" file="$(find tbai_ros_anymal_d_mujoco)/config/elevation_mapping_mujoco.yaml"/>
+        <rosparam command="load" file="$(find tbai_ros_gridmap)/config/post_processing.yaml"/>
+    </node>
+
+    <!-- Virtual joystick -->
+    <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/>
+
+    <!-- RViz -->
+    <group if="$(arg run_rviz)">
+        <arg name="rvizconfig" default="$(find tbai_ros_bob)/launch/rviz/robot.rviz"/>
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen"/>
+    </group>
+
+</launch>

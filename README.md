@@ -105,7 +105,7 @@ $ just help
 https://github.com/user-attachments/assets/b424cec3-14c2-477c-bf13-06d57f93b8e6
 
 
-Check out the [**tbai_ros_deploy_go2_rl**](./tbai_ros_deploy_go2/tbai_ros_deploy_go2_rl) folder for deployment-related documentation, pictures and videos 🤗
+Check out the [**tbai_ros_go2_rl**](./tbai_ros_go2/tbai_ros_go2_rl) folder for deployment-related documentation, pictures and videos 🤗
 
 ### G1 Dancing
 

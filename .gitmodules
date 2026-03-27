@@ -19,12 +19,6 @@
 [submodule "dependencies/pybind11_catkin"]
 	path = dependencies/pybind11_catkin
 	url = https://github.com/wxmerkt/pybind11_catkin.git
-[submodule "dependencies/realsense-ros"]
-	path = dependencies/realsense-ros
-	url = https://github.com/IntelRealSense/realsense-ros.git
 [submodule "dependencies/ddynamic_reconfigure"]
 	path = dependencies/ddynamic_reconfigure
 	url = https://github.com/pal-robotics/ddynamic_reconfigure.git
-[submodule "dependencies/HesaiLidar_ROS_2.0"]
-	path = dependencies/HesaiLidar_ROS_2.0
-	url = https://github.com/lnotspotl/HesaiLidar_ROS_2.0.git

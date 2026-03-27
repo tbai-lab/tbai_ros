@@ -11,14 +11,14 @@ help:
 [group("1. fresh")]
 fresh-install-go2: clean clone-tbai build-tbai ros-build-go2 install-tbai-cbf-mppi
     #!/usr/bin/env bash
-    catkin build elevation_mapping elevation_mapping_cupy hesai_ros_driver realsense2_camera
+    catkin build elevation_mapping elevation_mapping_cupy
     echo "All good 🤗"
 
 # Fresh install go2-gpu-free environment
 [group("1. fresh")]
 fresh-install-go2-gpu-free: clean clone-tbai build-tbai ros-build-go2 install-tbai-cbf-mppi
     #!/usr/bin/env bash
-    catkin build elevation_mapping realsense2_camera hesai_ros_driver
+    catkin build elevation_mapping
     echo "All good 🤗"
 
 # Fresh install all environment
@@ -50,13 +50,6 @@ go2_np3o_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
     roslaunch tbai_ros_go2_rl_mujoco deploy_go2_np3o.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true publish_pointcloud:=false
-
-# Go2 NP3O with MPPI in Mujoco
-[group("2. demos")]
-go2_np3o_mppi_mujoco:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_go2_rl_mujoco deploy_go2_np3o_mppi.launch run_go2_joystick:=false run_virtual_joystick:=true network_interface:=lo mujoco_simulation:=true run_rviz:=true
 
 
 # G1 humanoid in MuJoCo

@@ -36,10 +36,10 @@ dependencies:
 - glpk *
 - ros-noetic-octomap-mapping *
 - ros-noetic-octomap-server *
-- cupy *
 - libgl-devel *
 - glfw *
-- cudatoolkit *
+- cuda-version 12.8.*
+- cupy *
 - ros-noetic-image-transport >=1.12.0,<2
 - ros-noetic-image-transport-plugins >=1.14.0,<2
 - cpplint >=1.6.0,<2

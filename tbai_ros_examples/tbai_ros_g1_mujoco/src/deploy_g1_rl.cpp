@@ -135,16 +135,16 @@ int main(int argc, char *argv[]) {
     tbai::writeInitTime(tbai::RosTime::rightNow());
 
     // Start sensor bridge for mujoco image/pointcloud publishing
-    bool publishImage = tbai::getEnvAs<bool>("TBAI_G1_PUBLISH_IMAGE", true, false);
-    bool publishPointcloud = tbai::getEnvAs<bool>("TBAI_G1_PUBLISH_POINTCLOUD", true, false);
+    bool publishImage = tbai::getEnvAs<bool>("TBAI_G1_PUBLISH_IMAGE", false);
+    bool publishPointcloud = tbai::getEnvAs<bool>("TBAI_G1_PUBLISH_POINTCLOUD", false);
     auto sensorBridge = std::make_unique<SensorBridge>(publishImage, publishPointcloud);
 
     // Initialize G1RobotInterface
     std::shared_ptr<tbai::G1RobotInterface> g1RobotInterface = std::make_shared<tbai::G1RobotInterface>(
         tbai::G1RobotInterfaceArgs()
-            .networkInterface(tbai::getEnvAs<std::string>("TBAI_G1_NETWORK_INTERFACE", true, "lo"))
-            .unitreeChannel(tbai::getEnvAs<int>("TBAI_G1_UNITREE_CHANNEL", true, 1))
-            .useGroundTruthState(tbai::getEnvAs<bool>("TBAI_G1_USE_GROUND_TRUTH", true, false)));
+            .networkInterface(tbai::getEnvAs<std::string>("TBAI_G1_NETWORK_INTERFACE", "lo"))
+            .unitreeChannel(tbai::getEnvAs<int>("TBAI_G1_UNITREE_CHANNEL", 1))
+            .useGroundTruthState(tbai::getEnvAs<bool>("TBAI_G1_USE_GROUND_TRUTH", false)));
 
     // Start state visualizer (TF + contact markers) for all controllers
     auto jointNames = tbai::fromGlobalConfig<std::vector<std::string>>("joint_names");

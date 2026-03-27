@@ -135,8 +135,8 @@ int main(int argc, char *argv[]) {
 
     tbai::writeInitTime(tbai::RosTime::rightNow());
 
-    bool publishImages = tbai::getEnvAs<bool>("TBAI_ANYMAL_PUBLISH_IMAGE", true, false);
-    bool publishPointclouds = tbai::getEnvAs<bool>("TBAI_ANYMAL_PUBLISH_POINTCLOUD", true, false);
+    bool publishImages = tbai::getEnvAs<bool>("TBAI_ANYMAL_PUBLISH_IMAGE", false);
+    bool publishPointclouds = tbai::getEnvAs<bool>("TBAI_ANYMAL_PUBLISH_POINTCLOUD", false);
     auto sensorBridge = std::make_unique<SensorBridge>(publishImages, publishPointclouds);
 
     const std::string urdfString = nh.param<std::string>("robot_description", "");

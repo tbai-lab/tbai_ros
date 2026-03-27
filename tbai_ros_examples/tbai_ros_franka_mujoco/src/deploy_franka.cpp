@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
     tbai::writeInitTime(tbai::RosTime::rightNow());
 
     // Start sensor bridge for mujoco camera
-    bool publishImage = tbai::getEnvAs<bool>("TBAI_FRANKA_PUBLISH_IMAGE", true, false);
+    bool publishImage = tbai::getEnvAs<bool>("TBAI_FRANKA_PUBLISH_IMAGE", false);
     auto sensorBridge = std::make_unique<SensorBridge>(publishImage);
 
     // The FrankaRobotInterface implements RobotInterface (state + commands)

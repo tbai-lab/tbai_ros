@@ -131,16 +131,16 @@ int main(int argc, char *argv[]) {
     tbai::writeInitTime(tbai::RosTime::rightNow());
 
     // Sensor bridge for cameras and pointclouds
-    bool publishImages = tbai::getEnvAs<bool>("TBAI_GO2_PUBLISH_IMAGE", true, true);
-    bool publishPointclouds = tbai::getEnvAs<bool>("TBAI_GO2_PUBLISH_POINTCLOUD", true, true);
+    bool publishImages = tbai::getEnvAs<bool>("TBAI_GO2_PUBLISH_IMAGE", true);
+    bool publishPointclouds = tbai::getEnvAs<bool>("TBAI_GO2_PUBLISH_POINTCLOUD", true);
     auto sensorBridge = std::make_unique<SensorBridge>(publishImages, publishPointclouds);
 
     // Initialize Go2RobotInterface
     auto go2RobotInterface = std::make_shared<tbai::Go2RobotInterface>(
         tbai::Go2RobotInterfaceArgs()
-            .networkInterface(tbai::getEnvAs<std::string>("TBAI_GO2_NETWORK_INTERFACE", true, "eth0"))
-            .unitreeChannel(tbai::getEnvAs<int>("TBAI_GO2_UNITREE_CHANNEL", true, 0))
-            .useGroundTruthState(tbai::getEnvAs<bool>("TBAI_GO2_USE_GROUND_TRUTH", true, false)));
+            .networkInterface(tbai::getEnvAs<std::string>("TBAI_GO2_NETWORK_INTERFACE", "eth0"))
+            .unitreeChannel(tbai::getEnvAs<int>("TBAI_GO2_UNITREE_CHANNEL", 0))
+            .useGroundTruthState(tbai::getEnvAs<bool>("TBAI_GO2_USE_GROUND_TRUTH", false)));
 
     auto changeControllerTopic = tbai::fromGlobalConfig<std::string>("change_controller_topic");
 

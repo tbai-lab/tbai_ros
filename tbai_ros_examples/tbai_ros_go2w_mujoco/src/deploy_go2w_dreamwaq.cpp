@@ -74,12 +74,12 @@ int main(int argc, char *argv[]) {
     tbai::writeInitTime(tbai::RosTime::rightNow());
 
     // Start sensor bridge
-    bool publishImage = tbai::getEnvAs<bool>("TBAI_GO2W_PUBLISH_IMAGE", true, true);
+    bool publishImage = tbai::getEnvAs<bool>("TBAI_GO2W_PUBLISH_IMAGE", true);
     auto sensorBridge = std::make_unique<SensorBridge>(publishImage);
 
     // Initialize Go2WRobotInterface
     tbai::Go2WRobotInterfaceArgs ifaceArgs;
-    ifaceArgs.useGroundTruthState(tbai::getEnvAs<bool>("TBAI_GO2W_USE_GROUND_TRUTH", true, false));
+    ifaceArgs.useGroundTruthState(tbai::getEnvAs<bool>("TBAI_GO2W_USE_GROUND_TRUTH", false));
     std::shared_ptr<tbai::Go2WRobotInterface> go2wRobotInterface =
         std::make_shared<tbai::Go2WRobotInterface>(ifaceArgs);
 

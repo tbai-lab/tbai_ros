@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
         std::string robotName = tbai::fromGlobalConfig<std::string>("robot_name");
         tbai::writeInitTime(tbai::RosTime::rightNow());
 
-        bool publishImage = tbai::getEnvAs<bool>("TBAI_SPOT_PUBLISH_IMAGE", true, false);
+        bool publishImage = tbai::getEnvAs<bool>("TBAI_SPOT_PUBLISH_IMAGE", false);
         auto sensorBridge = std::make_unique<SensorBridge>(publishImage);
 
         auto spotArmInterface = std::make_shared<tbai::SpotArmRobotInterface>(tbai::SpotArmRobotInterfaceArgs());

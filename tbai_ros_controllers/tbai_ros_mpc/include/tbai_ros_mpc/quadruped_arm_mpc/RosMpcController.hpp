@@ -57,10 +57,10 @@ class RosMpcController : public tbai::mpc::quadruped_arm::MpcController {
    public:
     /**
      * Constructor
-     * @param stateSubscriberPtr: State subscriber for getting robot state
+     * @param robotInterfacePtr: State subscriber for getting robot state
      * @param velocityGeneratorPtr: Reference velocity generator
      */
-    RosMpcController(const std::string &robotName, const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+    RosMpcController(const std::string &robotName, const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                      std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr,
                      std::function<scalar_t()> getCurrentTimeFunction);
 

@@ -7,9 +7,9 @@ namespace tbai {
 namespace np3o {
 
 RosNp3oController::RosNp3oController(const std::string &urdfString,
-                                     const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+                                     const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                                      const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr)
-    : tbai::Np3oController(urdfString, stateSubscriberPtr, refVelGenPtr) {
+    : tbai::Np3oController(urdfString, robotInterfacePtr, refVelGenPtr) {
     timeSinceLastVisualizationUpdate_ = 1000.0;
 
     publishState_ = tbai::fromGlobalConfig<bool>("np3o/publish_state", false);
@@ -49,7 +49,7 @@ bool RosNp3oController::ok() const {
 
 void RosNp3oController::preStep(scalar_t currentTime, scalar_t dt) {
     ros::spinOnce();
-    state_ = stateSubscriberPtr_->getLatestState();
+    state_ = robotInterfacePtr_->getLatestState();
 }
 
 void RosNp3oController::publishEstimatedState() {

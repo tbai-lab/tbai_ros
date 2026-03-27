@@ -20,9 +20,9 @@ namespace tbai::mpc::arm {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-ArmMpcController::ArmMpcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+ArmMpcController::ArmMpcController(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                                    std::function<scalar_t()> getCurrentTimeFunction)
-    : stateSubscriberPtr_(stateSubscriberPtr), getCurrentTimeFunction_(getCurrentTimeFunction) {
+    : robotInterfacePtr_(robotInterfacePtr), getCurrentTimeFunction_(getCurrentTimeFunction) {
     logger_ = tbai::getLogger("arm_mpc_controller");
     initTime_ = tbai::readInitTime();
     initialize();
@@ -178,7 +178,7 @@ std::vector<MotorCommand> ArmMpcController::getMotorCommands(scalar_t currentTim
 /*********************************************************************************************************************/
 void ArmMpcController::preStep(scalar_t currentTime, scalar_t dt) {
     ros::spinOnce();
-    state_ = stateSubscriberPtr_->getLatestState();
+    state_ = robotInterfacePtr_->getLatestState();
 }
 
 /*********************************************************************************************************************/
@@ -274,7 +274,7 @@ void ArmMpcController::referenceThreadLoop() {
     TBAI_LOG_WARN(logger_, "Reference trajectory generator reset");
 
     // Wait for initial observation
-    stateSubscriberPtr_->waitTillInitialized();
+    robotInterfacePtr_->waitTillInitialized();
     ocs2::SystemObservation observation = generateSystemObservation();
     TBAI_LOG_WARN(logger_, "Reference trajectory generator initialized");
 
@@ -379,7 +379,7 @@ bool ArmMpcController::isSupported(const std::string &controllerType) {
 /*********************************************************************************************************************/
 void ArmMpcController::resetMpc() {
     // Same pattern as quadruped MpcController::resetMpc()
-    stateSubscriberPtr_->waitTillInitialized();
+    robotInterfacePtr_->waitTillInitialized();
     auto initialObservation = generateSystemObservation();
 
     // Build initial EE target state: [position(3), quaternion(4)]
@@ -414,7 +414,7 @@ void ArmMpcController::setObservation() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 ocs2::SystemObservation ArmMpcController::generateSystemObservation() const {
-    auto state = stateSubscriberPtr_->getLatestState();
+    auto state = robotInterfacePtr_->getLatestState();
     const tbai::vector_t &rbdState = state.x;
 
     const size_t nJoints = manipulatorInterfacePtr_->getArmModelInfo().armDim;

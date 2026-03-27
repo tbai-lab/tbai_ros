@@ -7,9 +7,9 @@ namespace tbai {
 namespace rl {
 
 RosBobController::RosBobController(const std::string &urdfString,
-                                   const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+                                   const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                                    const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr)
-    : tbai::BobController(urdfString, stateSubscriberPtr, refVelGenPtr) {
+    : tbai::BobController(urdfString, robotInterfacePtr, refVelGenPtr) {
     if (!blind_) {
         gridmap_ = tbai::gridmap::getGridmapInterfaceUnique();
     }
@@ -60,7 +60,7 @@ bool RosBobController::ok() const {
 
 void RosBobController::preStep(scalar_t currentTime, scalar_t dt) {
     ros::spinOnce();
-    state_ = stateSubscriberPtr_->getLatestState();
+    state_ = robotInterfacePtr_->getLatestState();
 }
 
 void RosBobController::publishEstimatedState() {

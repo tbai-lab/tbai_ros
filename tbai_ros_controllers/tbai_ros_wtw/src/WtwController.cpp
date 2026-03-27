@@ -7,9 +7,9 @@ namespace tbai {
 namespace wtw {
 
 RosWtwController::RosWtwController(const std::string &urdfString,
-                                   const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+                                   const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                                    const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr)
-    : tbai::WtwController(urdfString, stateSubscriberPtr, refVelGenPtr) {
+    : tbai::WtwController(urdfString, robotInterfacePtr, refVelGenPtr) {
     timeSinceLastVisualizationUpdate_ = 1000.0;
 
     publishState_ = tbai::fromGlobalConfig<bool>("wtw_controller/publish_state", false);
@@ -47,7 +47,7 @@ bool RosWtwController::ok() const {
 
 void RosWtwController::preStep(scalar_t currentTime, scalar_t dt) {
     ros::spinOnce();
-    state_ = stateSubscriberPtr_->getLatestState();
+    state_ = robotInterfacePtr_->getLatestState();
 }
 
 void RosWtwController::publishEstimatedState() {

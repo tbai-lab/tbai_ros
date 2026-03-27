@@ -13,7 +13,6 @@
 #include <pinocchio/algorithm/kinematics.hpp>
 #include <pinocchio/multibody/data.hpp>
 #include <pinocchio/multibody/model.hpp>
-#include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_gridmap/GridmapInterface.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_wtw/Visualizers.hpp>
@@ -29,7 +28,7 @@ using torch::jit::script::Module;
 
 class RosWtwController : public tbai::WtwController {
    public:
-    RosWtwController(const std::string &urdfString, const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+    RosWtwController(const std::string &urdfString, const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                      const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr);
 
     void postStep(scalar_t currentTime, scalar_t dt) override;

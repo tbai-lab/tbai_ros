@@ -15,7 +15,6 @@
 #include <pinocchio/multibody/model.hpp>
 #include <tbai_bob/BobController.hpp>
 #include <tbai_ros_bob/Visualizers.hpp>
-#include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_gridmap/GridmapInterface.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <torch/script.h>
@@ -29,7 +28,7 @@ using torch::jit::script::Module;
 
 class RosBobController : public tbai::BobController {
    public:
-    RosBobController(const std::string &urdfString, const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+    RosBobController(const std::string &urdfString, const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                      const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr);
 
     void postStep(scalar_t currentTime, scalar_t dt) override;

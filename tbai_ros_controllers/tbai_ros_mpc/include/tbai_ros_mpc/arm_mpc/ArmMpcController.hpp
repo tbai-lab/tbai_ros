@@ -17,7 +17,7 @@
 #include <ros/ros.h>
 #include <tbai_core/Logging.hpp>
 #include <tbai_core/control/Controllers.hpp>
-#include <tbai_core/control/Subscribers.hpp>
+#include <tbai_core/control/RobotInterface.hpp>
 #include <tbai_mpc/arm_mpc/ArmInterface.h>
 #include <tbai_mpc/arm_wbc/WbcBase.hpp>
 #include <tbai_ros_mpc/arm_mpc/ArmVisualizer.h>
@@ -30,7 +30,7 @@ using ocs2::vector_t;
 
 class ArmMpcController : public tbai::Controller {
    public:
-    ArmMpcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+    ArmMpcController(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                      std::function<scalar_t()> getCurrentTimeFunction);
 
     ~ArmMpcController() override;
@@ -51,7 +51,7 @@ class ArmMpcController : public tbai::Controller {
 
     bool ok() const override { return ros::ok(); }
 
-    void waitTillInitialized() override { stateSubscriberPtr_->waitTillInitialized(); }
+    void waitTillInitialized() override { robotInterfacePtr_->waitTillInitialized(); }
 
     void preStep(scalar_t currentTime, scalar_t dt) override;
 
@@ -70,7 +70,7 @@ class ArmMpcController : public tbai::Controller {
     void startReferenceThread();
     void stopReferenceThread();
 
-    std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr_;
+    std::shared_ptr<tbai::RobotInterface> robotInterfacePtr_;
     std::shared_ptr<spdlog::logger> logger_;
 
     std::unique_ptr<tbai::mpc::arm::ArmInterface> manipulatorInterfacePtr_;

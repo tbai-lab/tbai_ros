@@ -1,10 +1,15 @@
 #pragma once
 
+// clang-format off
+#include <pinocchio/fwd.hpp>
+// clang-format on
+
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "tbai_ros_core/Subscribers.hpp"
+#include <pinocchio/multibody/data.hpp>
+#include <pinocchio/multibody/model.hpp>
 #include <robot_state_publisher/robot_state_publisher.h>
 #include <ros/ros.h>
 #include <tbai_core/control/Controllers.hpp>
@@ -20,14 +25,14 @@ class RosStaticController : public tbai::static_::StaticController {
      * @brief Construct a new StaticController object
      *
      */
-    RosStaticController(std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr);
+    RosStaticController(std::shared_ptr<tbai::RobotInterface> robotInterfacePtr);
     void postStep(scalar_t currentTime, scalar_t dt) override;
 
     bool ok() const override { return ros::ok(); }
 
     void preStep(scalar_t currentTime, scalar_t dt) override {
         ros::spinOnce();
-        state_ = stateSubscriberPtr_->getLatestState();
+        state_ = robotInterfacePtr_->getLatestState();
     }
 
    private:

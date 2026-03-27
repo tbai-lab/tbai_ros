@@ -47,7 +47,7 @@ class GridmapTerrainInterface : public TerrainInterface {
  */
 class RosJoeController : public JoeController {
    public:
-    RosJoeController(const std::string &robotName, const std::shared_ptr<tbai::StateSubscriber> &stateSubscriber,
+    RosJoeController(const std::string &robotName, const std::shared_ptr<tbai::RobotInterface> &stateSubscriber,
                      std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGenerator,
                      std::function<scalar_t()> getCurrentTimeFunction);
 

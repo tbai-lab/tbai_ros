@@ -80,10 +80,10 @@ void ContactVisualizer::visualize(const vector_t &currentState, const std::vecto
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 RosMpcController::RosMpcController(const std::string &robotName,
-                                   const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+                                   const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                                    std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr,
                                    std::function<scalar_t()> getCurrentTimeFunction)
-    : MpcController(robotName, stateSubscriberPtr, std::move(velocityGeneratorPtr), getCurrentTimeFunction) {
+    : MpcController(robotName, robotInterfacePtr, std::move(velocityGeneratorPtr), getCurrentTimeFunction) {
     using tbai::fromGlobalConfig;
 
     initTime_ = tbai::readInitTime();
@@ -224,7 +224,7 @@ std::unique_ptr<ocs2::MPC_BASE> RosMpcController::createMpcInterface() {
 /*********************************************************************************************************************/
 void RosMpcController::preStep(scalar_t currentTime, scalar_t dt) {
     ros::spinOnce();
-    state_ = stateSubscriberPtr_->getLatestState();
+    state_ = robotInterfacePtr_->getLatestState();
 }
 
 /*********************************************************************************************************************/
@@ -251,7 +251,7 @@ void RosMpcController::spinOnceReferenceThread() {
 /*********************************************************************************************************************/
 void RosMpcController::referenceThreadLoop() {
     referenceTrajectoryGeneratorPtr_->reset();
-    stateSubscriberPtr_->waitTillInitialized();
+    robotInterfacePtr_->waitTillInitialized();
 
     // Reference loop
     ros::Rate rate(referenceThreadRate_);

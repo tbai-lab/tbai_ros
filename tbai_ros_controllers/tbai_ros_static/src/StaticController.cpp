@@ -24,8 +24,8 @@ namespace static_ {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-RosStaticController::RosStaticController(std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr)
-    : StaticController(stateSubscriberPtr) {
+RosStaticController::RosStaticController(std::shared_ptr<tbai::RobotInterface> robotInterfacePtr)
+    : StaticController(robotInterfacePtr) {
     // Setup state publisher
     std::string urdfString;
     if (!ros::param::get("/robot_description", urdfString)) {

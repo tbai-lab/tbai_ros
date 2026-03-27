@@ -42,7 +42,7 @@ class GridmapTerrainInterface : public TerrainInterface {
  */
 class RosDtcController : public DtcController {
    public:
-    RosDtcController(const std::string &robotName, const std::shared_ptr<tbai::StateSubscriber> &stateSubscriber,
+    RosDtcController(const std::string &robotName, const std::shared_ptr<tbai::RobotInterface> &stateSubscriber,
                      std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGenerator,
                      std::function<scalar_t()> getCurrentTimeFunction);
 

@@ -17,7 +17,7 @@ namespace tbai {
 namespace dtc {
 
 RosDtcController::RosDtcController(const std::string &robotName,
-                                   const std::shared_ptr<tbai::StateSubscriber> &stateSubscriber,
+                                   const std::shared_ptr<tbai::RobotInterface> &stateSubscriber,
                                    std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGenerator,
                                    std::function<scalar_t()> getCurrentTimeFunction)
     : DtcController(robotName, stateSubscriber, std::move(velocityGenerator), std::move(getCurrentTimeFunction)) {
@@ -84,7 +84,7 @@ void RosDtcController::resetMpc() {
     TBAI_LOG_INFO(logger_, "Waiting for state subscriber to initialize...");
 
     // Wait to receive observation
-    stateSubscriberPtr_->waitTillInitialized();
+    robotInterfacePtr_->waitTillInitialized();
 
     TBAI_LOG_INFO(logger_, "State subscriber initialized");
 

@@ -4,7 +4,7 @@ project(tbai_ros_spot_mujoco)
 add_compile_options(-std=c++17)
 set(CMAKE_CXX_STANDARD 17)
 
-set(TBAI_SDK_DIR "/home/kb/projects/tbai_sdk")
+set(TBAI_SDK_DIR "$ENV{TBAI_SDK_DIR}" CACHE PATH "Path to tbai_sdk")
 set(ZENOH_INSTALL "${TBAI_SDK_DIR}/deps/zenoh-install")
 include_directories(${TBAI_SDK_DIR}/include ${ZENOH_INSTALL}/include)
 add_definitions(-DZENOHCXX_ZENOHC)
@@ -48,7 +48,7 @@ target_link_libraries(deploy_spot
 )
 
 find_library(TBAI_ROS_QUADRUPED_ARM_MPC_LIB tbai_ros_quadruped_arm_mpc
-  PATHS ${CATKIN_DEVEL_PREFIX}/lib /home/kb/projects/ros_test/devel/lib NO_DEFAULT_PATH)
+  PATHS ${CATKIN_DEVEL_PREFIX}/lib ${CATKIN_DEVEL_PREFIX}/lib NO_DEFAULT_PATH)
 
 add_executable(deploy_spot_arm src/deploy_spot_arm.cpp)
 target_link_libraries(deploy_spot_arm

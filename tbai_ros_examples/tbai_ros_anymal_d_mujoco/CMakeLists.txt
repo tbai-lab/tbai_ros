@@ -4,7 +4,7 @@ project(tbai_ros_anymal_d_mujoco)
 add_compile_options(-std=c++17)
 set(CMAKE_CXX_STANDARD 17)
 
-set(TBAI_SDK_DIR "/home/kb/projects/tbai_sdk")
+set(TBAI_SDK_DIR "$ENV{TBAI_SDK_DIR}" CACHE PATH "Path to tbai_sdk")
 set(ZENOH_INSTALL "${TBAI_SDK_DIR}/deps/zenoh-install")
 include_directories(${TBAI_SDK_DIR}/include ${ZENOH_INSTALL}/include)
 add_definitions(-DZENOHCXX_ZENOHC)

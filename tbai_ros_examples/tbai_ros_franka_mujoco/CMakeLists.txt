@@ -5,7 +5,7 @@ add_compile_options(-std=c++17)
 set(CMAKE_CXX_STANDARD 17)
 
 # tbai_sdk (header-only, zenoh-based)
-set(TBAI_SDK_DIR "/home/kb/projects/tbai_sdk")
+set(TBAI_SDK_DIR "$ENV{TBAI_SDK_DIR}" CACHE PATH "Path to tbai_sdk")
 set(ZENOH_INSTALL "${TBAI_SDK_DIR}/deps/zenoh-install")
 include_directories(${TBAI_SDK_DIR}/include ${ZENOH_INSTALL}/include)
 add_definitions(-DZENOHCXX_ZENOHC)
@@ -40,7 +40,7 @@ find_library(TBAI_ROS_ARM_MPC_LIB tbai_ros_arm_mpc
   PATHS
     ${CATKIN_DEVEL_PREFIX}/lib
     ${CATKIN_DEVEL_PREFIX}/../lib
-    /home/kb/projects/ros_test/devel/lib
+    ${CATKIN_DEVEL_PREFIX}/lib
   NO_DEFAULT_PATH
 )
 

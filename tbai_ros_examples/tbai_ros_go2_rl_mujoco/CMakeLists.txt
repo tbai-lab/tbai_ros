@@ -18,7 +18,7 @@ find_package(tbai REQUIRED)
 find_package(spdlog REQUIRED)
 
 # tbai_sdk (header-only, zenoh-based)
-set(TBAI_SDK_DIR "/home/kb/projects/tbai_sdk")
+set(TBAI_SDK_DIR "$ENV{TBAI_SDK_DIR}" CACHE PATH "Path to tbai_sdk")
 set(ZENOH_INSTALL "${TBAI_SDK_DIR}/deps/zenoh-install")
 include_directories(${TBAI_SDK_DIR}/include ${ZENOH_INSTALL}/include)
 add_definitions(-DZENOHCXX_ZENOHC)

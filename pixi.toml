@@ -8,6 +8,7 @@ version = "0.0.5"
 [feature.common.dependencies]
 
 # tbai dependencies
+rust = "*"
 gxx="13.3.0.*"
 gcc="13.3.0.*"
 fmt="10.2.1.*"

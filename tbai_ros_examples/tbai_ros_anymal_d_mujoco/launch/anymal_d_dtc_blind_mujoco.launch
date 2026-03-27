@@ -9,7 +9,7 @@
     <arg name="mujoco_config_file" default="$(find tbai_descriptions)/mujoco/robots/anymal_d/config.yaml"/>
     <group if="$(arg mujoco_simulation)">
         <node name="mujoco_sim" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
-              args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>
+              args="rosrun tbai_ros_mujoco tbai_mujoco $(arg mujoco_config_file)"/>
     </group>
 
     <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>

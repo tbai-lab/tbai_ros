@@ -23,13 +23,13 @@ fresh-install-go2-gpu-free: clean clone-tbai build-tbai ros-build-go2 install-tb
 
 # Fresh install all environment
 [group("1. fresh")]
-fresh-install-all: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi clone-mujoco-robotic-assets build-mujoco-robotic-assets    #!/usr/bin/env bash
+fresh-install-all: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi    #!/usr/bin/env bash
     catkin build elevation_mapping elevation_mapping_cupy
     echo "All good 🤗"
 
 # Fresh install all-gpu-free environment
 [group("1. fresh")]
-fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi clone-mujoco-robotic-assets build-mujoco-robotic-assets    #!/usr/bin/env bash
+fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi    #!/usr/bin/env bash
     catkin build elevation_mapping
     echo "All good 🤗"
 
@@ -298,29 +298,6 @@ build-tbai:
 remove-tbai:
     #!/usr/bin/env bash
     rm -rf thirdparty/tbai && rm -rf ${tbai_build_dir}
-
-[group("3. development")]
-clone-mujoco-robotic-assets:
-    #!/usr/bin/env bash
-    if [[ ! -d thirdparty/mujoco_robotic_assets ]]; then
-        git clone https://github.com/tbai-lab/mujoco_robotic_assets.git --single-branch --branch=main thirdparty/mujoco_robotic_assets
-    else
-        echo "[TBAI] thirdparty/mujoco_robotic_assets already exists, skipping clone"
-        if [[ -d thirdparty/mujoco_robotic_assets/.git ]]; then
-            echo "[TBAI] thirdparty/mujoco_robotic_assets exists, pulling latest changes"
-            git -C thirdparty/mujoco_robotic_assets pull
-        fi
-    fi
-
-[group("3. development")]
-build-mujoco-robotic-assets:
-    #!/usr/bin/env bash
-    catkin build mujoco_robotic_assets
-
-[group("3. development")]
-remove-mujoco-robotic-assets:
-    #!/usr/bin/env bash
-    rm -rf thirdparty/mujoco_robotic_assets
 
 [group("3. development")]
 install-tbai-cbf-mppi: clone-tbai

@@ -4,10 +4,10 @@
 namespace tbai {
 namespace g1 {
 
-RosG1Twist2Controller::RosG1Twist2Controller(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+RosG1Twist2Controller::RosG1Twist2Controller(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                                              const std::string &policyPath, const std::string &motionFilePath,
                                              float timeStart, float timeEnd, const std::string &controllerName)
-    : G1Twist2Controller(stateSubscriberPtr, policyPath, motionFilePath, timeStart, timeEnd, controllerName) {}
+    : G1Twist2Controller(robotInterfacePtr, policyPath, motionFilePath, timeStart, timeEnd, controllerName) {}
 
 void RosG1Twist2Controller::preStep(scalar_t currentTime, scalar_t dt) {
     ros::spinOnce();

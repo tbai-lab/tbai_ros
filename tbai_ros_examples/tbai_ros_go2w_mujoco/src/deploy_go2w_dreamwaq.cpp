@@ -13,6 +13,7 @@
 #include <tbai_deploy_go2w/Go2WRobotInterface.hpp>
 #include <tbai_ros_core/Rate.hpp>
 #include <tbai_ros_core/StateVisualizer.hpp>
+#include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_go2w_mujoco/Go2WDreamWaQController.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_static/StaticController.hpp>
@@ -88,19 +89,16 @@ int main(int argc, char *argv[]) {
     auto stateVisualizer =
         std::make_unique<tbai::StateVisualizer>(go2wRobotInterface, jointNames, footFrames, 30.0, false, "base");
 
-    std::shared_ptr<tbai::StateSubscriber> stateSubscriber = go2wRobotInterface;
-    std::shared_ptr<tbai::CommandPublisher> commandPublisher = go2wRobotInterface;
-
     auto changeControllerTopic = tbai::fromGlobalConfig<std::string>("change_controller_topic");
 
     std::shared_ptr<tbai::ChangeControllerSubscriber> changeControllerSubscriber =
         std::make_shared<tbai::RosChangeControllerSubscriber>(nh, changeControllerTopic);
 
     // Create central controller
-    tbai::CentralController<ros::Rate, tbai::RosTime> controller(commandPublisher, changeControllerSubscriber);
+    tbai::CentralController<ros::Rate, tbai::RosTime> controller(go2wRobotInterface, changeControllerSubscriber);
 
     // Add static controller for standing
-    controller.addController(std::make_unique<tbai::static_::RosStaticController>(stateSubscriber));
+    controller.addController(std::make_unique<tbai::static_::RosStaticController>(go2wRobotInterface));
 
     // Get reference velocity generator
     auto referenceGeneratorType = tbai::fromGlobalConfig<std::string>("reference_generator/type");
@@ -122,7 +120,7 @@ int main(int argc, char *argv[]) {
 
     // Add Go2W DreamWaQ controller
     controller.addController(
-        std::make_unique<tbai::go2w::RosGo2WDreamWaQController>(stateSubscriber, referenceVelocityPtr, modelDir));
+        std::make_unique<tbai::go2w::RosGo2WDreamWaQController>(go2wRobotInterface, referenceVelocityPtr, modelDir));
 
     TBAI_LOG_INFO(logger, "Controllers initialized. Starting main loop...");
 

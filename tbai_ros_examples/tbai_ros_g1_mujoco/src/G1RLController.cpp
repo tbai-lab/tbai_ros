@@ -4,10 +4,10 @@
 namespace tbai {
 namespace g1 {
 
-RosG1RLController::RosG1RLController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+RosG1RLController::RosG1RLController(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                                      const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr,
                                      const std::string &policyPath)
-    : G1RLController(stateSubscriberPtr, refVelGenPtr, policyPath) {}
+    : G1RLController(robotInterfacePtr, refVelGenPtr, policyPath) {}
 
 void RosG1RLController::preStep(scalar_t currentTime, scalar_t dt) {
     ros::spinOnce();

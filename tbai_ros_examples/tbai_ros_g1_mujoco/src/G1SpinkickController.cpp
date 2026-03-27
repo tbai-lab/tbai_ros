@@ -4,10 +4,10 @@
 namespace tbai {
 namespace g1 {
 
-RosG1SpinkickController::RosG1SpinkickController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+RosG1SpinkickController::RosG1SpinkickController(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                                                  const std::string &policyPath, const std::string &controllerName,
                                                  bool useModelMetaConfig, float actionBeta)
-    : G1SpinkickController(stateSubscriberPtr, policyPath, controllerName, useModelMetaConfig, actionBeta) {}
+    : G1SpinkickController(robotInterfacePtr, policyPath, controllerName, useModelMetaConfig, actionBeta) {}
 
 void RosG1SpinkickController::preStep(scalar_t currentTime, scalar_t dt) {
     ros::spinOnce();

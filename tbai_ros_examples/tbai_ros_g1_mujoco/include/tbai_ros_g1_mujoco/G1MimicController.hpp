@@ -10,7 +10,7 @@ namespace g1 {
 
 class RosG1MimicController : public tbai::g1::G1MimicController {
    public:
-    RosG1MimicController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+    RosG1MimicController(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                          const std::string &policyPath, const std::string &motionFilePath, float motionFps = 60.0f,
                          float timeStart = 0.0f, float timeEnd = -1.0f,
                          const std::string &controllerName = "RosG1MimicController");

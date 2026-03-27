@@ -17,7 +17,6 @@
 #include <tbai_core/config/Config.hpp>
 #include <tbai_core/control/CentralController.hpp>
 #include <tbai_deploy_go2/Go2RobotInterface.hpp>
-#include <tbai_ros_core/Publishers.hpp>
 #include <tbai_ros_core/Rate.hpp>
 #include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
@@ -139,19 +138,16 @@ int main(int argc, char *argv[]) {
             .unitreeChannel(tbai::getEnvAs<int>("TBAI_GO2_UNITREE_CHANNEL", true, 0))
             .useGroundTruthState(tbai::getEnvAs<bool>("TBAI_GO2_USE_GROUND_TRUTH", true, false)));
 
-    std::shared_ptr<tbai::StateSubscriber> stateSubscriber = go2RobotInterface;
-    std::shared_ptr<tbai::CommandPublisher> commandPublisher = go2RobotInterface;
-
     auto changeControllerTopic = tbai::fromGlobalConfig<std::string>("change_controller_topic");
 
     std::shared_ptr<tbai::ChangeControllerSubscriber> changeControllerSubscriber =
         std::shared_ptr<tbai::ChangeControllerSubscriber>(
             new tbai::RosChangeControllerSubscriber(nh, changeControllerTopic));
 
-    tbai::CentralController<ros::Rate, tbai::RosTime> controller(commandPublisher, changeControllerSubscriber);
+    tbai::CentralController<ros::Rate, tbai::RosTime> controller(go2RobotInterface, changeControllerSubscriber);
 
     // Add static controller
-    controller.addController(std::make_unique<tbai::static_::RosStaticController>(stateSubscriber));
+    controller.addController(std::make_unique<tbai::static_::RosStaticController>(go2RobotInterface));
 
     std::string urdfString = nh.param<std::string>("robot_description", "");
 
@@ -164,7 +160,7 @@ int main(int argc, char *argv[]) {
     // Add MPC controller
     std::string robotName = tbai::fromGlobalConfig<std::string>("robot_name");
     controller.addController(std::make_unique<tbai::mpc::RosMpcController>(
-        robotName, stateSubscriber, referenceVelocityPtr, tbai::RosTime::rightNow));
+        robotName, go2RobotInterface, referenceVelocityPtr, tbai::RosTime::rightNow));
 
     // Start controller loop
     controller.start();

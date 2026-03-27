@@ -18,14 +18,14 @@ class RosG1PBHCController : public tbai::g1::G1PBHCController {
    public:
     /**
      * @brief Construct a new RosG1PBHCController
-     * @param stateSubscriberPtr State subscriber for robot state
+     * @param robotInterfacePtr State subscriber for robot state
      * @param policyPath Path to ONNX model (.onnx file)
      * @param motionFilePath Path to motion CSV file (converted from pkl)
      * @param timeStart Start time in motion file
      * @param timeEnd End time in motion file (-1 for full duration)
      * @param controllerName Name for logging
      */
-    RosG1PBHCController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr, const std::string &policyPath,
+    RosG1PBHCController(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr, const std::string &policyPath,
                         const std::string &motionFilePath, float timeStart = 0.0f, float timeEnd = -1.0f,
                         const std::string &controllerName = "RosG1PBHCController");
 

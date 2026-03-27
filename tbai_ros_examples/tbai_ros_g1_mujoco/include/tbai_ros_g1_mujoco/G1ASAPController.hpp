@@ -18,12 +18,12 @@ class RosG1ASAPController : public tbai::g1::G1ASAPController {
    public:
     /**
      * @brief Construct a new RosG1ASAPController
-     * @param stateSubscriberPtr State subscriber for robot state
+     * @param robotInterfacePtr State subscriber for robot state
      * @param refVelGenPtr Reference velocity generator for velocity commands
      * @param policyPath Path to ONNX model (.onnx file)
      * @param controllerName Name for logging
      */
-    RosG1ASAPController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+    RosG1ASAPController(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                         const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr,
                         const std::string &policyPath, const std::string &controllerName = "G1ASAPLocomotion");
 

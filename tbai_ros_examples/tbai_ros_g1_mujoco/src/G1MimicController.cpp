@@ -4,11 +4,11 @@
 namespace tbai {
 namespace g1 {
 
-RosG1MimicController::RosG1MimicController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+RosG1MimicController::RosG1MimicController(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                                            const std::string &policyPath, const std::string &motionFilePath,
                                            float motionFps, float timeStart, float timeEnd,
                                            const std::string &controllerName)
-    : G1MimicController(stateSubscriberPtr, policyPath, motionFilePath, motionFps, timeStart, timeEnd, controllerName) {
+    : G1MimicController(robotInterfacePtr, policyPath, motionFilePath, motionFps, timeStart, timeEnd, controllerName) {
 }
 
 void RosG1MimicController::preStep(scalar_t currentTime, scalar_t dt) {

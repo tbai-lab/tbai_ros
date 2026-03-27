@@ -18,12 +18,12 @@ class RosG1ASAPMimicController : public tbai::g1::G1ASAPMimicController {
    public:
     /**
      * @brief Construct a new RosG1ASAPMimicController
-     * @param stateSubscriberPtr State subscriber for robot state
+     * @param robotInterfacePtr State subscriber for robot state
      * @param policyPath Path to ONNX model (.onnx file)
      * @param motionLength Duration of the motion in seconds
      * @param controllerName Name for logging
      */
-    RosG1ASAPMimicController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+    RosG1ASAPMimicController(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                              const std::string &policyPath, float motionLength,
                              const std::string &controllerName = "G1ASAPMimic");
 

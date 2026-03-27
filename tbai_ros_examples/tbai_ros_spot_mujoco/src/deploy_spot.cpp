@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
     bool publishImage = tbai::getEnvAs<bool>("TBAI_SPOT_PUBLISH_IMAGE", true, false);
     auto sensorBridge = std::make_unique<SensorBridge>(publishImage);
 
-    // SpotRobotInterface is both StateSubscriber and CommandPublisher
+    // SpotRobotInterface implements RobotInterface (state + commands)
     auto spotInterface = std::make_shared<tbai::SpotRobotInterface>(tbai::SpotRobotInterfaceArgs());
 
     // State visualizer
@@ -112,20 +112,17 @@ int main(int argc, char *argv[]) {
     auto stateVisualizer =
         std::make_unique<tbai::StateVisualizer>(spotInterface, jointNames, footFrames, 30.0, false, "base");
 
-    std::shared_ptr<tbai::StateSubscriber> stateSubscriber = spotInterface;
-    std::shared_ptr<tbai::CommandPublisher> commandPublisher = spotInterface;
-
     auto changeControllerTopic = tbai::fromGlobalConfig<std::string>("change_controller_topic");
     auto changeControllerSubscriber = std::make_shared<tbai::RosChangeControllerSubscriber>(nh, changeControllerTopic);
 
-    tbai::CentralController<ros::Rate, tbai::RosTime> controller(commandPublisher, changeControllerSubscriber);
+    tbai::CentralController<ros::Rate, tbai::RosTime> controller(spotInterface, changeControllerSubscriber);
 
     // Add static controller
-    controller.addController(std::make_unique<tbai::static_::RosStaticController>(stateSubscriber));
+    controller.addController(std::make_unique<tbai::static_::RosStaticController>(spotInterface));
 
     // Add MPC controller
     controller.addController(std::make_unique<tbai::mpc::RosMpcController>(
-        robotName, stateSubscriber, tbai::reference::getReferenceVelocityGeneratorShared(nh), tbai::RosTime::rightNow));
+        robotName, spotInterface, tbai::reference::getReferenceVelocityGeneratorShared(nh), tbai::RosTime::rightNow));
 
     TBAI_LOG_INFO(logger, "Controllers initialized. Starting main loop...");
 

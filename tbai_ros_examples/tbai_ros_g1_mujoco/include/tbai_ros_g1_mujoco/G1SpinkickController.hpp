@@ -10,7 +10,7 @@ namespace g1 {
 
 class RosG1SpinkickController : public tbai::g1::G1SpinkickController {
    public:
-    RosG1SpinkickController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+    RosG1SpinkickController(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                             const std::string &policyPath,
                             const std::string &controllerName = "RosG1SpinkickController",
                             bool useModelMetaConfig = true, float actionBeta = 1.0f);

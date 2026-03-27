@@ -4,10 +4,10 @@
 namespace tbai {
 namespace g1 {
 
-RosG1BeyondMimicController::RosG1BeyondMimicController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+RosG1BeyondMimicController::RosG1BeyondMimicController(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                                                        const std::string &policyPath, const std::string &controllerName,
                                                        bool useModelMetaConfig, float actionBeta)
-    : G1BeyondMimicController(stateSubscriberPtr, policyPath, controllerName, useModelMetaConfig, actionBeta) {}
+    : G1BeyondMimicController(robotInterfacePtr, policyPath, controllerName, useModelMetaConfig, actionBeta) {}
 
 void RosG1BeyondMimicController::preStep(scalar_t currentTime, scalar_t dt) {
     ros::spinOnce();

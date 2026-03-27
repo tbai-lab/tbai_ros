@@ -143,18 +143,15 @@ int main(int argc, char *argv[]) {
     auto stateVisualizer =
         std::make_unique<tbai::StateVisualizer>(anymalInterface, jointNames, footFrames, 30.0, false, "base");
 
-    std::shared_ptr<tbai::StateSubscriber> stateSubscriber = anymalInterface;
-    std::shared_ptr<tbai::CommandPublisher> commandPublisher = anymalInterface;
-
     auto changeControllerTopic = tbai::fromGlobalConfig<std::string>("change_controller_topic");
     auto changeControllerSubscriber = std::make_shared<tbai::RosChangeControllerSubscriber>(nh, changeControllerTopic);
 
-    tbai::CentralController<ros::Rate, tbai::RosTime> controller(commandPublisher, changeControllerSubscriber);
+    tbai::CentralController<ros::Rate, tbai::RosTime> controller(anymalInterface, changeControllerSubscriber);
 
-    controller.addController(std::make_unique<tbai::static_::RosStaticController>(stateSubscriber));
+    controller.addController(std::make_unique<tbai::static_::RosStaticController>(anymalInterface));
 
     controller.addController(std::make_unique<tbai::joe::RosJoeController>(
-        robotName, stateSubscriber, tbai::reference::getReferenceVelocityGeneratorShared(nh), tbai::RosTime::rightNow));
+        robotName, anymalInterface, tbai::reference::getReferenceVelocityGeneratorShared(nh), tbai::RosTime::rightNow));
 
     TBAI_LOG_INFO(logger, "Controllers initialized. Starting main loop...");
     controller.start();

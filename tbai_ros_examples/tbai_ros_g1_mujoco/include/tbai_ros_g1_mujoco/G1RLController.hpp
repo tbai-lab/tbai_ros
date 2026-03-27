@@ -10,7 +10,7 @@ namespace g1 {
 
 class RosG1RLController : public tbai::g1::G1RLController {
    public:
-    RosG1RLController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+    RosG1RLController(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                       const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr,
                       const std::string &policyPath);
 

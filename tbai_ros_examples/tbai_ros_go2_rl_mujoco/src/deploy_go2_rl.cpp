@@ -20,7 +20,6 @@
 #include <tbai_core/config/Config.hpp>
 #include <tbai_core/control/CentralController.hpp>
 #include <tbai_deploy_go2/Go2RobotInterface.hpp>
-#include <tbai_ros_core/Publishers.hpp>
 #include <tbai_ros_core/Rate.hpp>
 #include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
@@ -143,19 +142,16 @@ int main(int argc, char *argv[]) {
             .unitreeChannel(tbai::getEnvAs<int>("TBAI_GO2_UNITREE_CHANNEL", true, 0))
             .useGroundTruthState(tbai::getEnvAs<bool>("TBAI_GO2_USE_GROUND_TRUTH", true, false)));
 
-    std::shared_ptr<tbai::StateSubscriber> stateSubscriber = go2RobotInterface;
-    std::shared_ptr<tbai::CommandPublisher> commandPublisher = go2RobotInterface;
-
     auto changeControllerTopic = tbai::fromGlobalConfig<std::string>("change_controller_topic");
 
     std::shared_ptr<tbai::ChangeControllerSubscriber> changeControllerSubscriber =
         std::shared_ptr<tbai::ChangeControllerSubscriber>(
             new tbai::RosChangeControllerSubscriber(nh, changeControllerTopic));
 
-    tbai::CentralController<ros::Rate, tbai::RosTime> controller(commandPublisher, changeControllerSubscriber);
+    tbai::CentralController<ros::Rate, tbai::RosTime> controller(go2RobotInterface, changeControllerSubscriber);
 
     // Add static controller
-    controller.addController(std::make_unique<tbai::static_::RosStaticController>(stateSubscriber));
+    controller.addController(std::make_unique<tbai::static_::RosStaticController>(go2RobotInterface));
 
     std::string urdfString = nh.param<std::string>("robot_description", "");
 
@@ -167,15 +163,15 @@ int main(int argc, char *argv[]) {
 
     // Add NP3O controller
     controller.addController(
-        std::make_unique<tbai::np3o::RosNp3oController>(urdfString, stateSubscriber, referenceVelocityPtr));
+        std::make_unique<tbai::np3o::RosNp3oController>(urdfString, go2RobotInterface, referenceVelocityPtr));
 
     // Add Bob controller
     controller.addController(
-        std::make_unique<tbai::rl::RosBobController>(urdfString, stateSubscriber, referenceVelocityPtr));
+        std::make_unique<tbai::rl::RosBobController>(urdfString, go2RobotInterface, referenceVelocityPtr));
 
     // Add WTW controller
     controller.addController(
-        std::make_unique<tbai::wtw::RosWtwController>(urdfString, stateSubscriber, referenceVelocityPtr));
+        std::make_unique<tbai::wtw::RosWtwController>(urdfString, go2RobotInterface, referenceVelocityPtr));
 
     // Start the resource monitor
     tbai::ResourceMonitor resourceMonitor(1.0 / 30.0, 1.0 / 10.0);

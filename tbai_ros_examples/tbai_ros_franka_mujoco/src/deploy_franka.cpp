@@ -79,26 +79,22 @@ int main(int argc, char *argv[]) {
     bool publishImage = tbai::getEnvAs<bool>("TBAI_FRANKA_PUBLISH_IMAGE", true, false);
     auto sensorBridge = std::make_unique<SensorBridge>(publishImage);
 
-    // The FrankaRobotInterface is both StateSubscriber and CommandPublisher
-    // (replaces the ROS topic-based state/command used in the simulation version)
+    // The FrankaRobotInterface implements RobotInterface (state + commands)
     auto frankaInterface = std::make_shared<tbai::FrankaRobotInterface>(tbai::FrankaRobotInterfaceArgs());
 
     // No StateVisualizer for Franka — ArmMpcController's ArmVisualizer handles TF
 
-    std::shared_ptr<tbai::StateSubscriber> stateSubscriber = frankaInterface;
-    std::shared_ptr<tbai::CommandPublisher> commandPublisher = frankaInterface;
-
     auto changeControllerTopic = tbai::fromGlobalConfig<std::string>("change_controller_topic");
     auto changeControllerSubscriber = std::make_shared<tbai::RosChangeControllerSubscriber>(nh, changeControllerTopic);
 
-    tbai::CentralController<ros::Rate, tbai::RosTime> controller(commandPublisher, changeControllerSubscriber);
+    tbai::CentralController<ros::Rate, tbai::RosTime> controller(frankaInterface, changeControllerSubscriber);
 
     // Add static controller (starts first, holds home position)
-    controller.addController(std::make_unique<tbai::static_::RosStaticController>(stateSubscriber));
+    controller.addController(std::make_unique<tbai::static_::RosStaticController>(frankaInterface));
 
     // Add Arm MPC+WBC controller (switch to this via change_controller_topic)
     controller.addController(
-        std::make_unique<tbai::mpc::arm::ArmMpcController>(stateSubscriber, tbai::RosTime::rightNow));
+        std::make_unique<tbai::mpc::arm::ArmMpcController>(frankaInterface, tbai::RosTime::rightNow));
 
     // Start controller loop
     controller.start();

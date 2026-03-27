@@ -8,9 +8,9 @@ namespace go2w {
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
 RosGo2WDreamWaQController::RosGo2WDreamWaQController(
-    const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+    const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
     const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr, const std::string &modelDir)
-    : Go2WDreamWaQController(stateSubscriberPtr, refVelGenPtr, modelDir) {}
+    : Go2WDreamWaQController(robotInterfacePtr, refVelGenPtr, modelDir) {}
 
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/

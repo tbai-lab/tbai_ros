@@ -10,7 +10,7 @@ namespace go2w {
 
 class RosGo2WDreamWaQController : public tbai::go2w::Go2WDreamWaQController {
    public:
-    RosGo2WDreamWaQController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+    RosGo2WDreamWaQController(const std::shared_ptr<tbai::RobotInterface> &robotInterfacePtr,
                               const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr,
                               const std::string &modelDir);
 

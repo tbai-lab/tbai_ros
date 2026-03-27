@@ -2,7 +2,9 @@
 #include <cstring>
 #include <iostream>
 #include <memory>
+#include <mutex>
 #include <thread>
+#include <vector>
 
 #include <ros/package.h>
 #include <ros/ros.h>
@@ -173,285 +175,155 @@ int main(int argc, char *argv[]) {
         referenceVelocityPtr = tbai::reference::getReferenceVelocityGeneratorUnique(nh);
     }
 
-    // Load G1 walking controller
-    auto hfRepo = tbai::fromGlobalConfig<std::string>("g1_controller/hf_repo");
-    auto hfModel = tbai::fromGlobalConfig<std::string>("g1_controller/hf_model");
-    auto modelPath = tbai::downloadFromHuggingFace(hfRepo, hfModel);
-    TBAI_LOG_INFO(logger, "Loading HF model: {}/{}", hfRepo, hfModel);
-    controller.addController(
-        std::make_unique<tbai::g1::RosG1RLController>(g1RobotInterface, referenceVelocityPtr, modelPath));
+    // Helper: download model, construct controller, add with lock
+    std::mutex controllerMutex;
+    auto addCtrl = [&](std::shared_ptr<tbai::Controller> ctrl) {
+        std::lock_guard<std::mutex> lock(controllerMutex);
+        controller.addController(std::move(ctrl));
+    };
 
-    // Load G1 mimic dance 102 controller
-    auto hfRepo3 = tbai::fromGlobalConfig<std::string>("g1_mimic_dance102/hf_repo");
-    auto hfModel3 = tbai::fromGlobalConfig<std::string>("g1_mimic_dance102/hf_model");
-    auto motionFps = tbai::fromGlobalConfig<float>("g1_mimic_dance102/motion_fps");
-    auto timeStart = tbai::fromGlobalConfig<float>("g1_mimic_dance102/time_start");
-    auto timeEnd = tbai::fromGlobalConfig<float>("g1_mimic_dance102/time_end");
-    auto dance102MotionFile = tbai::fromGlobalConfig<std::string>("g1_mimic_dance102/hf_motion_file");
-    auto modelPathDance102 = tbai::downloadFromHuggingFace(hfRepo3, hfModel3);
-    auto dance102MotionFilePath = tbai::downloadFromHuggingFace(hfRepo3, dance102MotionFile);
-    TBAI_LOG_INFO(logger, "Loading HF model: {}/{}", hfRepo3, hfModel3);
-    controller.addController(std::make_unique<tbai::g1::RosG1MimicController>(
-        g1RobotInterface, modelPathDance102, dance102MotionFilePath, motionFps, timeStart, timeEnd, "G1MimicDance102"));
+    std::vector<std::thread> loaderThreads;
 
-    // Load G1 mimic gangnam style controller
-    auto hfRepo2 = tbai::fromGlobalConfig<std::string>("g1_mimic_gangnam/hf_repo");
-    auto hfModel2 = tbai::fromGlobalConfig<std::string>("g1_mimic_gangnam/hf_model");
-    auto motionFps2 = tbai::fromGlobalConfig<float>("g1_mimic_gangnam/motion_fps");
-    auto timeStart2 = tbai::fromGlobalConfig<float>("g1_mimic_gangnam/time_start");
-    auto timeEnd2 = tbai::fromGlobalConfig<float>("g1_mimic_gangnam/time_end");
-    auto gangnamMotionFile2 = tbai::fromGlobalConfig<std::string>("g1_mimic_gangnam/hf_motion_file");
-    auto modelPathGangnam = tbai::downloadFromHuggingFace(hfRepo2, hfModel2);
-    auto gangnamMotionFilePath = tbai::downloadFromHuggingFace(hfRepo2, gangnamMotionFile2);
-    TBAI_LOG_INFO(logger, "Loading HF model: {}/{}", hfRepo2, hfModel2);
-    controller.addController(std::make_unique<tbai::g1::RosG1MimicController>(
-        g1RobotInterface, modelPathGangnam, gangnamMotionFilePath, motionFps2, timeStart2, timeEnd2, "G1MimicGangnam"));
+    // G1 RL walking controller
+    loaderThreads.emplace_back([&]() {
+        auto repo = tbai::fromGlobalConfig<std::string>("g1_controller/hf_repo");
+        auto model = tbai::fromGlobalConfig<std::string>("g1_controller/hf_model");
+        auto path = tbai::downloadFromHuggingFace(repo, model);
+        TBAI_LOG_INFO(logger, "Loaded G1RLController: {}/{}", repo, model);
+        addCtrl(std::make_shared<tbai::g1::RosG1RLController>(g1RobotInterface, referenceVelocityPtr, path));
+    });
 
-    // Load G1 BeyondMimic Dance controller
-    auto hfRepoBeyondDance = tbai::fromGlobalConfig<std::string>("g1_beyond_dance/hf_repo");
-    auto hfModelBeyondDance = tbai::fromGlobalConfig<std::string>("g1_beyond_dance/hf_model");
-    auto modelPathBeyondDance = tbai::downloadFromHuggingFace(hfRepoBeyondDance, hfModelBeyondDance);
-    TBAI_LOG_INFO(logger, "Loading BeyondMimic model: {}", modelPathBeyondDance);
-    controller.addController(
-        std::make_unique<tbai::g1::RosG1BeyondMimicController>(g1RobotInterface, modelPathBeyondDance, "G1BeyondDance"));
+    // Mimic dance 102
+    loaderThreads.emplace_back([&]() {
+        auto repo = tbai::fromGlobalConfig<std::string>("g1_mimic_dance102/hf_repo");
+        auto model = tbai::fromGlobalConfig<std::string>("g1_mimic_dance102/hf_model");
+        auto fps = tbai::fromGlobalConfig<float>("g1_mimic_dance102/motion_fps");
+        auto ts = tbai::fromGlobalConfig<float>("g1_mimic_dance102/time_start");
+        auto te = tbai::fromGlobalConfig<float>("g1_mimic_dance102/time_end");
+        auto motionFile = tbai::fromGlobalConfig<std::string>("g1_mimic_dance102/hf_motion_file");
+        auto modelPath = tbai::downloadFromHuggingFace(repo, model);
+        auto motionPath = tbai::downloadFromHuggingFace(repo, motionFile);
+        TBAI_LOG_INFO(logger, "Loaded G1MimicDance102: {}/{}", repo, model);
+        addCtrl(std::make_shared<tbai::g1::RosG1MimicController>(
+            g1RobotInterface, modelPath, motionPath, fps, ts, te, "G1MimicDance102"));
+    });
 
-    // Load G1 Spinkick controller
-    auto hfRepoSpinkick = tbai::fromGlobalConfig<std::string>("g1_spinkick/hf_repo");
-    auto hfModelSpinkick = tbai::fromGlobalConfig<std::string>("g1_spinkick/hf_model");
-    auto modelPathSpinkick = tbai::downloadFromHuggingFace(hfRepoSpinkick, hfModelSpinkick);
-    TBAI_LOG_INFO(logger, "Loading Spinkick model: {}", modelPathSpinkick);
-    controller.addController(
-        std::make_unique<tbai::g1::RosG1SpinkickController>(g1RobotInterface, modelPathSpinkick, "G1Spinkick"));
+    // Mimic gangnam
+    loaderThreads.emplace_back([&]() {
+        auto repo = tbai::fromGlobalConfig<std::string>("g1_mimic_gangnam/hf_repo");
+        auto model = tbai::fromGlobalConfig<std::string>("g1_mimic_gangnam/hf_model");
+        auto fps = tbai::fromGlobalConfig<float>("g1_mimic_gangnam/motion_fps");
+        auto ts = tbai::fromGlobalConfig<float>("g1_mimic_gangnam/time_start");
+        auto te = tbai::fromGlobalConfig<float>("g1_mimic_gangnam/time_end");
+        auto motionFile = tbai::fromGlobalConfig<std::string>("g1_mimic_gangnam/hf_motion_file");
+        auto modelPath = tbai::downloadFromHuggingFace(repo, model);
+        auto motionPath = tbai::downloadFromHuggingFace(repo, motionFile);
+        TBAI_LOG_INFO(logger, "Loaded G1MimicGangnam: {}/{}", repo, model);
+        addCtrl(std::make_shared<tbai::g1::RosG1MimicController>(
+            g1RobotInterface, modelPath, motionPath, fps, ts, te, "G1MimicGangnam"));
+    });
 
-    // Walk motion 1
+    // BeyondMimic Dance
+    loaderThreads.emplace_back([&]() {
+        auto repo = tbai::fromGlobalConfig<std::string>("g1_beyond_dance/hf_repo");
+        auto model = tbai::fromGlobalConfig<std::string>("g1_beyond_dance/hf_model");
+        auto path = tbai::downloadFromHuggingFace(repo, model);
+        TBAI_LOG_INFO(logger, "Loaded G1BeyondDance: {}", path);
+        addCtrl(std::make_shared<tbai::g1::RosG1BeyondMimicController>(g1RobotInterface, path, "G1BeyondDance"));
+    });
+
+    // Spinkick
+    loaderThreads.emplace_back([&]() {
+        auto repo = tbai::fromGlobalConfig<std::string>("g1_spinkick/hf_repo");
+        auto model = tbai::fromGlobalConfig<std::string>("g1_spinkick/hf_model");
+        auto path = tbai::downloadFromHuggingFace(repo, model);
+        TBAI_LOG_INFO(logger, "Loaded G1Spinkick: {}", path);
+        addCtrl(std::make_shared<tbai::g1::RosG1SpinkickController>(g1RobotInterface, path, "G1Spinkick"));
+    });
+
+    // TWIST2 controllers (shared model, different motions)
     auto twistHfRepo = tbai::fromGlobalConfig<std::string>("g1_twist_walk1/hf_repo");
     auto twistHfModel = tbai::fromGlobalConfig<std::string>("g1_twist_walk1/hf_model");
-    auto twistHfMotion1 = tbai::fromGlobalConfig<std::string>("g1_twist_walk1/hf_motion_file");
     auto twistModelPath = tbai::downloadFromHuggingFace(twistHfRepo, twistHfModel);
-    auto twistWalk1Motion = tbai::downloadFromHuggingFace(twistHfRepo, twistHfMotion1);
-    auto twistWalk1Start = tbai::fromGlobalConfig<float>("g1_twist_walk1/time_start");
-    auto twistWalk1End = tbai::fromGlobalConfig<float>("g1_twist_walk1/time_end");
-    TBAI_LOG_INFO(logger, "Loading TWIST2 Walk1: {}/{}", twistHfRepo, twistHfMotion1);
-    controller.addController(std::make_unique<tbai::g1::RosG1Twist2Controller>(
-        g1RobotInterface, twistModelPath, twistWalk1Motion, twistWalk1Start, twistWalk1End, "G1TwistWalk1"));
 
-    // Walk motion 2
-    auto twistHfMotion2 = tbai::fromGlobalConfig<std::string>("g1_twist_walk2/hf_motion_file");
-    auto twistWalk2Motion = tbai::downloadFromHuggingFace(twistHfRepo, twistHfMotion2);
-    auto twistWalk2Start = tbai::fromGlobalConfig<float>("g1_twist_walk2/time_start");
-    auto twistWalk2End = tbai::fromGlobalConfig<float>("g1_twist_walk2/time_end");
-    TBAI_LOG_INFO(logger, "Loading TWIST2 Walk2: {}/{}", twistHfRepo, twistHfMotion2);
-    controller.addController(std::make_unique<tbai::g1::RosG1Twist2Controller>(
-        g1RobotInterface, twistModelPath, twistWalk2Motion, twistWalk2Start, twistWalk2End, "G1TwistWalk2"));
+    auto loadTwist = [&](const std::string &configPrefix, const std::string &ctrlName) {
+        loaderThreads.emplace_back([&, configPrefix, ctrlName, twistModelPath]() {
+            auto motionFile = tbai::fromGlobalConfig<std::string>(configPrefix + "/hf_motion_file");
+            auto motionPath = tbai::downloadFromHuggingFace(twistHfRepo, motionFile);
+            auto ts = tbai::fromGlobalConfig<float>(configPrefix + "/time_start");
+            auto te = tbai::fromGlobalConfig<float>(configPrefix + "/time_end");
+            TBAI_LOG_INFO(logger, "Loaded {}: {}", ctrlName, motionFile);
+            addCtrl(std::make_shared<tbai::g1::RosG1Twist2Controller>(
+                g1RobotInterface, twistModelPath, motionPath, ts, te, ctrlName));
+        });
+    };
+    loadTwist("g1_twist_walk1", "G1TwistWalk1");
+    loadTwist("g1_twist_walk2", "G1TwistWalk2");
+    loadTwist("g1_twist_walk3", "G1TwistWalk3");
+    loadTwist("g1_twist_walk5", "G1TwistWalk5");
+    loadTwist("g1_twist_walk7", "G1TwistWalk7");
+    loadTwist("g1_twist_swing", "G1TwistSwing");
 
-    // Walk motion 3
-    auto twistHfMotion3 = tbai::fromGlobalConfig<std::string>("g1_twist_walk3/hf_motion_file");
-    auto twistWalk3Motion = tbai::downloadFromHuggingFace(twistHfRepo, twistHfMotion3);
-    auto twistWalk3Start = tbai::fromGlobalConfig<float>("g1_twist_walk3/time_start");
-    auto twistWalk3End = tbai::fromGlobalConfig<float>("g1_twist_walk3/time_end");
-    TBAI_LOG_INFO(logger, "Loading TWIST2 Walk3: {}/{}", twistHfRepo, twistHfMotion3);
-    controller.addController(std::make_unique<tbai::g1::RosG1Twist2Controller>(
-        g1RobotInterface, twistModelPath, twistWalk3Motion, twistWalk3Start, twistWalk3End, "G1TwistWalk3"));
+    // PBHC controllers
+    auto loadPBHC = [&](const std::string &configPrefix, const std::string &ctrlName) {
+        loaderThreads.emplace_back([&, configPrefix, ctrlName]() {
+            auto repo = tbai::fromGlobalConfig<std::string>(configPrefix + "/hf_repo");
+            auto model = tbai::fromGlobalConfig<std::string>(configPrefix + "/hf_model");
+            auto motionFile = tbai::fromGlobalConfig<std::string>(configPrefix + "/hf_motion_file");
+            auto modelPath = tbai::downloadFromHuggingFace(repo, model);
+            auto motionPath = tbai::downloadFromHuggingFace(repo, motionFile);
+            auto ts = tbai::fromGlobalConfig<float>(configPrefix + "/time_start");
+            auto te = tbai::fromGlobalConfig<float>(configPrefix + "/time_end");
+            TBAI_LOG_INFO(logger, "Loaded {}: {}/{}", ctrlName, repo, model);
+            addCtrl(std::make_shared<tbai::g1::RosG1PBHCController>(
+                g1RobotInterface, modelPath, motionPath, ts, te, ctrlName));
+        });
+    };
+    loadPBHC("g1_pbhc_horse_stance_punch", "G1PBHCHorseStancePunch");
+    loadPBHC("g1_pbhc_horse_stance_pose", "G1PBHCHorseStancePose");
+    loadPBHC("g1_pbhc_horse_stance_pose2", "G1PBHCHorseStancePose2");
 
-    // Walk motion 5
-    auto twistHfMotion5 = tbai::fromGlobalConfig<std::string>("g1_twist_walk5/hf_motion_file");
-    auto twistWalk5Motion = tbai::downloadFromHuggingFace(twistHfRepo, twistHfMotion5);
-    auto twistWalk5Start = tbai::fromGlobalConfig<float>("g1_twist_walk5/time_start");
-    auto twistWalk5End = tbai::fromGlobalConfig<float>("g1_twist_walk5/time_end");
-    TBAI_LOG_INFO(logger, "Loading TWIST2 Walk5: {}/{}", twistHfRepo, twistHfMotion5);
-    controller.addController(std::make_unique<tbai::g1::RosG1Twist2Controller>(
-        g1RobotInterface, twistModelPath, twistWalk5Motion, twistWalk5Start, twistWalk5End, "G1TwistWalk5"));
+    // ASAP Locomotion
+    loaderThreads.emplace_back([&]() {
+        auto repo = tbai::fromGlobalConfig<std::string>("g1_asap_locomotion/hf_repo");
+        auto model = tbai::fromGlobalConfig<std::string>("g1_asap_locomotion/hf_model");
+        auto path = tbai::downloadFromHuggingFace(repo, model);
+        TBAI_LOG_INFO(logger, "Loaded G1ASAPLocomotion: {}/{}", repo, model);
+        addCtrl(std::make_shared<tbai::g1::RosG1ASAPController>(
+            g1RobotInterface, referenceVelocityPtr, path, "G1ASAPLocomotion"));
+    });
 
-    // Walk motion 7
-    auto twistHfMotion7 = tbai::fromGlobalConfig<std::string>("g1_twist_walk7/hf_motion_file");
-    auto twistWalk7Motion = tbai::downloadFromHuggingFace(twistHfRepo, twistHfMotion7);
-    auto twistWalk7Start = tbai::fromGlobalConfig<float>("g1_twist_walk7/time_start");
-    auto twistWalk7End = tbai::fromGlobalConfig<float>("g1_twist_walk7/time_end");
-    TBAI_LOG_INFO(logger, "Loading TWIST2 Walk7: {}/{}", twistHfRepo, twistHfMotion7);
-    controller.addController(std::make_unique<tbai::g1::RosG1Twist2Controller>(
-        g1RobotInterface, twistModelPath, twistWalk7Motion, twistWalk7Start, twistWalk7End, "G1TwistWalk7"));
+    // ASAP Mimic controllers
+    auto loadASAPMimic = [&](const std::string &configPrefix, const std::string &ctrlName) {
+        loaderThreads.emplace_back([&, configPrefix, ctrlName]() {
+            auto repo = tbai::fromGlobalConfig<std::string>(configPrefix + "/hf_repo");
+            auto model = tbai::fromGlobalConfig<std::string>(configPrefix + "/hf_model");
+            auto path = tbai::downloadFromHuggingFace(repo, model);
+            auto motionLength = tbai::fromGlobalConfig<float>(configPrefix + "/motion_length");
+            TBAI_LOG_INFO(logger, "Loaded {}: {}/{}", ctrlName, repo, model);
+            addCtrl(std::make_shared<tbai::g1::RosG1ASAPMimicController>(
+                g1RobotInterface, path, motionLength, ctrlName));
+        });
+    };
+    loadASAPMimic("g1_asap_cr7", "G1ASAPCR7");
+    loadASAPMimic("g1_asap_apt", "G1ASAPAPT");
+    loadASAPMimic("g1_asap_jump_forward1", "G1ASAPJumpForward1");
+    loadASAPMimic("g1_asap_jump_forward2", "G1ASAPJumpForward2");
+    loadASAPMimic("g1_asap_jump_forward3", "G1ASAPJumpForward3");
+    loadASAPMimic("g1_asap_kick1", "G1ASAPKick1");
+    loadASAPMimic("g1_asap_kick2", "G1ASAPKick2");
+    loadASAPMimic("g1_asap_kick3", "G1ASAPKick3");
+    loadASAPMimic("g1_asap_kobe", "G1ASAPKobe");
+    loadASAPMimic("g1_asap_lebron1", "G1ASAPLeBron1");
+    loadASAPMimic("g1_asap_lebron2", "G1ASAPLeBron2");
+    loadASAPMimic("g1_asap_side_jump1", "G1ASAPSideJump1");
+    loadASAPMimic("g1_asap_side_jump2", "G1ASAPSideJump2");
+    loadASAPMimic("g1_asap_side_jump3", "G1ASAPSideJump3");
 
-    // Swing motion
-    auto twistHfMotionSwing = tbai::fromGlobalConfig<std::string>("g1_twist_swing/hf_motion_file");
-    auto twistSwingMotion = tbai::downloadFromHuggingFace(twistHfRepo, twistHfMotionSwing);
-    auto twistSwingStart = tbai::fromGlobalConfig<float>("g1_twist_swing/time_start");
-    auto twistSwingEnd = tbai::fromGlobalConfig<float>("g1_twist_swing/time_end");
-    TBAI_LOG_INFO(logger, "Loading TWIST2 Swing: {}/{}", twistHfRepo, twistHfMotionSwing);
-    controller.addController(std::make_unique<tbai::g1::RosG1Twist2Controller>(
-        g1RobotInterface, twistModelPath, twistSwingMotion, twistSwingStart, twistSwingEnd, "G1TwistSwing"));
-
-    // Load G1 PBHC Horse Stance Punch controller
-    auto pbhcHfRepo = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_punch/hf_repo");
-    auto pbhcHfModel = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_punch/hf_model");
-    auto pbhcHfMotion = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_punch/hf_motion_file");
-    auto pbhcModelPath = tbai::downloadFromHuggingFace(pbhcHfRepo, pbhcHfModel);
-    auto pbhcMotionFile = tbai::downloadFromHuggingFace(pbhcHfRepo, pbhcHfMotion);
-    auto pbhcTimeStart = tbai::fromGlobalConfig<float>("g1_pbhc_horse_stance_punch/time_start");
-    auto pbhcTimeEnd = tbai::fromGlobalConfig<float>("g1_pbhc_horse_stance_punch/time_end");
-    TBAI_LOG_INFO(logger, "Loading PBHC Horse Stance Punch: {}/{}", pbhcHfRepo, pbhcHfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1PBHCController>(
-        g1RobotInterface, pbhcModelPath, pbhcMotionFile, pbhcTimeStart, pbhcTimeEnd, "G1PBHCHorseStancePunch"));
-
-    // Load G1 PBHC Horse Stance Pose controller (model_50000)
-    auto pbhcPoseHfRepo = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_pose/hf_repo");
-    auto pbhcPoseHfModel = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_pose/hf_model");
-    auto pbhcPoseHfMotion = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_pose/hf_motion_file");
-    auto pbhcPoseModelPath = tbai::downloadFromHuggingFace(pbhcPoseHfRepo, pbhcPoseHfModel);
-    auto pbhcPoseMotionFile = tbai::downloadFromHuggingFace(pbhcPoseHfRepo, pbhcPoseHfMotion);
-    auto pbhcPoseTimeStart = tbai::fromGlobalConfig<float>("g1_pbhc_horse_stance_pose/time_start");
-    auto pbhcPoseTimeEnd = tbai::fromGlobalConfig<float>("g1_pbhc_horse_stance_pose/time_end");
-    TBAI_LOG_INFO(logger, "Loading PBHC Horse Stance Pose: {}/{}", pbhcPoseHfRepo, pbhcPoseHfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1PBHCController>(g1RobotInterface, pbhcPoseModelPath,
-                                                                             pbhcPoseMotionFile, pbhcPoseTimeStart,
-                                                                             pbhcPoseTimeEnd, "G1PBHCHorseStancePose"));
-
-    // Load G1 PBHC Horse Stance Pose v2 controller (model_119000)
-    auto pbhcPose2HfRepo = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_pose2/hf_repo");
-    auto pbhcPose2HfModel = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_pose2/hf_model");
-    auto pbhcPose2HfMotion = tbai::fromGlobalConfig<std::string>("g1_pbhc_horse_stance_pose2/hf_motion_file");
-    auto pbhcPose2ModelPath = tbai::downloadFromHuggingFace(pbhcPose2HfRepo, pbhcPose2HfModel);
-    auto pbhcPose2MotionFile = tbai::downloadFromHuggingFace(pbhcPose2HfRepo, pbhcPose2HfMotion);
-    auto pbhcPose2TimeStart = tbai::fromGlobalConfig<float>("g1_pbhc_horse_stance_pose2/time_start");
-    auto pbhcPose2TimeEnd = tbai::fromGlobalConfig<float>("g1_pbhc_horse_stance_pose2/time_end");
-    TBAI_LOG_INFO(logger, "Loading PBHC Horse Stance Pose v2: {}/{}", pbhcPose2HfRepo, pbhcPose2HfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1PBHCController>(
-        g1RobotInterface, pbhcPose2ModelPath, pbhcPose2MotionFile, pbhcPose2TimeStart, pbhcPose2TimeEnd,
-        "G1PBHCHorseStancePose2"));
-
-    // Load G1 ASAP Locomotion controller (decoupled locomotion with stand height)
-    auto asapHfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_locomotion/hf_repo");
-    auto asapHfModel = tbai::fromGlobalConfig<std::string>("g1_asap_locomotion/hf_model");
-    auto asapModelPath = tbai::downloadFromHuggingFace(asapHfRepo, asapHfModel);
-    TBAI_LOG_INFO(logger, "Loading ASAP Locomotion: {}/{}", asapHfRepo, asapHfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPController>(g1RobotInterface, referenceVelocityPtr,
-                                                                             asapModelPath, "G1ASAPLocomotion"));
-
-    // Load G1 ASAP Mimic controllers
-    // CR7
-    auto cr7HfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_cr7/hf_repo");
-    auto cr7HfModel = tbai::fromGlobalConfig<std::string>("g1_asap_cr7/hf_model");
-    auto cr7ModelPath = tbai::downloadFromHuggingFace(cr7HfRepo, cr7HfModel);
-    auto cr7MotionLength = tbai::fromGlobalConfig<float>("g1_asap_cr7/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP CR7: {}/{}", cr7HfRepo, cr7HfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(g1RobotInterface, cr7ModelPath,
-                                                                                  cr7MotionLength, "G1ASAPCR7"));
-
-    // APT
-    auto aptHfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_apt/hf_repo");
-    auto aptHfModel = tbai::fromGlobalConfig<std::string>("g1_asap_apt/hf_model");
-    auto aptModelPath = tbai::downloadFromHuggingFace(aptHfRepo, aptHfModel);
-    auto aptMotionLength = tbai::fromGlobalConfig<float>("g1_asap_apt/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP APT: {}/{}", aptHfRepo, aptHfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(g1RobotInterface, aptModelPath,
-                                                                                  aptMotionLength, "G1ASAPAPT"));
-
-    // Jump Forward Level 1
-    auto jf1HfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_jump_forward1/hf_repo");
-    auto jf1HfModel = tbai::fromGlobalConfig<std::string>("g1_asap_jump_forward1/hf_model");
-    auto jf1ModelPath = tbai::downloadFromHuggingFace(jf1HfRepo, jf1HfModel);
-    auto jf1MotionLength = tbai::fromGlobalConfig<float>("g1_asap_jump_forward1/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP Jump Forward 1: {}/{}", jf1HfRepo, jf1HfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(
-        g1RobotInterface, jf1ModelPath, jf1MotionLength, "G1ASAPJumpForward1"));
-
-    // Jump Forward Level 2
-    auto jf2HfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_jump_forward2/hf_repo");
-    auto jf2HfModel = tbai::fromGlobalConfig<std::string>("g1_asap_jump_forward2/hf_model");
-    auto jf2ModelPath = tbai::downloadFromHuggingFace(jf2HfRepo, jf2HfModel);
-    auto jf2MotionLength = tbai::fromGlobalConfig<float>("g1_asap_jump_forward2/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP Jump Forward 2: {}/{}", jf2HfRepo, jf2HfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(
-        g1RobotInterface, jf2ModelPath, jf2MotionLength, "G1ASAPJumpForward2"));
-
-    // Jump Forward Level 3
-    auto jf3HfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_jump_forward3/hf_repo");
-    auto jf3HfModel = tbai::fromGlobalConfig<std::string>("g1_asap_jump_forward3/hf_model");
-    auto jf3ModelPath = tbai::downloadFromHuggingFace(jf3HfRepo, jf3HfModel);
-    auto jf3MotionLength = tbai::fromGlobalConfig<float>("g1_asap_jump_forward3/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP Jump Forward 3: {}/{}", jf3HfRepo, jf3HfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(
-        g1RobotInterface, jf3ModelPath, jf3MotionLength, "G1ASAPJumpForward3"));
-
-    // Kick Level 1
-    auto kick1HfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_kick1/hf_repo");
-    auto kick1HfModel = tbai::fromGlobalConfig<std::string>("g1_asap_kick1/hf_model");
-    auto kick1ModelPath = tbai::downloadFromHuggingFace(kick1HfRepo, kick1HfModel);
-    auto kick1MotionLength = tbai::fromGlobalConfig<float>("g1_asap_kick1/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP Kick 1: {}/{}", kick1HfRepo, kick1HfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(g1RobotInterface, kick1ModelPath,
-                                                                                  kick1MotionLength, "G1ASAPKick1"));
-
-    // Kick Level 2
-    auto kick2HfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_kick2/hf_repo");
-    auto kick2HfModel = tbai::fromGlobalConfig<std::string>("g1_asap_kick2/hf_model");
-    auto kick2ModelPath = tbai::downloadFromHuggingFace(kick2HfRepo, kick2HfModel);
-    auto kick2MotionLength = tbai::fromGlobalConfig<float>("g1_asap_kick2/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP Kick 2: {}/{}", kick2HfRepo, kick2HfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(g1RobotInterface, kick2ModelPath,
-                                                                                  kick2MotionLength, "G1ASAPKick2"));
-
-    // Kick Level 3
-    auto kick3HfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_kick3/hf_repo");
-    auto kick3HfModel = tbai::fromGlobalConfig<std::string>("g1_asap_kick3/hf_model");
-    auto kick3ModelPath = tbai::downloadFromHuggingFace(kick3HfRepo, kick3HfModel);
-    auto kick3MotionLength = tbai::fromGlobalConfig<float>("g1_asap_kick3/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP Kick 3: {}/{}", kick3HfRepo, kick3HfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(g1RobotInterface, kick3ModelPath,
-                                                                                  kick3MotionLength, "G1ASAPKick3"));
-
-    // Kobe
-    auto kobeHfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_kobe/hf_repo");
-    auto kobeHfModel = tbai::fromGlobalConfig<std::string>("g1_asap_kobe/hf_model");
-    auto kobeModelPath = tbai::downloadFromHuggingFace(kobeHfRepo, kobeHfModel);
-    auto kobeMotionLength = tbai::fromGlobalConfig<float>("g1_asap_kobe/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP Kobe: {}/{}", kobeHfRepo, kobeHfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(g1RobotInterface, kobeModelPath,
-                                                                                  kobeMotionLength, "G1ASAPKobe"));
-
-    // LeBron Level 1
-    auto lebron1HfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_lebron1/hf_repo");
-    auto lebron1HfModel = tbai::fromGlobalConfig<std::string>("g1_asap_lebron1/hf_model");
-    auto lebron1ModelPath = tbai::downloadFromHuggingFace(lebron1HfRepo, lebron1HfModel);
-    auto lebron1MotionLength = tbai::fromGlobalConfig<float>("g1_asap_lebron1/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP LeBron 1: {}/{}", lebron1HfRepo, lebron1HfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(
-        g1RobotInterface, lebron1ModelPath, lebron1MotionLength, "G1ASAPLeBron1"));
-
-    // LeBron Level 2
-    auto lebron2HfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_lebron2/hf_repo");
-    auto lebron2HfModel = tbai::fromGlobalConfig<std::string>("g1_asap_lebron2/hf_model");
-    auto lebron2ModelPath = tbai::downloadFromHuggingFace(lebron2HfRepo, lebron2HfModel);
-    auto lebron2MotionLength = tbai::fromGlobalConfig<float>("g1_asap_lebron2/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP LeBron 2: {}/{}", lebron2HfRepo, lebron2HfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(
-        g1RobotInterface, lebron2ModelPath, lebron2MotionLength, "G1ASAPLeBron2"));
-
-    // Side Jump Level 1
-    auto sj1HfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_side_jump1/hf_repo");
-    auto sj1HfModel = tbai::fromGlobalConfig<std::string>("g1_asap_side_jump1/hf_model");
-    auto sj1ModelPath = tbai::downloadFromHuggingFace(sj1HfRepo, sj1HfModel);
-    auto sj1MotionLength = tbai::fromGlobalConfig<float>("g1_asap_side_jump1/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP Side Jump 1: {}/{}", sj1HfRepo, sj1HfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(g1RobotInterface, sj1ModelPath,
-                                                                                  sj1MotionLength, "G1ASAPSideJump1"));
-
-    // Side Jump Level 2
-    auto sj2HfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_side_jump2/hf_repo");
-    auto sj2HfModel = tbai::fromGlobalConfig<std::string>("g1_asap_side_jump2/hf_model");
-    auto sj2ModelPath = tbai::downloadFromHuggingFace(sj2HfRepo, sj2HfModel);
-    auto sj2MotionLength = tbai::fromGlobalConfig<float>("g1_asap_side_jump2/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP Side Jump 2: {}/{}", sj2HfRepo, sj2HfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(g1RobotInterface, sj2ModelPath,
-                                                                                  sj2MotionLength, "G1ASAPSideJump2"));
-
-    // Side Jump Level 3
-    auto sj3HfRepo = tbai::fromGlobalConfig<std::string>("g1_asap_side_jump3/hf_repo");
-    auto sj3HfModel = tbai::fromGlobalConfig<std::string>("g1_asap_side_jump3/hf_model");
-    auto sj3ModelPath = tbai::downloadFromHuggingFace(sj3HfRepo, sj3HfModel);
-    auto sj3MotionLength = tbai::fromGlobalConfig<float>("g1_asap_side_jump3/motion_length");
-    TBAI_LOG_INFO(logger, "Loading ASAP Side Jump 3: {}/{}", sj3HfRepo, sj3HfModel);
-    controller.addController(std::make_unique<tbai::g1::RosG1ASAPMimicController>(g1RobotInterface, sj3ModelPath,
-                                                                                  sj3MotionLength, "G1ASAPSideJump3"));
+    // Wait for all loader threads to finish
+    for (auto &t : loaderThreads) {
+        t.join();
+    }
 
     TBAI_LOG_INFO(logger, "Controllers initialized. Starting main loop...");
 

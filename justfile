@@ -211,22 +211,6 @@ build:
     echo "[TBAI] Building ROS packages:$ros_packages"
     catkin build $ros_packages
 
-# Run tests for ROS packages
-[group("3. development")]
-test:
-    #!/usr/bin/env bash
-    folders=$(ls -d */ | grep -v dependencies)
-    ros_packages=""
-    for folder in $folders; do
-        if [[ -d $folder/test ]]; then
-            echo "[TBAI] Running tests in $folder"
-            package=$(basename $folder)
-            ros_packages+=" $package"
-        fi
-    done
-    echo "[TBAI] Running tests for ROS packages:$ros_packages"
-    catkin test $ros_packages
-
 # List all pixi environments\
 [group("3. development")]
 pixi-list-envs:

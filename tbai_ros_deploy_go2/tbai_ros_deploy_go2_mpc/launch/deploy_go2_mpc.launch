@@ -37,7 +37,7 @@
         args="cd /home/kb/projects/tbai_mujoco &amp;&amp; pixi run -- ./build/simulate/tbai_mujoco $(arg mujoco_config_file)"/>
     </group>
 
-    <!-- Load gazebo description -->
+    <!-- Load robot description -->
 	<param name="$(arg description_name)" command="$(find xacro)/xacro --inorder $(arg description_file)" />
 
     <!-- Upload config path to ROS param server -->

@@ -171,14 +171,14 @@ go2w_handstand_mujoco:
 spot_arm_mpc_dummy:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc spot_arm_blind.launch dummy:=true
+    roslaunch tbai_ros_mpc spot_arm_blind.launch
 
 # Franka arm, MPC, dummy
 [group("2. demos")]
 franka_arm_mpc_dummy:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc franka.launch dummy:=true
+    roslaunch tbai_ros_mpc franka.launch
 
 #******************************************************************************************************************#
 #******************************************************************************************************************#
@@ -400,8 +400,6 @@ install-tbai-cbf-mppi: clone-tbai
 # Build all ROS packages
 [group("4. development")]
 ros-build-all: build
-    #!/usr/bin/env bash
-    echo 'export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:$(catkin locate)/devel/lib:$CONDA_PREFIX/lib' >> ../../devel/setup.sh
 
 # Build go2 ROS packages
 [group("4. development")]

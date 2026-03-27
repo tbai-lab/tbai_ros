@@ -37,7 +37,6 @@ librealsense = ">=2.55.1,<3"
 
 [feature.all.dependencies]
 ros-noetic-desktop-full = "1.5.0.*"
-gazebo = "11.14.0.*"
 ros-distro-mutex = "0.5.0.*"
 libprotobuf = "*"
 colcon-common-extensions = "*"

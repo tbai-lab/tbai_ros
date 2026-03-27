@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
     auto sensorBridge = std::make_unique<SensorBridge>(publishImage);
 
     // The FrankaRobotInterface is both StateSubscriber and CommandPublisher
-    // (replaces the ROS topic-based state/command used in the Gazebo version)
+    // (replaces the ROS topic-based state/command used in the simulation version)
     auto frankaInterface = std::make_shared<tbai::FrankaRobotInterface>(tbai::FrankaRobotInterfaceArgs());
 
     // No StateVisualizer for Franka — ArmMpcController's ArmVisualizer handles TF

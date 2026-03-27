@@ -57,8 +57,8 @@ micromamba activate all-gpu-free
 # Run `just help` to see many available demos (subset of all)
 $ just help
 [2. demos]
-    anymal_b_mpc_gazebo            # ANYmal B blind MPC in Gazebo
-    anymal_c_mpc_gazebo            # ANYmal C blind MPC in Gazebo
+    anymal_b_mpc_mujoco            # ANYmal B blind MPC in MuJoCo
+    anymal_d_bob_mujoco            # ANYmal D blind Bob in MuJoCo
     g1_mujoco                      # G1 humanoid in MuJoCo (with countless controllers available)
     go2w_drive_mujoco              # Go2W (wheeled) drive in MuJoCo
     ....
@@ -90,8 +90,8 @@ pixi shell --environment all-gpu-free
 # Run `just help` to see many available demos (subset of all)
 $ just help
 [2. demos]
-    anymal_b_mpc_gazebo            # ANYmal B blind MPC in Gazebo
-    anymal_c_mpc_gazebo            # ANYmal C blind MPC in Gazebo
+    anymal_b_mpc_mujoco            # ANYmal B blind MPC in MuJoCo
+    anymal_d_bob_mujoco            # ANYmal D blind Bob in MuJoCo
     g1_mujoco                      # G1 humanoid in MuJoCo
     go2w_drive_mujoco              # Go2W (wheeled) drive in MuJoCo
     ....

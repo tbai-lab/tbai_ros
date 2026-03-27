@@ -27,13 +27,12 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-  src/Subscribers.cpp
+  src/tbai_ros_core.cpp
 )
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
     ${catkin_LIBRARIES}
     tbai::core
-    tbai::estim
 )
 
 install(

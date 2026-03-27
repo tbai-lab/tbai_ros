@@ -13,7 +13,7 @@
 #include <ros/ros.h>
 #include <tbai_core/Rotations.hpp>
 #include <tbai_core/Types.hpp>
-#include <tbai_core/control/Subscribers.hpp>
+#include <tbai_core/control/RobotInterface.hpp>
 #include <tf2_ros/transform_broadcaster.h>
 #include <visualization_msgs/MarkerArray.h>
 
@@ -21,7 +21,7 @@ namespace tbai {
 
 class StateVisualizer {
    public:
-    StateVisualizer(std::shared_ptr<tbai::StateSubscriber> interface, const std::vector<std::string> &jointNames,
+    StateVisualizer(std::shared_ptr<tbai::RobotInterface> interface, const std::vector<std::string> &jointNames,
                     const std::vector<std::string> &footFrameNames, double rate = 30.0, bool enableContactVis = true,
                     const std::string &baseName = "")
         : interface_(interface),
@@ -120,7 +120,7 @@ class StateVisualizer {
         contactPublisher_.publish(markerArray);
     }
 
-    std::shared_ptr<tbai::StateSubscriber> interface_;
+    std::shared_ptr<tbai::RobotInterface> interface_;
     std::vector<std::string> jointNames_;
     std::vector<std::string> footFrameNames_;
     std::string baseName_;

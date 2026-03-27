@@ -26,7 +26,8 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-  src/tbai_ros_core.cpp
+  src/StateVisualizer.cpp
+  src/Subscribers.cpp
 )
 target_link_libraries(${PROJECT_NAME}
   PUBLIC

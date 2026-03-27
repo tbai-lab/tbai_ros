@@ -257,6 +257,10 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        front_camera_optical:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         imu:
           Alpha: 1
           Show Axes: false
@@ -410,6 +414,8 @@ Visualization Manager:
           Value: true
         front_camera:
           Value: false
+        front_camera_optical:
+          Value: true
         imu:
           Value: false
         odom:
@@ -488,6 +494,8 @@ Visualization Manager:
               camera_link:
                 camera_link_optical:
                   {}
+              front_camera_optical:
+                {}
             imu:
               {}
             radar:
@@ -517,7 +525,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.009999999776482582
       Style: Flat Squares
-      Topic: /camera/depth/points
+      Topic: /pointcloud/front
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true

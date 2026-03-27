@@ -24,8 +24,6 @@ add_definitions(-DZENOHCXX_ZENOHC)
 link_directories(${ZENOH_INSTALL}/lib)
 
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES
   CATKIN_DEPENDS tbai_ros_mpc tbai_ros_static tbai_ros_reference
 )
 

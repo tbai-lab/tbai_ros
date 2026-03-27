@@ -10,5 +10,7 @@ dependencies:
 - just >=1.42.4,<2
 - pip
 - pip:
+  - simple-parsing>=0.1.7, <0.2
+  - ruamel-yaml>=0.18.14, <0.19
   - shapely>=2.1.1, <3
 

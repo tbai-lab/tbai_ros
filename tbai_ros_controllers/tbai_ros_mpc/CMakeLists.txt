@@ -28,7 +28,7 @@ find_package(spdlog REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES tbai_ros_mpc
+  LIBRARIES tbai_ros_mpc tbai_ros_arm_mpc tbai_ros_quadruped_arm_mpc
   CATKIN_DEPENDS tbai_ros_reference tbai_ros_ocs2
 )
 

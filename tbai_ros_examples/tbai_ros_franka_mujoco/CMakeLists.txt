@@ -35,23 +35,14 @@ include_directories(
   ${EIGEN3_INCLUDE_DIR}
 )
 
-# tbai_ros_arm_mpc is not exported by tbai_ros_mpc's catkin_package, link explicitly
-find_library(TBAI_ROS_ARM_MPC_LIB tbai_ros_arm_mpc
-  PATHS
-    ${CATKIN_DEVEL_PREFIX}/lib
-    ${CATKIN_DEVEL_PREFIX}/../lib
-    ${CATKIN_DEVEL_PREFIX}/lib
-  NO_DEFAULT_PATH
-)
-
 # Deployment executable (mirrors simple_arm_wbc but with FrankaRobotInterface)
 add_executable(deploy_franka src/deploy_franka.cpp)
 target_link_libraries(deploy_franka
   ${catkin_LIBRARIES}
-  ${TBAI_ROS_ARM_MPC_LIB}
   tbai::core
   tbai::deploy_franka
   tbai::static
+  tbai::arm_mpc
   spdlog::spdlog
   yaml-cpp
   zenohc

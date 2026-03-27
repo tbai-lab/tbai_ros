@@ -47,17 +47,14 @@ target_link_libraries(deploy_spot
   spdlog::spdlog
 )
 
-find_library(TBAI_ROS_QUADRUPED_ARM_MPC_LIB tbai_ros_quadruped_arm_mpc
-  PATHS ${CATKIN_DEVEL_PREFIX}/lib ${CATKIN_DEVEL_PREFIX}/lib NO_DEFAULT_PATH)
-
 add_executable(deploy_spot_arm src/deploy_spot_arm.cpp)
 target_link_libraries(deploy_spot_arm
-  ${TBAI_ROS_QUADRUPED_ARM_MPC_LIB}
   ${catkin_LIBRARIES}
   tbai::core
   tbai::deploy_spot
   tbai::reference
   tbai::static
+  tbai::quadruped_arm_mpc
   zenohc
   spdlog::spdlog
   yaml-cpp

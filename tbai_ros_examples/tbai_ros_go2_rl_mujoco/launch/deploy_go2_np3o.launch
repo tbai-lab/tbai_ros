@@ -6,7 +6,7 @@
     <arg name="controllers_args"            default="joint_controller"/>
     <arg name="tbai_config_path"            default="$(find tbai_ros_go2_rl_mujoco)/config/deploy_go2_rl.yaml"/>
     <arg name="description_name"            default="robot_description"/>
-    <arg name="description_file"            default="/home/kb/projects/ros_test/src/tbai_ros/dependencies/tbai_descriptions/robots/go2/go2.urdf"/>
+    <arg name="description_file"            default="/home/kb/projects/ros_test/src/tbai_ros/thirdparty/tbai_descriptions/robots/go2/go2.urdf"/>
     <arg name="network_interface"           default="eth0"/>
     <arg name="unitree_channel"             default="0"/>
     <arg name="run_rviz"                    default="false"/>

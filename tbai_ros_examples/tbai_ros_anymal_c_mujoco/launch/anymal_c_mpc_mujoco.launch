@@ -2,7 +2,7 @@
 <launch>
     <arg name="robot_name"          default="anymal_c"/>
     <arg name="tbai_config_path"    default="$(find tbai_ros_anymal_c_mujoco)/config/deploy_anymal_c_mpc.yaml"/>
-    <arg name="urdf_file"           default="/home/kb/projects/ros_test/src/tbai_ros/dependencies/tbai_descriptions/robots/anymal_c/anymal_c.urdf"/>
+    <arg name="urdf_file"           default="/home/kb/projects/ros_test/src/tbai_ros/thirdparty/tbai_descriptions/robots/anymal_c/anymal_c.urdf"/>
     <arg name="run_rviz"            default="true"/>
 
     <arg name="sqp_settings_file"           default="$(find tbai_ros_mpc)/config/anymal_c/blind/sqp.info"/>

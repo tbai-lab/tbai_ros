@@ -275,13 +275,13 @@ clean:
 [group("3. development")]
 clone-tbai:
     #!/usr/bin/env bash
-    if [[ ! -d dependencies/tbai ]]; then
-        git clone https://github.com/tbai-lab/tbai.git --single-branch --branch=main dependencies/tbai
+    if [[ ! -d thirdparty/tbai ]]; then
+        git clone https://github.com/tbai-lab/tbai.git --single-branch --branch=main thirdparty/tbai
     else
-        echo "[TBAI] dependencies/tbai already exists, skipping clone"
-        if [[ -d dependencies/tbai/.git ]]; then
-            echo "[TBAI] dependencies/tbai exists, pulling latest changes"
-            git -C dependencies/tbai pull
+        echo "[TBAI] thirdparty/tbai already exists, skipping clone"
+        if [[ -d thirdparty/tbai/.git ]]; then
+            echo "[TBAI] thirdparty/tbai exists, pulling latest changes"
+            git -C thirdparty/tbai pull
         fi
     fi
 
@@ -289,7 +289,7 @@ clone-tbai:
 [group("3. development")]
 build-tbai:
     #!/usr/bin/env bash
-    cmake -B{{tbai_build_dir}} -Sdependencies/tbai -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+    cmake -B{{tbai_build_dir}} -Sthirdparty/tbai -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
     cmake --build {{tbai_build_dir}} --parallel 8
     cmake --build {{tbai_build_dir}} --target install
 
@@ -297,18 +297,18 @@ build-tbai:
 [group("3. development")]
 remove-tbai:
     #!/usr/bin/env bash
-    rm -rf dependencies/tbai && rm -rf ${tbai_build_dir}
+    rm -rf thirdparty/tbai && rm -rf ${tbai_build_dir}
 
 [group("3. development")]
 clone-mujoco-robotic-assets:
     #!/usr/bin/env bash
-    if [[ ! -d dependencies/mujoco_robotic_assets ]]; then
-        git clone https://github.com/tbai-lab/mujoco_robotic_assets.git --single-branch --branch=main dependencies/mujoco_robotic_assets
+    if [[ ! -d thirdparty/mujoco_robotic_assets ]]; then
+        git clone https://github.com/tbai-lab/mujoco_robotic_assets.git --single-branch --branch=main thirdparty/mujoco_robotic_assets
     else
-        echo "[TBAI] dependencies/mujoco_robotic_assets already exists, skipping clone"
-        if [[ -d dependencies/mujoco_robotic_assets/.git ]]; then
-            echo "[TBAI] dependencies/mujoco_robotic_assets exists, pulling latest changes"
-            git -C dependencies/mujoco_robotic_assets pull
+        echo "[TBAI] thirdparty/mujoco_robotic_assets already exists, skipping clone"
+        if [[ -d thirdparty/mujoco_robotic_assets/.git ]]; then
+            echo "[TBAI] thirdparty/mujoco_robotic_assets exists, pulling latest changes"
+            git -C thirdparty/mujoco_robotic_assets pull
         fi
     fi
 
@@ -320,7 +320,7 @@ build-mujoco-robotic-assets:
 [group("3. development")]
 remove-mujoco-robotic-assets:
     #!/usr/bin/env bash
-    rm -rf dependencies/mujoco_robotic_assets
+    rm -rf thirdparty/mujoco_robotic_assets
 
 [group("3. development")]
 install-tbai-cbf-mppi: clone-tbai

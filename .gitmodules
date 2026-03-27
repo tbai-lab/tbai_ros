@@ -1,24 +1,24 @@
-[submodule "dependencies/elevation_mapping"]
-	path = dependencies/elevation_mapping
+[submodule "thirdparty/elevation_mapping"]
+	path = thirdparty/elevation_mapping
 	url = https://github.com/ANYbotics/elevation_mapping.git
-[submodule "dependencies/kindr"]
-	path = dependencies/kindr
+[submodule "thirdparty/kindr"]
+	path = thirdparty/kindr
 	url = https://github.com/ANYbotics/kindr.git
-[submodule "dependencies/kindr_ros"]
-	path = dependencies/kindr_ros
+[submodule "thirdparty/kindr_ros"]
+	path = thirdparty/kindr_ros
 	url = https://github.com/ANYbotics/kindr_ros.git
-[submodule "dependencies/message_logger"]
-	path = dependencies/message_logger
+[submodule "thirdparty/message_logger"]
+	path = thirdparty/message_logger
 	url = https://github.com/ANYbotics/message_logger.git
-[submodule "dependencies/elevation_mapping_cupy"]
-	path = dependencies/elevation_mapping_cupy
+[submodule "thirdparty/elevation_mapping_cupy"]
+	path = thirdparty/elevation_mapping_cupy
 	url = https://github.com/lnotspotl/elevation_mapping_cupy.git
-[submodule "dependencies/grid_map"]
-	path = dependencies/grid_map
+[submodule "thirdparty/grid_map"]
+	path = thirdparty/grid_map
 	url = https://github.com/lnotspotl/grid_map.git
-[submodule "dependencies/pybind11_catkin"]
-	path = dependencies/pybind11_catkin
+[submodule "thirdparty/pybind11_catkin"]
+	path = thirdparty/pybind11_catkin
 	url = https://github.com/wxmerkt/pybind11_catkin.git
-[submodule "dependencies/ddynamic_reconfigure"]
-	path = dependencies/ddynamic_reconfigure
+[submodule "thirdparty/ddynamic_reconfigure"]
+	path = thirdparty/ddynamic_reconfigure
 	url = https://github.com/pal-robotics/ddynamic_reconfigure.git

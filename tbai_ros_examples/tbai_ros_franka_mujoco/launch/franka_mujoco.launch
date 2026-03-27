@@ -7,7 +7,7 @@
 
     <!-- MPC/WBC specific paths -->
     <arg name="taskFile"  default="$(find tbai_ros_mpc)/config/franka/task.info"/>
-    <arg name="urdfFile"  default="/home/kb/projects/ros_test/src/tbai_ros/dependencies/tbai_descriptions/robots/franka_panda/franka_panda.urdf"/>
+    <arg name="urdfFile"  default="/home/kb/projects/ros_test/src/tbai_ros/thirdparty/tbai_descriptions/robots/franka_panda/franka_panda.urdf"/>
     <arg name="libFolder" default="/tmp/tbai_arm_wbc"/>
 
     <!-- MuJoCo simulation -->

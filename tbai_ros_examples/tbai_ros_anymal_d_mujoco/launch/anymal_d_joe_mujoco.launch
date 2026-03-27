@@ -2,7 +2,7 @@
 <launch>
     <arg name="robot_name"          default="anymal_d"/>
     <arg name="tbai_config_path"    default="$(find tbai_ros_anymal_d_mujoco)/config/deploy_anymal_d_joe.yaml"/>
-    <arg name="urdf_file"           default="/home/kb/projects/ros_test/src/tbai_ros/dependencies/tbai_descriptions/robots/anymal_d/anymal_d.urdf"/>
+    <arg name="urdf_file"           default="/home/kb/projects/ros_test/src/tbai_ros/thirdparty/tbai_descriptions/robots/anymal_d/anymal_d.urdf"/>
     <arg name="run_rviz"            default="true"/>
     <arg name="mapping_device"      default="cpu"/>
 

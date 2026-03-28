@@ -2,7 +2,7 @@
 <launch>
     <arg name="robot_name"          default="spot"/>
     <arg name="tbai_config_path"    default="$(find tbai_ros_spot_mujoco)/config/deploy_spot.yaml"/>
-    <arg name="urdf_file"           default="$(find tbai_descriptions)/urdf/robots/spot/spot.urdf"/>
+    <arg name="urdf_file"           default="$(find tbai_ros_descriptions)/urdf/robots/spot/spot.urdf"/>
     <arg name="run_rviz"            default="true"/>
 
     <!-- MPC config files -->
@@ -15,7 +15,7 @@
 
     <!-- MuJoCo simulation -->
     <arg name="mujoco_simulation" default="false"/>
-    <arg name="mujoco_config_file" default="$(find tbai_descriptions)/mujoco/robots/spot/config.yaml"/>
+    <arg name="mujoco_config_file" default="$(find tbai_ros_descriptions)/mujoco/robots/spot/config.yaml"/>
     <group if="$(arg mujoco_simulation)">
         <node name="mujoco_sim" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
               args="tbai_mujoco $(arg mujoco_config_file)"/>

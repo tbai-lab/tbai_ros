@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(tbai_descriptions)
+project(tbai_ros_descriptions)
 
 find_package(catkin REQUIRED)
 find_package(Git REQUIRED)

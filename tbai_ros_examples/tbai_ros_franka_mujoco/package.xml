@@ -17,6 +17,6 @@
   <depend>tbai_ros_static</depend>
   <depend>tbai_ros_reference</depend>
   <depend>tbai_ros_mpc</depend>
-  <depend>tbai_descriptions</depend>
+  <depend>tbai_ros_descriptions</depend>
   <depend>xacro</depend>
 </package>

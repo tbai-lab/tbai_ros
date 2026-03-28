@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
 
         controller.addController(std::make_unique<tbai::static_::RosStaticController>(spotArmInterface));
 
-        controller.addController(std::make_unique<tbai::mpc::RosMpcController>(
+        controller.addController(std::make_unique<tbai::mpc::quadruped_arm::RosMpcController>(
             robotName, spotArmInterface, tbai::reference::getReferenceVelocityGeneratorShared(nh),
             tbai::RosTime::rightNow));
 

@@ -16,6 +16,7 @@
 
 namespace tbai {
 namespace mpc {
+namespace quadruped_arm {
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
@@ -130,7 +131,7 @@ RosMpcController::RosMpcController(const std::string &robotName,
     auto kinematicsPtr = std::shared_ptr<tbai::mpc::quadruped_arm::KinematicsModelBase<scalar_t>>(
         quadrupedInterfacePtr_->getKinematicModel().clone());
     auto terrainTopic = fromGlobalConfig<std::string>("mpc_controller/reference_trajectory/terrain_topic");
-    referenceTrajectoryGeneratorPtr_ = std::make_unique<reference::GridmapReferenceTrajectoryGenerator>(
+    referenceTrajectoryGeneratorPtr_ = std::make_unique<tbai::mpc::reference::GridmapReferenceTrajectoryGenerator>(
         referenceThreadNodeHandle_, targetCommandConfig, velocityGeneratorPtr_, std::move(kinematicsPtr), trajdt,
         trajKnots, terrainTopic, blind);
 }
@@ -269,5 +270,6 @@ void RosMpcController::referenceThreadLoop() {
     }
 }
 
+}  // namespace quadruped_arm
 }  // namespace mpc
 }  // namespace tbai

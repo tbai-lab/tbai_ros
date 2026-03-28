@@ -29,8 +29,7 @@
 
 namespace tbai {
 namespace mpc {
-
-using namespace tbai::mpc::quadruped_arm;
+namespace quadruped_arm {
 
 /**
  * Visualizes contact points using ROS markers.
@@ -106,5 +105,6 @@ class RosMpcController : public tbai::mpc::quadruped_arm::MpcController {
     bool useRosInterface_ = true;
 };
 
+}  // namespace quadruped_arm
 }  // namespace mpc
 }  // namespace tbai

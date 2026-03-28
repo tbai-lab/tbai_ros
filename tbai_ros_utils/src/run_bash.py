@@ -1,16 +1,24 @@
 #!/usr/bin/env python3
 import argparse
+import os
 import subprocess
 import sys
 
 
 def run_bash(command: str, shell: bool = True, check: bool = True):
+  
+  ## wayland hack
+  env = os.environ.copy()
+  env["WAYLAND_DISPLAY"] = ""
+  env["XDG_SESSION_TYPE"] = "x11"
+
   result = subprocess.run(
     command,
     shell=shell,
     capture_output=True,
     text=True,
     check=check,
+    env=env,
   )
   return result
 

@@ -42,7 +42,7 @@
 
     <!-- Start Rviz visualizer -->
     <group if="$(arg run_rviz)">
-        <arg name="rvizconfig" default="$(find tbai_ros_g1_mujoco)/launch/rviz/g1_rl.rviz"/>
+        <arg name="rvizconfig" default="$(find tbai_ros_g1_mujoco)/launch/rviz/g1.rviz"/>
         <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen"/>
     </group>
 

@@ -261,8 +261,7 @@ build-zenoh-c:
         -DCMAKE_INSTALL_PREFIX="$CONDA_PREFIX" \
         -DZENOHC_BUILD_WITH_UNSTABLE_API=ON \
         -DZENOHC_BUILD_WITH_SHARED_MEMORY=ON
-    cmake --build {{zenoh_c_build_dir}} --config Release -j"$(nproc)"
-    cmake --install {{zenoh_c_build_dir}}
+    cmake --build {{zenoh_c_build_dir}} --config Release -j"$(nproc)" --target install
     echo "[TBAI] zenoh-c installed."
 
 # Build and install zenoh-cpp headers
@@ -282,7 +281,7 @@ build-zenoh-cpp: build-zenoh-c
         -DCMAKE_INSTALL_PREFIX="$CONDA_PREFIX" \
         -DCMAKE_PREFIX_PATH="$CONDA_PREFIX" \
         -DZENOHCXX_ZENOHC=ON -DZENOHCXX_ZENOHPICO=OFF
-    cmake --install {{zenoh_cpp_build_dir}}
+    cmake --build {{zenoh_cpp_build_dir}} --config Release -j"$(nproc)" --target install
     echo "[TBAI] zenoh-cpp installed."
 
 # Clone tbai_sdk (skips if already exists)
@@ -316,8 +315,7 @@ build-tbai-sdk: build-zenoh-cpp clone-tbai-sdk
     cmake -S "$TBAI_SDK_DIR" -B {{tbai_sdk_build_dir}} \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX="$CONDA_PREFIX"
-    cmake --build {{tbai_sdk_build_dir}} --parallel "$(nproc)"
-    cmake --install {{tbai_sdk_build_dir}}
+    cmake --build {{tbai_sdk_build_dir}} --parallel "$(nproc)" --target install
     echo "[TBAI] tbai_sdk installed."
 
 # Clone tbai_mujoco (skips if already exists)
@@ -345,8 +343,7 @@ build-tbai-mujoco: build-tbai-sdk clone-tbai-mujoco
     cmake -S thirdparty/tbai_mujoco -B {{tbai_mujoco_build_dir}} \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX="$CONDA_PREFIX"
-    cmake --build {{tbai_mujoco_build_dir}} --parallel "$(nproc)"
-    cmake --install {{tbai_mujoco_build_dir}}
+    cmake --build {{tbai_mujoco_build_dir}} --parallel "$(nproc)" --target install
     echo "[TBAI] tbai_mujoco installed."
 
 # Clone tbai repository (skips if already exists)
@@ -368,7 +365,7 @@ clone-tbai:
 build-tbai: build-tbai-mujoco
     #!/usr/bin/env bash
     cmake -B{{tbai_build_dir}} -Sthirdparty/tbai -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-    cmake --build {{tbai_build_dir}} --parallel 8 --target install
+    cmake --build {{tbai_build_dir}} --parallel "$(nproc)" --target install
 
 # Remove tbai dependencies
 [group("4.2 tbai")]

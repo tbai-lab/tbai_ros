@@ -2,6 +2,10 @@
 __pycache__/
 tbai/
 thirdparty/tbai_descriptions/
+thirdparty/tbai_sdk/
+thirdparty/tbai_mujoco/
+thirdparty/zenoh-c/
+thirdparty/zenoh-cpp/
 pixi.lock
 
 *.mp4

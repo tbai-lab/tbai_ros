@@ -136,11 +136,9 @@ int main(int argc, char *argv[]) {
     auto sensorBridge = std::make_unique<SensorBridge>(publishImages, publishPointclouds);
 
     // Initialize Go2RobotInterface
-    auto go2RobotInterface = std::make_shared<tbai::Go2RobotInterface>(
-        tbai::Go2RobotInterfaceArgs()
-            .networkInterface(tbai::getEnvAs<std::string>("TBAI_GO2_NETWORK_INTERFACE", "eth0"))
-            .unitreeChannel(tbai::getEnvAs<int>("TBAI_GO2_UNITREE_CHANNEL", 0))
-            .useGroundTruthState(tbai::getEnvAs<bool>("TBAI_GO2_USE_GROUND_TRUTH", false)));
+    tbai::Go2RobotInterfaceArgs go2Args;
+    go2Args.useGroundTruthState = tbai::getEnvAs<bool>("TBAI_GO2_USE_GROUND_TRUTH", false);
+    auto go2RobotInterface = std::make_shared<tbai::Go2RobotInterface>(go2Args);
 
     auto changeControllerTopic = tbai::fromGlobalConfig<std::string>("change_controller_topic");
 

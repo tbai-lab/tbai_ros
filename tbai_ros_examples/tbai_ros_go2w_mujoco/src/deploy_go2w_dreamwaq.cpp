@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
 
     // Initialize Go2WRobotInterface
     tbai::Go2WRobotInterfaceArgs ifaceArgs;
-    ifaceArgs.useGroundTruthState(tbai::getEnvAs<bool>("TBAI_GO2W_USE_GROUND_TRUTH", false));
+    ifaceArgs.useGroundTruthState = tbai::getEnvAs<bool>("TBAI_GO2W_USE_GROUND_TRUTH", false);
     std::shared_ptr<tbai::Go2WRobotInterface> go2wRobotInterface =
         std::make_shared<tbai::Go2WRobotInterface>(ifaceArgs);
 

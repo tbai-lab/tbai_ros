@@ -142,8 +142,8 @@ int main(int argc, char *argv[]) {
     auto sensorBridge = std::make_unique<SensorBridge>(publishImages, publishPointclouds);
 
     tbai::AnymalCRobotInterfaceArgs ifaceArgs;
-    ifaceArgs.useGroundTruthState(true);
-    ifaceArgs.enableGroundPlaneCorrection(false);
+    ifaceArgs.useGroundTruthState = true;
+    ifaceArgs.enableGroundPlaneCorrection = false;
     auto anymalInterface = std::make_shared<tbai::AnymalCRobotInterface>(ifaceArgs);
 
     auto jointNames = tbai::fromGlobalConfig<std::vector<std::string>>("joint_names");

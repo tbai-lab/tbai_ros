@@ -142,8 +142,8 @@ int main(int argc, char *argv[]) {
     const std::string urdfString = nh.param<std::string>("robot_description", "");
 
     tbai::AnymalDRobotInterfaceArgs ifaceArgs;
-    ifaceArgs.useGroundTruthState(true);
-    ifaceArgs.enableGroundPlaneCorrection(false);
+    ifaceArgs.useGroundTruthState = true;
+    ifaceArgs.enableGroundPlaneCorrection = false;
     auto anymalInterface = std::make_shared<tbai::AnymalDRobotInterface>(ifaceArgs);
 
     auto jointNames = tbai::fromGlobalConfig<std::vector<std::string>>("joint_names");

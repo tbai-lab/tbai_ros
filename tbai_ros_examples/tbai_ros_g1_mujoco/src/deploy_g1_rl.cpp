@@ -140,11 +140,9 @@ int main(int argc, char *argv[]) {
     auto sensorBridge = std::make_unique<SensorBridge>(publishImage, publishPointcloud);
 
     // Initialize G1RobotInterface
-    std::shared_ptr<tbai::G1RobotInterface> g1RobotInterface = std::make_shared<tbai::G1RobotInterface>(
-        tbai::G1RobotInterfaceArgs()
-            .networkInterface(tbai::getEnvAs<std::string>("TBAI_G1_NETWORK_INTERFACE", "lo"))
-            .unitreeChannel(tbai::getEnvAs<int>("TBAI_G1_UNITREE_CHANNEL", 1))
-            .useGroundTruthState(tbai::getEnvAs<bool>("TBAI_G1_USE_GROUND_TRUTH", false)));
+    tbai::G1RobotInterfaceArgs g1Args;
+    g1Args.useGroundTruthState = tbai::getEnvAs<bool>("TBAI_G1_USE_GROUND_TRUTH", false);
+    std::shared_ptr<tbai::G1RobotInterface> g1RobotInterface = std::make_shared<tbai::G1RobotInterface>(g1Args);
 
     // Start state visualizer (TF + contact markers) for all controllers
     auto jointNames = tbai::fromGlobalConfig<std::vector<std::string>>("joint_names");

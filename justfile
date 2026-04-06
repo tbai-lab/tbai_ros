@@ -84,6 +84,13 @@ anymal_d_mpc_blind_mujoco:
     source $(catkin locate)/devel/setup.bash
     roslaunch tbai_ros_anymal_d_mujoco anymal_d_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
+# ANYmal D perceptive MPC in MuJoCo
+[group("2. demos")]
+anymal_d_mpc_perceptive_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_mpc_perceptive_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
 # ANYmal D blind Bob in MuJoCo
 [group("2. demos")]
 anymal_d_bob_mujoco:

@@ -11,6 +11,11 @@ help:
     #!/usr/bin/env bash
     just -l
 
+# Show available demos
+show-demos:
+    #!/usr/bin/env bash
+    just --list --list-heading '' | sed -n '/\[2\. demos\]/,/^\s*$/p'
+
 # Fresh install go2 environment
 [group("1. fresh")]
 fresh-install-go2: clean clone-tbai build-tbai ros-build-go2 install-tbai-cbf-mppi

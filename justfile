@@ -359,7 +359,7 @@ build-tbai-mujoco: build-tbai-sdk clone-tbai-mujoco
 clone-tbai:
     #!/usr/bin/env bash
     if [[ ! -d thirdparty/tbai ]]; then
-        git clone https://github.com/tbai-lab/tbai.git --single-branch --branch=develop thirdparty/tbai
+        git clone https://github.com/tbai-lab/tbai.git --single-branch --branch=main thirdparty/tbai
     else
         echo "[TBAI] thirdparty/tbai already exists, skipping clone"
         if [[ -d thirdparty/tbai/.git ]]; then

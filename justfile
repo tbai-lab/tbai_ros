@@ -43,7 +43,7 @@ fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all install-tb
 
 # Go2 MPC in Mujoco
 [group("2. demos")]
-go2_mpc_mujoco:
+go2_mpc_blind_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
     roslaunch tbai_ros_go2_mpc_mujoco deploy_go2_mpc.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true
@@ -65,21 +65,21 @@ g1_mujoco:
 
 # ANYmal B blind MPC in MuJoCo
 [group("2. demos")]
-anymal_b_mpc_mujoco:
+anymal_b_mpc_blind_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
     roslaunch tbai_ros_anymal_b_mujoco anymal_b_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
 # ANYmal C blind MPC in MuJoCo
 [group("2. demos")]
-anymal_c_mpc_mujoco:
+anymal_c_mpc_blind_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
     roslaunch tbai_ros_anymal_c_mujoco anymal_c_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
 
 # ANYmal D blind MPC in MuJoCo
 [group("2. demos")]
-anymal_d_mpc_mujoco:
+anymal_d_mpc_blind_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
     roslaunch tbai_ros_anymal_d_mujoco anymal_d_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true

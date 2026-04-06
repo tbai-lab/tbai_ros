@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+    <arg name="robot_name"          default="anymal_d"/>
+    <arg name="tbai_config_path"    default="$(find tbai_ros_anymal_d_mujoco)/config/deploy_anymal_d_dtc_perceptive.yaml"/>
+    <arg name="urdf_file"           default="$(find tbai_ros_descriptions)/urdf/robots/anymal_d/anymal_d.urdf"/>
+    <arg name="run_rviz"            default="true"/>
+    <arg name="mapping_device"      default="cpu"/>
+
+    <arg name="mujoco_simulation" default="false"/>
+    <arg name="mujoco_config_file" default="$(find tbai_ros_descriptions)/mujoco/robots/anymal_d/config.yaml"/>
+    <group if="$(arg mujoco_simulation)">
+        <node name="mujoco_sim" pkg="tbai_ros_utils" type="run_bash.py" output="screen"
+              args="tbai_mujoco $(arg mujoco_config_file)"/>
+    </group>
+
+    <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>
+    <param name="robot_name" type="string" value="$(arg robot_name)"/>
+    <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>
+    <env name="TBAI_ROBOT_DESCRIPTION_PATH" value="$(arg urdf_file)"/>
+    <env name="TBAI_ANYMAL_PUBLISH_IMAGE" value="$(arg mujoco_simulation)"/>
+    <env name="TBAI_ANYMAL_PUBLISH_POINTCLOUD" value="$(arg mujoco_simulation)"/>
+
+    <!-- DTC/MPC params -->
+    <param name="taskFile"                    value="$(find tbai_ros_dtc)/config/dtc/task.info"/>
+    <param name="referenceFile"               value="$(find tbai_ros_dtc)/config/dtc/reference.info"/>
+    <param name="gait_file"                   value="$(find tbai_ros_dtc)/config/dtc/gait.info"/>
+    <param name="urdfFile"                    value="$(arg urdf_file)"/>
+    <param name="sqp_settings_file"           value="$(find tbai_ros_dtc)/config/dtc/sqp.info"/>
+    <param name="frame_declaration_file"      value="$(find tbai_ros_dtc)/config/dtc/frame_declarations.info"/>
+    <param name="task_settings_file"          value="$(find tbai_ros_dtc)/config/dtc/task.info"/>
+    <param name="target_command_config_file"  value="$(find tbai_ros_dtc)/config/dtc/targetCommand.info"/>
+    <param name="controller_config_file"      value="$(find tbai_ros_dtc)/config/dtc/controllers.info"/>
+
+    <param name="robot_description" textfile="$(arg urdf_file)"/>
+
+    <node name="deploy_anymal_d_dtc" pkg="tbai_ros_anymal_d_mujoco" type="deploy_anymal_d_dtc" output="screen"/>
+    <node pkg="tbai_ros_mpc" type="quadruped_mpc_node" name="quadruped_mpc_node" output="screen"/>
+
+    <!-- Voxel grid downsampling per camera -->
+    <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen"/>
+
+    <node pkg="nodelet" type="nodelet" name="voxel_grid_front" args="load pcl/VoxelGrid pcl_manager" output="screen">
+        <remap from="~input" to="/pointcloud/front_lower"/>
+        <remap from="~output" to="/pointcloud/front_lower_downsampled"/>
+        <rosparam>
+            filter_field_name: z
+            filter_limit_min: 0.01
+            filter_limit_max: 4.0
+            filter_limit_negative: False
+            leaf_size: 0.02
+        </rosparam>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="voxel_grid_left" args="load pcl/VoxelGrid pcl_manager" output="screen">
+        <remap from="~input" to="/pointcloud/left"/>
+        <remap from="~output" to="/pointcloud/left_downsampled"/>
+        <rosparam>
+            filter_field_name: z
+            filter_limit_min: 0.01
+            filter_limit_max: 4.0
+            filter_limit_negative: False
+            leaf_size: 0.02
+        </rosparam>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="voxel_grid_right" args="load pcl/VoxelGrid pcl_manager" output="screen">
+        <remap from="~input" to="/pointcloud/right"/>
+        <remap from="~output" to="/pointcloud/right_downsampled"/>
+        <rosparam>
+            filter_field_name: z
+            filter_limit_min: 0.01
+            filter_limit_max: 4.0
+            filter_limit_negative: False
+            leaf_size: 0.02
+        </rosparam>
+    </node>
+
+    <!-- Elevation mapping with multiple input sources -->
+    <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen">
+        <rosparam command="load" file="$(find tbai_ros_anymal_d_mujoco)/config/elevation_mapping_mujoco.yaml"/>
+        <rosparam command="load" file="$(find tbai_ros_gridmap)/config/post_processing.yaml"/>
+    </node>
+
+    <!-- Convex plane decomposition -->
+    <include file="$(find convex_plane_decomposition_ros)/launch/convex_plane_decomposition.launch">
+        <arg name="parameter_file" default="$(find tbai_ros_dtc)/config/dtc/convex_plane_decomposition_parameters.yaml"/>
+        <arg name="node_parameter_file" default="$(find tbai_ros_dtc)/config/dtc/convex_plane_decomposition_node.yaml"/>
+    </include>
+
+    <node pkg="tbai_ros_ocs2" type="gait_command_node" name="gait_command_node"
+          output="screen" launch-prefix="x-terminal-emulator -e">
+        <param name="robot_name" value="$(arg robot_name)"/>
+    </node>
+
+    <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/>
+
+    <group if="$(arg run_rviz)">
+        <arg name="rvizconfig" default="$(find tbai_ros_bob)/launch/rviz/robot.rviz"/>
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen"/>
+    </group>
+</launch>

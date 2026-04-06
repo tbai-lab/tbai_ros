@@ -1,8 +1,11 @@
 .vscode
 __pycache__/
 tbai/
-mujoco_robotic_assets/
-unitree_mujoco/
+thirdparty/tbai_descriptions/
+thirdparty/tbai_sdk/
+thirdparty/tbai_mujoco/
+thirdparty/zenoh-c/
+thirdparty/zenoh-cpp/
 pixi.lock
 
 *.mp4

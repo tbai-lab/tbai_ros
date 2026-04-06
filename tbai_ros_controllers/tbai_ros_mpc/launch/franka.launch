@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+    <!-- Required arguments -->
+    <arg name="tbai_config_path"    default="$(find tbai_ros_mpc)/config/franka/default_config_arm.yaml"/>
+
+    <!-- MPC/WBC specific paths -->
+    <arg name="taskFile"  default="$(find tbai_ros_mpc)/config/franka/task.info"/>
+    <arg name="urdfFile"  default="$(find tbai_ros_descriptions)/urdf/robots/franka_panda/franka_panda.urdf"/>
+    <arg name="libFolder" default="/tmp/tbai_arm_wbc"/>
+
+    <!-- Debug and visualization -->
+    <arg name="debug" default="false"/>
+    <arg name="rviz" default="true"/>
+
+    <!-- Upload config paths to ROS param server -->
+    <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>
+    <param name="taskFile" type="string" value="$(arg taskFile)"/>
+    <param name="urdfFile" type="string" value="$(arg urdfFile)"/>
+    <param name="libFolder" type="string" value="$(arg libFolder)"/>
+
+    <!-- Set environment variable for config path -->
+    <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>
+
+    <!-- Load robot description -->
+    <param name="robot_description" textfile="$(arg urdfFile)"/>
+
+    <!-- MPC node -->
+    <node if="$(arg debug)" pkg="tbai_ros_mpc" type="arm_mpc_node" name="arm_mpc_node"
+          output="screen" launch-prefix="gnome-terminal -- gdb -ex run --args"/>
+    <node unless="$(arg debug)" pkg="tbai_ros_mpc" type="arm_mpc_node" name="arm_mpc_node"
+          output="screen"/>
+
+    <!-- Dummy MRT node -->
+    <node pkg="tbai_ros_mpc" type="arm_dummy_mrt_node" name="arm_dummy_mrt_node"
+          output="screen"/>
+
+    <!-- Target interactive marker -->
+    <node if="$(arg rviz)" pkg="tbai_ros_mpc" type="arm_target" name="arm_target"
+          output="screen"/>
+
+    <group if="$(arg rviz)">
+        <arg name="rvizconfig" default="$(find tbai_ros_mpc)/rviz/arm.rviz"/>
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen"/>
+    </group>
+
+</launch>

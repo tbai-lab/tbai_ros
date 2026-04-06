@@ -1,6 +1,9 @@
 justfile_path := `realpath justfile`
 tbai_build_dir := "/tmp/tbai_build_123"
-unitree_mujoco_build_dir := "/tmp/unitree_mujoco_build_123"
+zenoh_c_build_dir := "/tmp/zenoh_c_build"
+zenoh_cpp_build_dir := "/tmp/zenoh_cpp_build"
+tbai_sdk_build_dir := "/tmp/tbai_sdk_build"
+tbai_mujoco_build_dir := "/tmp/tbai_mujoco_build"
 current_dir := `realpath justfile`
 
 # Show available commands
@@ -8,31 +11,34 @@ help:
     #!/usr/bin/env bash
     just -l
 
+# Show available demos
+show-demos:
+    #!/usr/bin/env bash
+    just --list --list-heading '' | sed -n '/\[2\. demos\]/,/^\s*$/p'
+
 # Fresh install go2 environment
 [group("1. fresh")]
 fresh-install-go2: clean clone-tbai build-tbai ros-build-go2 install-tbai-cbf-mppi
     #!/usr/bin/env bash
-    catkin build elevation_mapping elevation_mapping_cupy hesai_ros_driver realsense2_camera
+    catkin build elevation_mapping elevation_mapping_cupy
     echo "All good 🤗"
 
 # Fresh install go2-gpu-free environment
 [group("1. fresh")]
 fresh-install-go2-gpu-free: clean clone-tbai build-tbai ros-build-go2 install-tbai-cbf-mppi
     #!/usr/bin/env bash
-    catkin build elevation_mapping realsense2_camera hesai_ros_driver
+    catkin build elevation_mapping
     echo "All good 🤗"
 
 # Fresh install all environment
 [group("1. fresh")]
-fresh-install-all: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi clone-mujoco-robotic-assets build-mujoco-robotic-assets clone-unitree-mujoco build-unitree-mujoco
-    #!/usr/bin/env bash
+fresh-install-all: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi    #!/usr/bin/env bash
     catkin build elevation_mapping elevation_mapping_cupy
     echo "All good 🤗"
 
 # Fresh install all-gpu-free environment
 [group("1. fresh")]
-fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi clone-mujoco-robotic-assets build-mujoco-robotic-assets clone-unitree-mujoco build-unitree-mujoco
-    #!/usr/bin/env bash
+fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi    #!/usr/bin/env bash
     catkin build elevation_mapping
     echo "All good 🤗"
 
@@ -40,249 +46,149 @@ fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all install-tb
 #******************************************************************************************************************#
 #******************************************************************************************************************#
 
-# Go2 blind MPC in Gazebo
-[group("2. demos")]
-go2_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc go2_blind.launch gui:=true
-
-# Go2 perceptive MPC in Gazebo
-[group("2. demos")]
-go2_perceptive_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc go2_perceptive.launch gui:=true
-
-# ANYmal B blind MPC in Gazebo
-[group("2. demos")]
-anymal_b_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc anymal_b_blind.launch gui:=true
-
-# ANYmal C blind MPC in Gazebo
-[group("2. demos")]
-anymal_c_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc anymal_c_blind.launch gui:=true
-
-# ANYmal D blind MPC in Gazebo
-[group("2. demos")]
-anymal_d_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc anymal_d_blind.launch gui:=true
-
-# ANYmal D perceptive MPC in Gazebo
-[group("2. demos")]
-anymal_d_perceptive_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc anymal_d_perceptive.launch gui:=true
-
-# Spot blind MPC in Gazebo
-[group("2. demos")]
-spot_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc spot_blind.launch gui:=true
-
 # Go2 MPC in Mujoco
 [group("2. demos")]
-go2_mpc_mujoco:
+go2_mpc_blind_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_mpc deploy_go2_mpc.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true
-
-# ANYmal D perceptive DTC in Gazebo
-[group("2. demos")]
-anymal_d_dtc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_dtc simple_perceptive.launch gui:=true
-
-# ANYmal D blind DTC in Gazebo
-[group("2. demos")]
-anymal_d_dtc_blind_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_dtc simple_blind.launch gui:=true
-
-# ANYmal D perceptive Joe in Gazebo
-[group("2. demos")]
-anymal_d_joe_perceptive_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_joe simple_perceptive.launch gui:=true
-
-# Go2 NP3O in Gazebo
-[group("2. demos")]
-go2_np3o_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_np3o simple_go2.launch gui:=true
+    roslaunch tbai_ros_go2_mpc_mujoco deploy_go2_mpc.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true
 
 # Go2 NP3O in Mujoco
 [group("2. demos")]
 go2_np3o_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true publish_pointcloud:=false
+    roslaunch tbai_ros_go2_rl_mujoco deploy_go2_np3o.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true publish_pointcloud:=false
 
-# Go2 NP3O with MPPI in Mujoco
-[group("2. demos")]
-go2_np3o_mppi_mujoco:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o_mppi.launch run_go2_joystick:=false run_virtual_joystick:=true network_interface:=lo mujoco_simulation:=true run_rviz:=true
-
-# Go2 Safe in Gazebo
-[group("2. demos")]
-go2_safe_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_safe simple_go2_safe.launch gui:=true
-
-# Go2 Safe in Mujoco
-[group("2. demos")]
-go2_safe_mujoco:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_safe deploy_go2_safe.launch run_go2_joystick:=false run_virtual_joystick:=true unitree_channel:=1 network_interface:=lo mujoco_simulation:=true run_rviz:=true
-
-# ANYmal D blind Bob in Gazebo
-[group("2. demos")]
-anymal_d_bob_blind_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_bob anymal_d_blind.launch gui:=true
-
-# ANYmal D perceptive Bob in Gazebo
-[group("2. demos")]
-anymal_d_bob_perceptive_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_bob anymal_d_perceptive.launch gui:=true
-
-# Go2 blind Bob in Gazebo
-[group("2. demos")]
-go2_bob_blind_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_bob go2_blind.launch gui:=true
 
 # G1 humanoid in MuJoCo
 [group("2. demos")]
 g1_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_g1 g1_mujoco.launch mujoco_simulation:=true run_rviz:=false
+    roslaunch tbai_ros_g1_mujoco g1_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal B blind MPC in MuJoCo
+[group("2. demos")]
+anymal_b_mpc_blind_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_b_mujoco anymal_b_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal C blind MPC in MuJoCo
+[group("2. demos")]
+anymal_c_mpc_blind_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_c_mujoco anymal_c_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal D blind MPC in MuJoCo
+[group("2. demos")]
+anymal_d_mpc_blind_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_mpc_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal D perceptive MPC in MuJoCo
+[group("2. demos")]
+anymal_d_mpc_perceptive_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_mpc_perceptive_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal D blind Bob in MuJoCo
+[group("2. demos")]
+anymal_d_bob_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_bob_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal D perceptive Bob in MuJoCo
+[group("2. demos")]
+anymal_d_bob_perceptive_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_bob_perceptive_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal D blind DTC in MuJoCo
+[group("2. demos")]
+anymal_d_dtc_blind_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_dtc_blind_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal D perceptive DTC in MuJoCo
+[group("2. demos")]
+anymal_d_dtc_perceptive_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_dtc_perceptive_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# ANYmal D JOE in MuJoCo
+[group("2. demos")]
+anymal_d_joe_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_anymal_d_mujoco anymal_d_joe_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# Spot in MuJoCo (with MPC + RViz)
+[group("2. demos")]
+spot_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_spot_mujoco spot_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# Spot Arm in MuJoCo (with MPC + RViz)
+[group("2. demos")]
+spot_arm_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_spot_mujoco spot_arm_mujoco.launch mujoco_simulation:=true run_rviz:=true
+
+# Franka Panda in MuJoCo (with MPC + RViz)
+[group("2. demos")]
+franka_mujoco:
+    #!/usr/bin/env bash
+    source $(catkin locate)/devel/setup.bash
+    roslaunch tbai_ros_franka_mujoco franka_mujoco.launch mujoco_simulation:=true run_rviz:=true enable_mpc:=true
 
 # Go2W (wheeled) drive in MuJoCo
 [group("2. demos")]
 go2w_drive_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_go2w go2w_mujoco_drive.launch run_rviz:=false
+    roslaunch tbai_ros_go2w_mujoco go2w_mujoco_drive.launch run_rviz:=true
 
 # Go2W (wheeled) handstand in MuJoCo
 [group("2. demos")]
 go2w_handstand_mujoco:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_go2w go2w_mujoco_handstand.launch run_rviz:=false
+    roslaunch tbai_ros_go2w_mujoco go2w_mujoco_handstand.launch run_rviz:=false
 
 # Spot with arm, MPC, dummy
 [group("2. demos")]
 spot_arm_mpc_dummy:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc spot_arm_blind.launch dummy:=true
-
-# Spot with arm, MPC, Gazebo
-[group("2. demos")]
-spot_arm_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc spot_arm_blind.launch dummy:=false gui:=true
+    roslaunch tbai_ros_mpc spot_arm_blind.launch
 
 # Franka arm, MPC, dummy
 [group("2. demos")]
 franka_arm_mpc_dummy:
     #!/usr/bin/env bash
     source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc franka.launch dummy:=true
-
-# Franka arm, MPC, dummy
-[group("2. demos")]
-franka_arm_mpc_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_mpc franka.launch dummy:=false gui:=false
-
-# Go2W (wheeled) drive in MuJoCo
-[group("2. demos")]
-go2w_drive_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    echo "This example requires two terminals:"
-    echo "roslaunch tbai_ros_gazebo_unitree go2w_gazebo_unitree.launch"
-    echo "roslaunch tbai_ros_go2w go2w_mujoco_drive.launch mujoco_simulation:=false"
-    echo "We are working on a fix! 🤗"
-    
-# Go2W (wheeled) handstand in MuJoCo
-[group("2. demos")]
-go2w_handstand_gazebo:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    echo "This example requires two terminals:"
-    echo "roslaunch tbai_ros_gazebo_unitree go2w_gazebo_unitree.launch"
-    echo "roslaunch tbai_ros_go2w go2w_mujoco_handstand.launch mujoco_simulation:=false"
-    echo "We are working on a fix! 🤗"
-
-#******************************************************************************************************************#
-#******************************************************************************************************************#
-#******************************************************************************************************************#
-
-# Deploy go2 np3o policy
-[group("3. deployment")]
-deploy-go2-np3o:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=true mapping_device:=cpu
-
-# Deploy go2 np3o policy with an MPPI safety controller
-[group("3. deployment")]
-deploy-go2-np3o-mppi:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o_mppi.launch publish_pointcloud:=true mapping_device:=cpu
-
-# Deploy go2 np3o policy with a safe controller
-[group("3. deployment")]
-deploy-go2-np3o-safe:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o_safe.launch publish_pointcloud:=true mapping_device:=cpu
-
-# Deploy go2 MPC policy
-[group("3. deployment")]
-deploy-go2-mpc:
-    #!/usr/bin/env bash
-    source $(catkin locate)/devel/setup.bash
-    roslaunch tbai_ros_deploy_go2_rl deploy_go2_mpc.launch publish_pointcloud:=false mapping_device:=none
+    roslaunch tbai_ros_mpc franka.launch
 
 #******************************************************************************************************************#
 #******************************************************************************************************************#
 #******************************************************************************************************************#
 
 # Format C++ code using clang-format, disabled for 'dependencies' folder
-[group("4. development")]
+[group("3. development")]
 format:
     #!/usr/bin/env bash
-    folders=$(ls -d */ | grep -v dependencies)
+    folders=$(ls -d */ | grep -v thirdparty)
     for folder in $folders; do
         for file in $(find $folder -name "*.hpp" -o -name "*.cpp"); do
             echo "[TBAI] Formatting $file"
@@ -291,7 +197,7 @@ format:
     done
 
 # Run cpplint on all folders, disabled for 'dependencies' folder
-[group("4. development")]
+[group("3. development")]
 lint:
     #!/usr/bin/env bash
     folders=$(ls -d */ | grep -v dependencies)
@@ -300,11 +206,11 @@ lint:
     done
 
 # Build ROS packages (only those related to tbai_ros)
-[group("4. development")]
+[group("3. development")]
 build:
     #!/usr/bin/env bash
     ros_packages=""
-    search_dirs=(./ tbai_ros_deploy_go2/)
+    search_dirs=(./ tbai_ros_examples/ tbai_ros_controllers/ tbai_ros_examples/tbai_ros_go2/)
     for search_dir in ${search_dirs[@]}; do
         for folder in "$search_dir"*/; do
             folder=${folder%/}
@@ -317,30 +223,14 @@ build:
     echo "[TBAI] Building ROS packages:$ros_packages"
     catkin build $ros_packages
 
-# Run tests for ROS packages
-[group("4. development")]
-test:
-    #!/usr/bin/env bash
-    folders=$(ls -d */ | grep -v dependencies)
-    ros_packages=""
-    for folder in $folders; do
-        if [[ -d $folder/test ]]; then
-            echo "[TBAI] Running tests in $folder"
-            package=$(basename $folder)
-            ros_packages+=" $package"
-        fi
-    done
-    echo "[TBAI] Running tests for ROS packages:$ros_packages"
-    catkin test $ros_packages
-
 # List all pixi environments\
-[group("4. development")]
+[group("3. development")]
 pixi-list-envs:
     #!/usr/bin/env bash
     pixi workspace environment list | grep -E '^- ' | cut -d':' -f1 | sed 's/^- //'
 
 # Generate conda environments for all pixi environments
-[group("4. development")]
+[group("3. development")]
 pixi-generate-conda-envs:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -349,23 +239,8 @@ pixi-generate-conda-envs:
         pixi workspace export conda-environment -e $env > .conda/$env.yaml
     done
 
-# Open documentation in browser
-[group("4. development")]
-open-docs:
-    #!/usr/bin/env bash
-    docs_path={{justfile_path}}/../../build/tbai_ros_docs/output/doxygen/html/index.html
-    echo "Opening documentation in browser: $docs_path"
-    google-chrome $docs_path
-
-# Rebuild documentation
-[group("4. development")]
-rebuild-docs:
-    #!/usr/bin/env bash
-    catkin clean tbai_ros_docs
-    catkin build tbai_ros_docs
-
 # Clean ROS workspace and remove tbai
-[group("4. development")]
+[group("3. development")]
 clean:
     #!/usr/bin/env bash
     CURRENT_DIR=$(pwd)
@@ -377,97 +252,147 @@ clean:
     catkin clean -y
     rm -rf ${tbai_build_dir}
 
+# Build and install zenoh-c (requires Rust)
+[group("4.0 zenoh")]
+build-zenoh-c:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ -f "$CONDA_PREFIX/lib/libzenohc.so" ]; then
+        echo "[TBAI] zenoh-c already installed, skipping."
+        exit 0
+    fi
+    echo "[TBAI] Building zenoh-c (requires Rust)..."
+    [ -d "thirdparty/zenoh-c" ] || \
+        git clone --depth 1 https://github.com/eclipse-zenoh/zenoh-c.git thirdparty/zenoh-c
+    cmake -S thirdparty/zenoh-c -B {{zenoh_c_build_dir}} \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX="$CONDA_PREFIX" \
+        -DZENOHC_BUILD_WITH_UNSTABLE_API=ON \
+        -DZENOHC_BUILD_WITH_SHARED_MEMORY=ON
+    cmake --build {{zenoh_c_build_dir}} --config Release -j"$(nproc)" --target install
+    echo "[TBAI] zenoh-c installed."
+
+# Build and install zenoh-cpp headers
+[group("4.0 zenoh")]
+build-zenoh-cpp: build-zenoh-c
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ -f "$CONDA_PREFIX/lib/cmake/zenohcxx/zenohcxxConfig.cmake" ]; then
+        echo "[TBAI] zenoh-cpp already installed, skipping."
+        exit 0
+    fi
+    echo "[TBAI] Installing zenoh-cpp headers..."
+    [ -d "thirdparty/zenoh-cpp" ] || \
+        git clone --depth 1 https://github.com/eclipse-zenoh/zenoh-cpp.git thirdparty/zenoh-cpp
+    cmake -S thirdparty/zenoh-cpp -B {{zenoh_cpp_build_dir}} \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX="$CONDA_PREFIX" \
+        -DCMAKE_PREFIX_PATH="$CONDA_PREFIX" \
+        -DZENOHCXX_ZENOHC=ON -DZENOHCXX_ZENOHPICO=OFF
+    cmake --build {{zenoh_cpp_build_dir}} --config Release -j"$(nproc)" --target install
+    echo "[TBAI] zenoh-cpp installed."
+
+# Clone tbai_sdk (skips if already exists)
+[group("4.1 tbai_sdk")]
+clone-tbai-sdk:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    TBAI_SDK_DIR="thirdparty/tbai_sdk"
+    if [[ ! -d "$TBAI_SDK_DIR" ]]; then
+        echo "[TBAI] Cloning tbai_sdk..."
+        git clone --depth 1 git@github.com:tbai-lab/tbai_sdk.git "$TBAI_SDK_DIR"
+    else
+        echo "[TBAI] tbai_sdk already exists at $TBAI_SDK_DIR"
+        if [[ -d "$TBAI_SDK_DIR/.git" ]]; then
+            echo "[TBAI] Pulling latest changes..."
+            git -C "$TBAI_SDK_DIR" pull
+        fi
+    fi
+
+# Build and install tbai_sdk
+[group("4.1 tbai_sdk")]
+build-tbai-sdk: build-zenoh-cpp clone-tbai-sdk
+    #!/usr/bin/env bash
+    set -euo pipefail
+    TBAI_SDK_DIR="thirdparty/tbai_sdk"
+    if [ -f "$CONDA_PREFIX/lib/cmake/tbai_sdk/tbai_sdkConfig.cmake" ]; then
+        echo "[TBAI] tbai_sdk already installed, skipping."
+        exit 0
+    fi
+    echo "[TBAI] Building and installing tbai_sdk..."
+    cmake -S "$TBAI_SDK_DIR" -B {{tbai_sdk_build_dir}} \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX="$CONDA_PREFIX"
+    cmake --build {{tbai_sdk_build_dir}} --parallel "$(nproc)" --target install
+    echo "[TBAI] tbai_sdk installed."
+
+# Clone tbai_mujoco (skips if already exists)
+[group("4.15 tbai_mujoco")]
+clone-tbai-mujoco:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [[ ! -d "thirdparty/tbai_mujoco" ]]; then
+        echo "[TBAI] Cloning tbai_mujoco..."
+        git clone --depth 1 git@github.com:tbai-lab/tbai_mujoco.git thirdparty/tbai_mujoco
+    else
+        echo "[TBAI] tbai_mujoco already exists"
+        if [[ -d "thirdparty/tbai_mujoco/.git" ]]; then
+            echo "[TBAI] Pulling latest changes..."
+            git -C thirdparty/tbai_mujoco pull
+        fi
+    fi
+
+# Build tbai_mujoco
+[group("4.15 tbai_mujoco")]
+build-tbai-mujoco: build-tbai-sdk clone-tbai-mujoco
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "[TBAI] Building tbai_mujoco..."
+    cmake -S thirdparty/tbai_mujoco -B {{tbai_mujoco_build_dir}} \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX="$CONDA_PREFIX"
+    cmake --build {{tbai_mujoco_build_dir}} --parallel "$(nproc)" --target install
+    echo "[TBAI] tbai_mujoco installed."
+
 # Clone tbai repository (skips if already exists)
-[group("4. development")]
+[group("4.2 tbai")]
 clone-tbai:
     #!/usr/bin/env bash
-    if [[ ! -d dependencies/tbai ]]; then
-        git clone https://github.com/tbai-lab/tbai.git --single-branch --branch=main dependencies/tbai
+    if [[ ! -d thirdparty/tbai ]]; then
+        git clone https://github.com/tbai-lab/tbai.git --single-branch --branch=main thirdparty/tbai
     else
-        echo "[TBAI] dependencies/tbai already exists, skipping clone"
-        if [[ -d dependencies/tbai/.git ]]; then
-            echo "[TBAI] dependencies/tbai exists, pulling latest changes"
-            git -C dependencies/tbai pull
+        echo "[TBAI] thirdparty/tbai already exists, skipping clone"
+        if [[ -d thirdparty/tbai/.git ]]; then
+            echo "[TBAI] thirdparty/tbai exists, pulling latest changes"
+            git -C thirdparty/tbai pull
         fi
     fi
 
 # Build tbai library
-[group("4. development")]
-build-tbai:
+[group("4.2 tbai")]
+build-tbai: build-tbai-mujoco
     #!/usr/bin/env bash
-    cmake -B{{tbai_build_dir}} -Sdependencies/tbai -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-    cmake --build {{tbai_build_dir}} --parallel 8
-    cmake --build {{tbai_build_dir}} --target install
+    cmake -B{{tbai_build_dir}} -Sthirdparty/tbai -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+    cmake --build {{tbai_build_dir}} --parallel "$(nproc)" --target install
 
 # Remove tbai dependencies
-[group("4. development")]
+[group("4.2 tbai")]
 remove-tbai:
     #!/usr/bin/env bash
-    rm -rf dependencies/tbai && rm -rf ${tbai_build_dir}
+    rm -rf thirdparty/tbai && rm -rf ${tbai_build_dir}
 
-[group("4. development")]
-clone-mujoco-robotic-assets:
-    #!/usr/bin/env bash
-    if [[ ! -d dependencies/mujoco_robotic_assets ]]; then
-        git clone https://github.com/tbai-lab/mujoco_robotic_assets.git --single-branch --branch=main dependencies/mujoco_robotic_assets
-    else
-        echo "[TBAI] dependencies/mujoco_robotic_assets already exists, skipping clone"
-        if [[ -d dependencies/mujoco_robotic_assets/.git ]]; then
-            echo "[TBAI] dependencies/mujoco_robotic_assets exists, pulling latest changes"
-            git -C dependencies/mujoco_robotic_assets pull
-        fi
-    fi
-
-[group("4. development")]
-build-mujoco-robotic-assets:
-    #!/usr/bin/env bash
-    catkin build mujoco_robotic_assets
-
-[group("4. development")]
-remove-mujoco-robotic-assets:
-    #!/usr/bin/env bash
-    rm -rf dependencies/mujoco_robotic_assets
-
-[group("4. development")]
-clone-unitree-mujoco:
-    #!/usr/bin/env bash
-    if [[ ! -d dependencies/unitree_mujoco ]]; then
-        git clone https://github.com/tbai-lab/unitree_mujoco.git --single-branch --branch=main dependencies/unitree_mujoco
-    else
-        echo "[TBAI] dependencies/unitree_mujoco already exists, skipping clone"
-        if [[ -d dependencies/unitree_mujoco/.git ]]; then
-            echo "[TBAI] dependencies/unitree_mujoco exists, pulling latest changes"
-            git -C dependencies/unitree_mujoco pull
-        fi
-    fi
-
-[group("4. development")]
-build-unitree-mujoco:
-    #!/usr/bin/env bash
-    cmake -B{{unitree_mujoco_build_dir}} -Sdependencies/unitree_mujoco -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-    cmake --build {{unitree_mujoco_build_dir}} --parallel 8
-    cmake --build {{unitree_mujoco_build_dir}} --target install
-
-[group("4. development")]
-remove-unitree-mujoco:
-    #!/usr/bin/env bash
-    rm -rf dependencies/unitree_mujoco
-    rm -rf {{unitree_mujoco_build_dir}}
-
-[group("4. development")]
+[group("4.2 tbai")]
 install-tbai-cbf-mppi: clone-tbai
     #!/usr/bin/env bash
     pip3 install git+https://github.com/tbai-lab/tbai_cbf_mppi.git
 
 # Build all ROS packages
-[group("4. development")]
+[group("3. development")]
 ros-build-all: build
-    #!/usr/bin/env bash
-    echo 'export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:$(catkin locate)/devel/lib:$CONDA_PREFIX/lib' >> ../../devel/setup.sh
 
 # Build go2 ROS packages
-[group("4. development")]
+[group("3. development")]
 ros-build-go2: 
     #!/usr/bin/env bash
-    catkin build tbai_ros_deploy_go2_rl
+    catkin build tbai_ros_go2_rl_mujoco
 

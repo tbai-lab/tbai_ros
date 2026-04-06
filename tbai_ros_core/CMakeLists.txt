@@ -6,7 +6,6 @@ add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
   tf
-  tbai_ros_msgs
   std_msgs
   roscpp
   roslib
@@ -17,7 +16,7 @@ find_package(tbai REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES  ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp roslib tbai_ros_msgs
+  CATKIN_DEPENDS roscpp roslib
 )
 
 ## Build
@@ -27,13 +26,13 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
+  src/StateVisualizer.cpp
   src/Subscribers.cpp
 )
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
     ${catkin_LIBRARIES}
     tbai::core
-    tbai::estim
 )
 
 install(

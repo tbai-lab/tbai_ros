@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>tbai_ros_descriptions</name>
+  <version>0.1.0</version>
+  <description>Robot URDF and MuJoCo descriptions for tbai</description>
+  <maintainer email="lnotspotl@gmail.com">tbai</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+</package>

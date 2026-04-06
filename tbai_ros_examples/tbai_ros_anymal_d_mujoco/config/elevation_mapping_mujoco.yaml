@@ -1,0 +1,68 @@
+input_sources:
+  front_lower:
+    type: pointcloud
+    topic: /pointcloud/front_lower_downsampled
+    queue_size: 1
+    publish_on_update: true
+    sensor_processor:
+      type: perfect
+  left:
+    type: pointcloud
+    topic: /pointcloud/left_downsampled
+    queue_size: 1
+    publish_on_update: false
+    sensor_processor:
+      type: perfect
+  right:
+    type: pointcloud
+    topic: /pointcloud/right_downsampled
+    queue_size: 1
+    publish_on_update: false
+    sensor_processor:
+      type: perfect
+  rear_upper:
+    type: pointcloud
+    topic: /pointcloud/rear_upper_downsampled
+    queue_size: 1
+    publish_on_update: false
+    sensor_processor:
+      type: perfect
+  rear_lower:
+    type: pointcloud
+    topic: /pointcloud/rear_lower_downsampled
+    queue_size: 1
+    publish_on_update: false
+    sensor_processor:
+      type: perfect
+
+map_frame_id: "odom"
+robot_base_frame_id: "base"
+robot_pose_with_covariance_topic: ""
+robot_pose_cache_size: 40
+track_point_frame_id: "base"
+track_point_x: 0.0
+track_point_y: 0.0
+track_point_z: 0.0
+
+length_in_x:                                4.0
+length_in_y:                                4.0
+position_x:                                 0.0
+position_y:                                 0.0
+resolution:                                 0.06
+min_variance:                               0.0001
+max_variance:                               0.05
+mahalanobis_distance_threshold:             2.5
+multi_height_noise:                         0.001
+surface_normal_positive_axis:               z
+fused_map_publishing_rate:                  0.5
+enable_visibility_cleanup:                  true
+visibility_cleanup_rate:                    1.0
+scanning_duration:                          1.0
+
+initialize_elevation_map:                   false
+initialization_method:                      0
+length_in_x_init_submap:                    4.0
+length_in_y_init_submap:                    4.0
+init_submap_height_offset:                  -0.01
+init_submap_variance:                       0.001
+target_frame_init_submap:                   odom

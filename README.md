@@ -17,7 +17,7 @@ ROS wrapper around [tbai](https://github.com/tbai-lab/tbai), for now the most ma
  ┣ 📂tbai_ros_bob                  # RL walking controller, based on the wild-Anymal paper (both perceptive and blind versions) [2]
  ┣ 📂tbai_ros_dtc                  # DTC controller (perceptive) [3]
  ┣ 📂tbai_ros_joe                  # Perceptive NMPC controller with NN-based tracking controller [1], [3]
- ┣ ... (many more, this list is to be updated)
+ ┣ ... (many more, this list is non-exhaustive)
 
  [1] Perceptive Locomotion through Nonlinear Model Predictive Control
      https://arxiv.org/abs/2208.08373
@@ -29,7 +29,9 @@ ROS wrapper around [tbai](https://github.com/tbai-lab/tbai), for now the most ma
 
 ## Installing tbai
 
-To install `tbai_ros`, we recommend using `pixi`, though `tbai_ros` is a full-fledged ROS package and it can be integrated into your projects in using conventional tools and methods. We use `pixi` for reproducibility. Don't worry that ROS is past its end of life, pixi (or micromamba) will install everything for you (even on the newest Ubuntu release) 😮
+> This is `tbai_ros` version 4.0. To view the older version of `tbai_ros`, built on top of the Gazebo simulator, see the [`release_v3.1.0`](https://github.com/tbai-lab/tbai_ros/tree/release_v3.1.0) branch.
+
+To install `tbai_ros`, we recommend using `micromamba`, though `tbai_ros` is a full-fledged ROS package and it can be integrated into your projects in using conventional tools and methods. We use `micromamba` for reproducibility. Don't worry that ROS is past its end of life, micromamba (or pixi) will install everything for you (even on the newest Ubuntu release) 😮
 
 ### Alternative 1: micromamba
 ```bash
@@ -57,46 +59,15 @@ micromamba activate all-gpu-free
 # Run `just help` to see many available demos (subset of all)
 $ just help
 [2. demos]
-    anymal_b_mpc_mujoco            # ANYmal B blind MPC in MuJoCo
-    anymal_d_bob_mujoco            # ANYmal D blind Bob in MuJoCo
-    g1_mujoco                      # G1 humanoid in MuJoCo (with countless controllers available)
-    go2w_drive_mujoco              # Go2W (wheeled) drive in MuJoCo
-    ....
-
-# Try out other examples located under tbai_ros_mpc, tbai_ros_bob, tbai_ros_dtc, tbai_ros_joe and tbai_ros_np3o
-```
-
----
----
-
-### Alternative 2: pixi
-```bash
-# Install pixi
-curl -fsSL https://pixi.sh/install.sh | sh # You might have to source your config again
-
-# Install tbai_ros
-mkdir -p ros/src && cd ros/src
-git clone https://github.com/tbai-lab/tbai_ros.git --recursive && cd tbai_ros
-pixi install && pixi shell --environment all-gpu-free
-just fresh-install-all-gpu-free
-```
-
-Once the installation is complete, you can run one of our many examples, for instance:
-
-```bash
-# Activate pixi environment
-pixi shell --environment all-gpu-free
-
-# Run `just help` to see many available demos (subset of all)
-$ just help
-[2. demos]
-    anymal_b_mpc_mujoco            # ANYmal B blind MPC in MuJoCo
-    anymal_d_bob_mujoco            # ANYmal D blind Bob in MuJoCo
+    anymal_b_mpc_blind_mujoco      # ANYmal B blind MPC in MuJoCo
+    anymal_d_bob_perceptive_mujoco # ANYmal D perceptive Bob in MuJoCo
+    anymal_d_dtc_blind_mujoco      # ANYmal D blind DTC in MuJoCo
+    anymal_d_mpc_perceptive_mujoco # ANYmal D perceptive MPC in MuJoCo
+    franka_mujoco                  # Franka Panda in MuJoCo (with MPC + RViz)
     g1_mujoco                      # G1 humanoid in MuJoCo
-    go2w_drive_mujoco              # Go2W (wheeled) drive in MuJoCo
-    ....
+    go2_mpc_blind_mujoco           # Go2 MPC in Mujoco
+    ...
 
-# Try out other examples located under tbai_ros_mpc, tbai_ros_bob, tbai_ros_dtc, tbai_ros_joe and tbai_ros_np3o
 ```
 
 ### Go2 deployment

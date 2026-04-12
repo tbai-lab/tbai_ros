@@ -26,7 +26,7 @@
     <param name="robot_name" type="string" value="$(arg robot_name)"/>
     <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>
     <env name="TBAI_ROBOT_DESCRIPTION_PATH" value="$(arg urdf_file)"/>
-    <env name="TBAI_SPOT_PUBLISH_IMAGE" value="$(arg mujoco_simulation)"/>
+    <env name="TBAI_SPOT_PUBLISH_IMAGE" value="true"/>
 
     <!-- MPC params -->
     <param name="sqp_settings_file" type="string" value="$(arg sqp_settings_file)"/>

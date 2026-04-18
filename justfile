@@ -18,27 +18,29 @@ show-demos:
 
 # Fresh install go2 environment
 [group("1. fresh")]
-fresh-install-go2: clean clone-tbai build-tbai ros-build-go2 install-tbai-cbf-mppi
+fresh-install-go2: clean clone-tbai build-tbai ros-build-go2
     #!/usr/bin/env bash
     catkin build elevation_mapping elevation_mapping_cupy
     echo "All good 🤗"
 
 # Fresh install go2-gpu-free environment
 [group("1. fresh")]
-fresh-install-go2-gpu-free: clean clone-tbai build-tbai ros-build-go2 install-tbai-cbf-mppi
+fresh-install-go2-gpu-free: clean clone-tbai build-tbai ros-build-go2
     #!/usr/bin/env bash
     catkin build elevation_mapping
     echo "All good 🤗"
 
 # Fresh install all environment
 [group("1. fresh")]
-fresh-install-all: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi    #!/usr/bin/env bash
+fresh-install-all: clean clone-tbai build-tbai ros-build-all
+    #!/usr/bin/env bash
     catkin build elevation_mapping elevation_mapping_cupy
     echo "All good 🤗"
 
 # Fresh install all-gpu-free environment
 [group("1. fresh")]
-fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all install-tbai-cbf-mppi    #!/usr/bin/env bash
+fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all
+    #!/usr/bin/env bash
     catkin build elevation_mapping
     echo "All good 🤗"
 
@@ -380,11 +382,6 @@ build-tbai: build-tbai-mujoco
 remove-tbai:
     #!/usr/bin/env bash
     rm -rf thirdparty/tbai && rm -rf ${tbai_build_dir}
-
-[group("4.2 tbai")]
-install-tbai-cbf-mppi: clone-tbai
-    #!/usr/bin/env bash
-    pip3 install git+https://github.com/tbai-lab/tbai_cbf_mppi.git
 
 # Build all ROS packages
 [group("3. development")]
